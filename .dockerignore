@@ -1,0 +1,12 @@
+*
+!src
+.debugger*
+.developer*
+*.log
+*.md
+*.sh
+avanti*
+debug*
+secret*
+scrap*
+TODO*
