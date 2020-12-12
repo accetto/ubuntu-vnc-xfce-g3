@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Version Sticker
+Comment=Verbose version sticker
+Exec=bash -c 'echo "Wait..." ; /dockerstartup/version_sticker.sh -f -V ; read -p "Press ENTER..."'
+Path=/dockerstartup
+Terminal=true
+StartupNotify=false

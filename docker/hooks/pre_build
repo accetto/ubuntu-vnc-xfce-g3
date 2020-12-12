@@ -1,0 +1,83 @@
+#!/bin/bash -e
+
+declare _mydir=$(dirname $0)
+source "${_mydir}"/env.rc
+source "${_mydir}"/util.rc
+
+main() {
+    local helper_suffix="_helper"
+    local now
+    local version_sticker
+
+    local should_build=${FORCE_BUILDING}
+
+    ### debugging support
+    # dump_environment
+
+    echo "Removing helper files..."
+    cleanup_scrap_files
+
+    ### build a temporary helper image for getting the current version sticker values
+    set -x
+    docker build $@ \
+        -f "${DOCKERFILE_PATH}" \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --build-arg BASEIMAGE="${BASEIMAGE}" \
+            --build-arg BASETAG="${BASETAG}" \
+            ${FEATURES_BUILD_SLIM:+--build-arg ARG_APT_NO_RECOMMENDS=1} \
+            ${FEATURES_SCREENSHOOTING:+--build-arg ARG_FEATURES_SCREENSHOOTING=1} \
+            ${FEATURES_THUMBNAILING:+--build-arg ARG_FEATURES_THUMBNAILING=1} \
+            ${FEATURES_USER_GROUP_OVERRIDE:+--build-arg ARG_FEATURES_USER_GROUP_OVERRIDE=1} \
+            ${FEATURES_NOVNC:+--build-arg ARG_FINAL_STAGE_BASE="stage_novnc"} \
+            ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_METADATA_STAGE_BASE="stage_firefox_plus"} \
+        -t "${DOCKER_REPO}":"${DOCKER_TAG}${helper_suffix}" "${_build_context}"
+    set +x
+
+    ### get the actual verbose version sticker value from the helper image and store it as the current one
+    version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker-verbose )"
+    echo "${version_sticker}" > "${_build_context}/${_scrap_version_sticker_verbose_current}"
+    echo -e "Current verbose version sticker:\n$( cat ${_build_context}/${_scrap_version_sticker_verbose_current} )"
+
+    if [ "${should_build}" == "1" ] ; then
+
+        echo ; echo "Building of new image has been forced."
+
+    else
+
+        echo; echo "Building of new image has not been forced."
+
+        echo "Getting the previous verbose version sticker value from the builder repository gist..."
+        get_gist_file "${GIST_ID}" "${DOCKER_REPO}" "${DOCKER_TAG}" "version-sticker-verbose.txt" "${_build_context}/${_scrap_version_sticker_verbose_previous}"
+
+        echo "Comparing verbose version stickers..."
+        if cmp -s "${_build_context}/${_scrap_version_sticker_verbose_current}" "${_build_context}/${_scrap_version_sticker_verbose_previous}" ; then
+
+            ### verbose version sticker hasn't changed since the last build - stop building
+            echo "Verbose version sticker has not changed since the last build, no need for building a new image." ; echo
+
+            ### if this file is present, the building will not continue
+            echo "Demanding building stop..."
+            touch "${_build_context}/${_scrap_demand_stop_building}"
+
+        else
+            ### verbose version sticker has changed since the last build - a new image should be built
+            echo "Verbose version sticker has changed, a new image will be built."
+            should_build="1"
+        fi
+    fi
+
+    if [ "${should_build}" == "1" ] ; then
+
+        ### get also the actual short version sticker value from the helper image and store it as the current one
+        ### note that some apps require a display to report their versions correctly, do not use '--skip-vnc' then
+        version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker )"
+        echo -n "${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}" > "${_build_context}/${_scrap_version_sticker_current}"
+        echo "Current version sticker: $( cat ${_build_context}/${_scrap_version_sticker_current} )"
+    fi
+
+    ### delete the helper image in any case
+    echo; echo "Removing helper image..."
+    docker rmi "${DOCKER_REPO}":"${DOCKER_TAG}${helper_suffix}"
+}
+
+main $@

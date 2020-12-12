@@ -1,0 +1,256 @@
+### prefix for temporary scrap files
+declare _scrap_prefix=${SCRAP_PREFIX:-scrap-}
+
+### temporary scrap helper files
+declare _scrap_version_sticker_current="${_scrap_prefix}version_sticker_current.tmp"
+declare _scrap_version_sticker_verbose_current="${_scrap_prefix}version_sticker-verbose_current.tmp"
+declare _scrap_version_sticker_verbose_previous="${_scrap_prefix}version_sticker-verbose_previous.tmp"
+declare _scrap_demand_stop_building="${_scrap_prefix}demand-stop-building"
+
+### gist file keys
+declare _gist_key_created="created.json"
+declare _gist_key_version_sticker="version-sticker.json"
+declare _gist_key_version_sticker_verbose="version-sticker-verbose.txt"
+
+### other configuration data
+declare _post_push_workflow_file="dockerhub-post-push.yml"
+
+cleanup_scrap_files() {
+    rm -f "${_build_context}/${_scrap_prefix}"*
+}
+
+dump_environment() {
+    ### List the selected environment variables.
+    ### Just debugging support.
+
+    echo "Environment dump:"
+    echo "_build_context=${_build_context}"
+    echo "_branch=${_branch}"
+    echo "_blend=${_blend}"
+
+    echo "_owner=${_owner}"
+    echo "DOCKER_REPO=${DOCKER_REPO}"
+    echo "DOCKER_TAG=${DOCKER_TAG}"
+    echo "_deploy_repo=${_deploy_repo}"
+    echo "_deploy_tags=${_deploy_tags[@]}"
+
+    echo "FEATURES_BUILD_SLIM=${FEATURES_BUILD_SLIM}"
+    echo "FEATURES_JQ=${FEATURES_JQ}"
+    echo "FEATURES_NOVNC=${FEATURES_NOVNC}"
+    echo "FEATURES_SCREENSHOOTING=${FEATURES_SCREENSHOOTING}"
+    echo "FEATURES_THUMBNAILING=${FEATURES_THUMBNAILING}"
+    echo "FEATURES_USER_GROUP_OVERRIDE=${FEATURES_USER_GROUP_OVERRIDE}"
+
+    echo "DOCKERFILE_PATH=${DOCKERFILE_PATH}"
+    echo "BASEIMAGE=${BASEIMAGE}"
+    echo "BASETAG=${BASETAG}"
+    echo "VERSION_STICKER_PREFIX=${VERSION_STICKER_PREFIX}"
+    echo "VERSION_STICKER_SUFFIX=${VERSION_STICKER_SUFFIX}"
+}
+
+encode_json_quotes() {
+    ### Encode double-quotes for use in JSON
+    echo "${1//\"/\\\"}"
+}
+
+encode_json_newlines() {
+    ### Encodes new-lines for use in JSON
+    echo $( echo -e "${1}" | sed -z 's/\n/\\n/g' )
+}
+
+get_label() {
+    ### Returning the given label value via the predefined global variable.
+
+    local repotag="$1"
+    local label="$2"
+
+    echo $( docker inspect "${repotag}" --format='{{ index .Config.Labels "'${label}'" }}' )
+}
+
+make_gist_filename() {
+    ### Returns correctly formatted gist member file name
+
+    local repo="${1?Need repo}"
+    local tag="${2?Need repo tag}"
+    local filename="${3?Need file name}"
+
+    echo "$(basename ${repo})"@"${tag}"@"${filename}"
+}
+
+get_gist_file() {
+    ### Gets the specified file from the secret gist.
+
+    local gist=${1?Need gist ID}
+    local repo="${2?Need repo}"
+    local tag="${3?Need repo tag}"
+    local filename="${4?Need file name}"
+    local output_file="${5?Need output file}"
+
+    local gist_filename
+    local result
+
+    gist_filename=$( make_gist_filename "${repo}" "${tag}" "${filename}" )
+
+    ### assumption: 'output_file' is the full file name correctly composed by the caller
+    result=$(curl -s \
+        -X GET \
+        --write-out "%{http_code}" \
+        -o "${output_file}" \
+        -H "Accept: application/vnd.github.v3+json" \
+        "https://gist.githubusercontent.com/${_owner}/${gist}/raw/${gist_filename}")
+
+    if [ "${result}" == "200" ] ; then
+        echo "Gist file '${gist_filename}' saved as '${output_file}'."
+        return 0
+    elif [ "${result}" == "404" ] ; then
+        echo ; echo "Gist file '${gist_filename}' not found."
+        return 0
+    else
+        echo "Getting gist file '${gist_filename}' failed: ${result}"
+        return 2
+    fi
+}
+
+list_labels() {
+    ### Listing all image labels.
+    ### Just debugging support.
+
+    local repotag="$1"
+
+    # docker inspect "${repotag}" --format='{{println}} {{ range $k, $v := .Config.Labels -}} {{ $k }}={{ $v }} {{println}} {{end -}}'
+
+    docker inspect "${repotag}" --format='
+    {{ range $k, $v := .Config.Labels -}}
+    {{ $k }}={{ $v }}
+    {{end -}}'
+}
+
+update_gist() {
+    ### Updating the secret GitHub gist containing datat (e.g. badge endpoints).
+    ### 'GIST_TOKEN' secret (PAT) with the 'gist' scope is required
+
+    local gist=${1?Need gist ID}
+    local gist_key="${2?Need gist key}"
+    local repo="${3?Need repo}"
+    local tag="${4?Need repo tag}"
+    local content="${5?Need content}"
+
+    local data
+    local envelope
+    local gist_filename
+    local result
+
+    if [ -z "${GIST_TOKEN}" ] ; then
+        echo "Skipping gist update. Required variables not set."
+        return 0
+    fi
+
+    case "${gist_key}" in
+        "${_gist_key_created}" )
+            envelope='{"subject":"created","status":"'${content}'","color":"blue"}'
+            ;;
+        "${_gist_key_version_sticker}" )
+            envelope='{"subject":"version sticker","status":"'${content}'","color":"blue"}'
+            ;;
+        "${_gist_key_version_sticker_verbose}" )
+            envelope="${content}"
+            ;;
+        * )
+            echo "Skipping gist update. Unsupported gist key '${gist_key}'."
+            return 0
+            ;;
+    esac
+
+    gist_filename=$( make_gist_filename "${repo}" "${tag}" "${gist_key}" )
+
+    ### encode double-quotes
+    # envelope="${envelope//\"/\\\"}"
+    envelope=$( encode_json_quotes "${envelope}" )
+
+    ### encode new-lines
+    # envelope=$( echo "${envelope}" | sed -z 's/\n/\\n/g' )
+    ### be careful with quotes!
+    envelope=$( encode_json_newlines "${envelope}" )
+    
+    data='{ "files": { "'${gist_filename}'": { "filename": "'${gist_filename}'", "content": "'${envelope}'" } } }'
+
+    echo "Updating gist '${gist_filename}'"
+
+    ### required 'GIST_TOKEN' (PAT) scope is 'gist'
+    result=$(curl -s \
+        -X PATCH \
+        -o /dev/null \
+        --write-out "%{http_code}" \
+        -H "Authorization: token ${GIST_TOKEN}" \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/gists/${gist} \
+        -d "${data}")
+
+    if [ "${result}" == "200" ] ; then
+        echo "Gist '${gist_filename}' updated successfully"
+        echo
+        return 0
+    else
+        echo "Gist '${gist_filename}' update failed: ${result}"
+        echo 
+        return 1
+    fi
+}
+
+trigger_post_push_workflow() {
+    ### Trigger the 'post_push' workflow on GitHub.
+    ### Secret 'POST_PUSH_WORKFLOW_TOKEN' with the scopes 'repo' and 'workflow' is needed.
+    ### Currently there is no real benefit of triggering this workflow.
+
+    ### example of 'repo' on Docker Hub: 'index.docker.io/accetto/ubuntu-vnc-xfce-g3'
+    ### 'repo' should be including the owner as 'owner/repo'
+    local repo="${1?Need repo}"
+    local tag="${2?Need tag}"
+    local gist="${3?Need gist}"
+    local readme_context="${4?Need readme context}"
+    local branch="${5?Need source branch name}"
+    local created="${6:-'(not-provided)'}"
+    local version_sticker="${7:-'(not-provided)'}"
+    local version_sticker_verbose="${8:-'(not-provided)'}"
+    local retval_on_failure=${9:-0}
+
+    local data
+    local result
+
+    ### possibly from environment
+    local workflow="${POST_PUSH_WORKFLOW:-${_post_push_workflow_file}}"
+
+    if [ -z "${POST_PUSH_WORKFLOW_TOKEN}" ] ; then
+        echo "Skipping workflow '${workflow}'. Required variables not set."
+        return ${retval_on_failure}
+    fi
+
+    ### be careful with quotes!
+    version_sticker_verbose=$( encode_json_newlines "${version_sticker_verbose}" )
+
+    data='{ "ref": "'${branch}'", "inputs": { "repo": "'${repo}'", "tag": "'${tag}'", "gist": "'${gist}'", "readme_context": "'${readme_context}'" , "created": "'${created}'", "version_sticker": "'${version_sticker}'", "version_sticker_verbose": "'${version_sticker_verbose}'" } }'
+
+    # echo "About to trigger workflow '${workflow}' passing data:"
+    # echo "${data}"
+
+    ### required token scopes: repo, workflow
+    result=$(curl -s \
+        -X POST \
+        -o /dev/null \
+        --write-out "%{http_code}" \
+        https://api.github.com/repos/${_owner}/${POST_PUSH_WORKFLOW_REPO}/actions/workflows/"${workflow}"/dispatches \
+        -H "Accept: application/vnd.github.v3+json" \
+        -H "Authorization: token ${POST_PUSH_WORKFLOW_TOKEN}" \
+        -d "${data}")
+
+    if [ "${result}" == "204" ] ; then
+        echo "Workflow '${workflow}' triggered successfuly"
+        echo
+        return 0
+    else
+        echo "Workflow '${workflow}' trigger failed: ${result}"
+        if [ ${retval_on_failure} -eq 0 ] ; then echo "Ignoring the failure." ; fi
+        echo
+        return ${retval_on_failure}
+    fi
+}

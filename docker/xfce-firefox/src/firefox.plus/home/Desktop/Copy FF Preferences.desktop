@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Copy FF Preferences
+Comment=Copy user.js into Firefox profiles
+Exec=/home/headless/firefox.plus/copy_firefox_user_preferences.sh
+Icon=accetto
+Path=
+Terminal=true
+StartupNotify=true
+GenericName=Copy FF Preferences

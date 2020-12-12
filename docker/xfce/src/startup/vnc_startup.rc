@@ -1,0 +1,96 @@
+
+start_vnc () {
+    local vnc_ip
+    local passwd_path
+    local xinit_pid
+
+    ### option '--skip-vnc'
+    if [ "${_arg_skip_vnc}" == "on" ] ; then
+        if [ -n "${_verbose}" ] ; then echo "INFO: VNC/noVNC startup skipped as requested." ; fi
+        return 0
+    fi
+
+    if [ -z "$(which vncserver)" ] ; then
+        if [ -n "${_verbose}" ] ; then echo "WARNING: No 'vncserver' is available." ; fi
+        return 0
+    fi
+
+    ### VNC requirements
+    if [ -z "${DISPLAY}" ] \
+    || [ -z "${VNC_PORT}" ] \
+    || [ -z "${VNC_PW}" ] \
+    || [ -z "${VNC_COL_DEPTH}" ] \
+    || [ -z "${VNC_RESOLUTION}" ] ; then
+        cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT,VNC_PW, VNC_COL_DEPTH, VNC_RESOLUTION"
+    fi
+
+    passwd_path="${HOME}"/.vnc/passwd
+    if [ ! -d "${HOME}"/.vnc ] ; then mkdir "${HOME}"/.vnc ; fi
+
+    if [ "${VNC_VIEW_ONLY,,}" == "true" ]; then
+        if [ -n "${_verbose}" ] ; then echo "Starting VNC server in view-only mode ..." ; fi
+        ### create random pw to prevent access
+        echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > "${passwd_path}"
+    fi
+
+    echo "${VNC_PW}" | vncpasswd -f >> "${passwd_path}"
+    chmod 600 "${passwd_path}"
+
+    ### create VNC configuration file
+    echo "
+    depth=${VNC_COL_DEPTH}
+    geometry=${VNC_RESOLUTION}
+    " > "${HOME}"/.vnc/config
+
+    ### get container IP address
+    vnc_ip=$(hostname -i)
+
+    ### removing old VNC locks to be a re-attachable container
+    xinit_pid="$(pidof xinit)"
+    if [ -n "${xinit_pid}" ] ; then
+        if [ -n "${_verbose}" ] ; then echo "Killing xinit PID ${xinit_pid}" ; fi
+        ### ignore the errors if not alive any more
+        kill "${xinit_pid}" > /dev/null 2>&1
+    fi
+    if [ -n $(compgen -G /tmp/.X*-lock) ] || [ -n $(compgen -G /tmp/.X11-unix) ] ; then
+        if [ -n "${_verbose}" ] ; then echo "Removing old VNC locks to be a re-attachable container" ; fi
+        rm -rfv /tmp/.X*-lock /tmp/.X11-unix &> "${_vnc_log}"
+    fi
+
+    ### VNC startup (in the background)
+    vncserver "${DISPLAY}" &> "${_vnc_log}" &
+
+    ### container will wait on this VNC server PID
+    _wait_pid=$!
+
+    if [ -n "${_verbose}" ] ; then 
+        echo "VNC server started on display '${DISPLAY}' and TCP port '${VNC_PORT}'"
+        echo "Connect via VNC viewer with ${vnc_ip}:${VNC_PORT}"
+    fi
+
+    ### option '--skip-novnc'
+    if [ "${_arg_skip_novnc}" == "off" ] ; then
+
+        ### noVNC is not necessarily installed
+        if [ -n "${NO_VNC_HOME}" ] || [ -d "${NO_VNC_HOME}/utils/websockify" ] ; then
+
+            ### noVNC requirements
+            if [ -n "${NO_VNC_PORT}" ] ; then
+
+                ### noVNC startup (in the background)
+                "${NO_VNC_HOME}"/utils/launch.sh --vnc localhost:${VNC_PORT} --listen ${NO_VNC_PORT} &> "${_novnc_log}" &
+                
+                if [ -n "${_verbose}" ] ; then 
+                    echo "noVNC started on TCP port '${NO_VNC_PORT}'"
+                    echo "Connect via web browser"
+                fi
+            else
+                cleanup "ERROR: Environment variable 'NO_VNC_PORT' is not set."
+            fi
+        else
+            if [ -n "${_verbose}" ] ; then echo "WARNING: noVNC is not available." ; fi
+        fi
+    else
+        if [ -n "${_verbose}" ] ; then echo "INFO: noVNC startup skipped as requested." ; fi
+    fi
+}

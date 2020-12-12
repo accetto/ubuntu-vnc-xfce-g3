@@ -1,0 +1,44 @@
+### This workflow triggers auto-building on Docker Hub.
+name: dockerhub-autobuild
+on:
+  release:
+    ### published: a release, pre-release, or draft of a release is published
+    ### unpublished: a release or pre-release is deleted
+    ### created: a draft is saved, or a release or pre-release is published without previously being saved as a draft
+    ### edited: a release, pre-release, or draft release is edited
+    ### deleted: a release, pre-release, or draft release is deleted
+    ### prereleased: a pre-release is created
+    ### released: a release or draft of a release is published, or a pre-release is changed to a release
+    types: [published]
+  schedule:
+    ### * is a special character in YAML so you have to quote this string
+    ### every 5 minutes (for testing only)
+    # - cron:  '*/5 * * * *'
+    ### at 03:15 on every Sunday
+    - cron:  '15 3 * * 0'
+jobs:
+  call-dockerhub:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report trigger
+        ### "tag_name": "v1.0.0",
+        ### "target_commitish": "master",
+        ### "name": "v1.0.0",
+        ### "body": "Description of the release",
+        ### "draft": false,
+        ### "prerelease": false,
+        ### "created_at": "2013-02-27T19:35:32Z",
+        ### "published_at": "2013-02-27T19:35:32Z",
+        shell: bash
+        run: |
+          echo "Event name: ${{ github.event_name }}"
+          echo "Release branch: ${{ github.event.release.target_commitish }}"
+          echo "Release tag: ${{ github.event.release.tag_name }}"
+          echo "Is draft: ${{ github.event.release.draft }}"
+          echo "Is prerelease: ${{ github.event.release.prerelease }}"
+          echo "Created at: ${{ github.event.release.created_at }}"
+      - name: Call webhook
+        shell: bash
+        run: |
+          echo "Call webhook"
+          curl -X POST -s -o /dev/null --write-out "%{http_code}" ${{ secrets.DockerHubWebhookBuildRelease }}

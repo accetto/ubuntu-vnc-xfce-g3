@@ -1,0 +1,65 @@
+#!/bin/bash -e
+
+declare _mydir=$(dirname $0)
+source "${_mydir}"/env.rc
+source "${_mydir}"/util.rc
+
+builder_push() {
+
+    echo ; echo "Pushing builder image ${DOCKER_REPO}:${DOCKER_TAG}"
+    docker push ${DOCKER_REPO}:${DOCKER_TAG}
+}
+
+deployment_push() {
+    local target
+
+    ### push all target tags into the deployment repository
+    for t in "${_deploy_tags[@]}" ; do
+
+        ### note that the builder and deployment repositories could be identical
+        ### in that case skip the tag which has been already published above
+        if [ "${DOCKER_REPO}" != "${_deploy_repo}" ] || [ "${DOCKER_TAG}" != "${t}" ] ; then
+
+            target="${_deploy_repo}:${t}"
+
+            echo ; echo "Deploying image '${target}'"
+            docker tag "${DOCKER_REPO}:${DOCKER_TAG}" "${target}"
+            docker push "${target}"
+        fi
+    done
+}
+
+main() {
+    local target
+
+    if [ -f "${_build_context}/${_scrap_demand_stop_building}" ] ; then
+        echo "Skipping push on demand."
+        return 0
+    fi
+
+    if [ "${_stage}" == "local" ] ; then
+        if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_PASSWORD}" ] ; then
+
+        echo "Logging-in on Docker Hub..."
+        echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+        if [ ! $? ] ; then
+            echo "Docker Hub login failed"
+            return 1
+        fi
+        else
+            echo "Local pushing requires Docker Hub login."
+            echo "However, your environment does not provide required authentication data."
+            return 1
+        fi
+    fi
+
+    ### push image into the builder repository
+    if [ "${_stage}" != "local" ] ; then builder_push ; fi
+
+    ### push images into the deployment repository
+    deployment_push
+
+    if [ "${_stage}" == "local" ] ; then docker logout ; fi
+}
+
+main $@

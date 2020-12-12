@@ -1,0 +1,42 @@
+<!-- This is the template of the file to append to the main part of README file for Docker Hub. -->
+<!-- The following variables will be replaced (related to the deployment repository): OWNER, GIST, REPO -->
+
+<!-- latest -->
+
+[badge_latest_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@created.json
+
+[badge_latest_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker.json
+
+[link_latest_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker-verbose.txt
+
+<!-- vnc -->
+
+[badge_vnc_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@created.json
+
+[badge_vnc_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@version-sticker.json
+
+[link_vnc_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@version-sticker-verbose.txt
+
+<!-- vnc-novnc -->
+
+[badge_vnc-novnc_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@created.json
+
+[badge_vnc-novnc_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@version-sticker.json
+
+[link_vnc-novnc_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@version-sticker-verbose.txt
+
+<!-- vnc-fugo -->
+
+[badge_vnc-fugo_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-fugo@created.json
+
+[badge_vnc-fugo_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-fugo@version-sticker.json
+
+[link_vnc-fugo_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-fugo@version-sticker-verbose.txt
+
+<!-- vnc-novnc-fugo -->
+
+[badge_vnc-novnc-fugo_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc-fugo@created.json
+
+[badge_vnc-novnc-fugo_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc-fugo@version-sticker.json
+
+[link_vnc-novnc-fugo_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc-fugo@version-sticker-verbose.txt

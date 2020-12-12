@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=FF Profile Manager
+Comment=Open Firefox Profile Manager
+Exec=firefox -P
+Icon=accetto
+Path=
+Terminal=false
+StartupNotify=true

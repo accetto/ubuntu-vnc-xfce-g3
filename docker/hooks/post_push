@@ -1,0 +1,93 @@
+#!/bin/bash -e
+
+declare _mydir=$(dirname $0)
+source "${_mydir}"/env.rc
+source "${_mydir}"/util.rc
+
+main() {
+    ### There is a secret gist on GitHub containing endpoints for the badges.
+    ### Updating the gist could be skipped by *not* setting these environment variables.
+    ### The required scope for the 'GIST_TOKEN' (PAT) is 'gist'.
+
+    local created
+    local version_sticker
+    local version_sticker_verbose
+
+    ### debugging support
+    # dump_environment
+
+    if [ -f "${_build_context}/${_scrap_demand_stop_building}" ] ; then
+
+        if [ "${FORCE_README_PUBLISHING}" != "1" ] ; then
+
+            echo "Skipping post_push on demand."
+            
+        else
+            ### get values for badges from the image metadata (labels)
+            created=$( get_label "${DOCKER_REPO}:${DOCKER_TAG}" "org.opencontainers.image.created" )
+            version_sticker=$( get_label "${DOCKER_REPO}:${DOCKER_TAG}" "any.accetto.version-sticker" )
+            version_sticker_verbose=$( cat "${_build_context}/${_scrap_version_sticker_verbose_current}" )
+
+            ### trigger the GitHub Actions workflow to push the readme file into the deployment repository
+            ### essential environment variables must be already set
+            if [ -n "${POST_PUSH_WORKFLOW_BRANCH}" ] && [ -n "${POST_PUSH_WORKFLOW_TOKEN}" ] ; then
+
+                ### 'git branch --show-current' helps by testing local building
+                ### note that only the main builder tag is sent to the workflow
+                trigger_post_push_workflow "${_deploy_repo}" "${DOCKER_TAG}" "${DEPLOY_GIST_ID}" \
+                    "${_readme_context}" "${POST_PUSH_WORKFLOW_BRANCH}" \
+                    "${created}" "${version_sticker}" "${version_sticker_verbose}" 1
+            else
+                echo "Skipping build workflow trigger. Required variables not set."
+            fi
+        fi
+    else
+        ### essential environment variables must be already set
+        if [ -n "${GIST_TOKEN}" ] && [ -n "${GIST_ID}" ] && [ -n "${DEPLOY_GIST_ID}" ] ; then
+
+            ### get values for badges from the image metadata (labels)
+            created=$( get_label "${DOCKER_REPO}:${DOCKER_TAG}" "org.opencontainers.image.created" )
+            version_sticker=$( get_label "${DOCKER_REPO}:${DOCKER_TAG}" "any.accetto.version-sticker" )
+            version_sticker_verbose=$( cat "${_build_context}/${_scrap_version_sticker_verbose_current}" )
+
+            ### update badge endpoints in the builder repository gist
+            update_gist "${GIST_ID}" "${_gist_key_created}" "${DOCKER_REPO}" "${DOCKER_TAG}" "${created}"
+            update_gist "${GIST_ID}" "${_gist_key_version_sticker}" "${DOCKER_REPO}" "${DOCKER_TAG}" "${version_sticker}"
+            update_gist "${GIST_ID}" "${_gist_key_version_sticker_verbose}" "${DOCKER_REPO}" "${DOCKER_TAG}" "${version_sticker_verbose}"
+
+            ### update badge endpoints for all tags in the deployment repository
+            for t in "${_deploy_tags[@]}" ; do
+
+                ### note that the builder and deployment repositories could be identical
+                ### in that case skip the tag which has been already published above
+                if [ "${DOCKER_REPO}" != "${_deploy_repo}" ] || [ "${DOCKER_TAG}" != "${t}" ] ; then
+
+                    update_gist "${DEPLOY_GIST_ID}" "${_gist_key_created}" "${_deploy_repo}" "${t}" "${created}"
+                    update_gist "${DEPLOY_GIST_ID}" "${_gist_key_version_sticker}" "${_deploy_repo}" "${t}" "${version_sticker}"
+                    update_gist "${DEPLOY_GIST_ID}" "${_gist_key_version_sticker_verbose}" "${_deploy_repo}" "${t}" "${version_sticker_verbose}"
+                fi
+            done
+
+            ### trigger the GitHub Actions workflow to push the readme file into the deployment repository
+            ### essential environment variables must be already set
+            if [ -n "${POST_PUSH_WORKFLOW_BRANCH}" ] && [ -n "${POST_PUSH_WORKFLOW_TOKEN}" ] ; then
+
+                ### 'git branch --show-current' helps by testing local building
+                ### note that only the main builder tag is sent to the workflow
+                trigger_post_push_workflow "${_deploy_repo}" "${DOCKER_TAG}" "${DEPLOY_GIST_ID}" \
+                    "${_readme_context}" "${POST_PUSH_WORKFLOW_BRANCH}" \
+                    "${created}" "${version_sticker}" "${version_sticker_verbose}" 1
+
+            else
+                echo "Skipping build workflow trigger. Required variables not set."
+            fi
+        else
+            echo "Skipping gist update. Required variables not set."
+        fi
+    fi
+
+    echo "Removing helper files..."
+    cleanup_scrap_files
+}
+
+main $@
