@@ -9,6 +9,8 @@
 ![badge-github-release][badge-github-release]
 ![badge-github-release-date][badge-github-release-date]
 
+`latest` ![badge_latest_created][badge_latest_created][![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
+
 ***
 
 **Tip** This is the short README version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
