@@ -47,7 +47,14 @@ main() {
         echo; echo "Building of new image has not been forced."
 
         echo "Getting the previous verbose version sticker value from the builder repository gist..."
-        get_gist_file "${GIST_ID}" "${DOCKER_REPO}" "${DOCKER_TAG}" "version-sticker-verbose.txt" "${_build_context}/${_scrap_version_sticker_verbose_previous}"
+        if [ -n "${GIST_ID}" ] ; then
+
+            get_gist_file "${GIST_ID}" "${DOCKER_REPO}" "${DOCKER_TAG}" "version-sticker-verbose.txt" "${_build_context}/${_scrap_version_sticker_verbose_previous}"
+
+        else
+            ### create an empty file instead
+            echo -n "" > "${_build_context}/${_scrap_version_sticker_verbose_previous}"
+        fi
 
         echo "Comparing verbose version stickers..."
         if cmp -s "${_build_context}/${_scrap_version_sticker_verbose_current}" "${_build_context}/${_scrap_version_sticker_verbose_previous}" ; then
