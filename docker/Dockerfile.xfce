@@ -142,7 +142,7 @@ ENV \
 ### 2020-10-03: nightly builds fix some TigerVNC issues (e.g #1097)
 # RUN wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.11.0.x86_64.tar.gz | tar xz --strip 1 -C / \
 RUN \
-    wget -qO- http://tigervnc.bphinz.com/nightly/xc/x86_64/tigervnc-1.11.80-20201209gita3d7d7d4.x86_64.tar.gz | tar xz --strip 1 -C / \
+    wget -qO- http://tigervnc.bphinz.com/nightly/xc/x86_64/tigervnc-1.11.80-20201220git2a0eabec.x86_64.tar.gz | tar xz --strip 1 -C / \
     && ln -s /usr/libexec/vncserver /usr/bin/vncserver \
     && sed -i 's/exec(@cmd);/print "@cmd";\nexec(@cmd);/g' /usr/libexec/vncserver
 
