@@ -366,7 +366,6 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 
-
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3/

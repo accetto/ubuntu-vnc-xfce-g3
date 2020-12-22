@@ -23,6 +23,27 @@ This repository contains resources for building Docker images based on [Ubuntu 2
 
 The resources for the individual images and their variations (tags) are stored in the subfolders of the **master** branch. Each image has its own README file describing its features and usage.
 
+- [Headless Ubuntu/Xfce containers with VNC/noVNC](#headless-ubuntuxfce-containers-with-vncnovnc)
+  - [Project `accetto/ubuntu-vnc-xfce-g3`](#project-accettoubuntu-vnc-xfce-g3)
+    - [Image generations](#image-generations)
+    - [Project goals](#project-goals)
+    - [Changes and new features](#changes-and-new-features)
+      - [Naming scheme](#naming-scheme)
+      - [Slimmer images](#slimmer-images)
+      - [Fewer and more flexible Dockerfiles](#fewer-and-more-flexible-dockerfiles)
+      - [Concept of features](#concept-of-features)
+      - [Optional overriding of user group by `docker run`](#optional-overriding-of-user-group-by-docker-run)
+      - [Different use of version sticker](#different-use-of-version-sticker)
+      - [Image metadata](#image-metadata)
+      - [Simple self-containing CI](#simple-self-containing-ci)
+      - [Separated builder and deployment repositories](#separated-builder-and-deployment-repositories)
+      - [Separate README files for Docker Hub](#separate-readme-files-for-docker-hub)
+      - [Based on Ubuntu 20.04 LTS](#based-on-ubuntu-2004-lts)
+      - [Using TigerVNC 1.11](#using-tigervnc-111)
+      - [New startup script](#new-startup-script)
+  - [Issues](#issues)
+  - [Credits](#credits)
+
 ### Image generations
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) contains the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) contains the GitHub repositories [accetto/ubuntu-vnc-xfce][accetto-docker-ubuntu-vnc-xfce], [accetto/ubuntu-vnc-xfce-firefox][accetto-docker-ubuntu-vnc-xfce-firefox], [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-docker-ubuntu-vnc-xfce-firefox-plus] and [accetto/ubuntu-vnc-xfce-chromium][accetto-docker-ubuntu-vnc-xfce-chromium].
@@ -53,7 +74,7 @@ New images are significantly slimmer than the previous ones. It's because that t
 
 #### Fewer and more flexible Dockerfiles
 
-Image variations are build from fewer Dockerfiles. This is allowed by using *multi-stage builds* and *Buildkit*. On the other hand, flexible and configurable Dockerfiles are slightly more complex.
+Image variations are build from fewer Dockerfiles. This is allowed by using *multi-stage builds* and [Buildkit][docker-doc-build-with-buildkit]. On the other hand, flexible and configurable Dockerfiles are slightly more complex.
 
 #### Concept of features
 
@@ -77,7 +98,7 @@ The third generation implements a relatively simple self-containing CI by utiliz
 
 #### Separated builder and deployment repositories
 
-While there is only one GitHub repository, containing the resource for building all images, there are two kinds of repositories on Docker Hub. A single *builder repository* is used for building all images. The final images are then published into one or more *deployment repositories*. This separation allows to keep permutations by naming reasonable. Not all repositories must have the same visibility, they can be private or public as required. The same repository could be also used for building and deployment.
+While there is only one GitHub repository, containing the resources for building all images, there are two kinds of repositories on Docker Hub. A single *builder repository* is used for building all images. The final images are then published into one or more *deployment repositories*. This separation allows to keep permutations by naming reasonable. Not all repositories must have the same visibility, they can be private or public as required. The same repository could be also used for building and deployment.
 
 #### Separate README files for Docker Hub
 
@@ -122,6 +143,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [accetto-docker-argbash-docker]: https://hub.docker.com/r/accetto/argbash-docker
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
+
+[docker-doc-build-with-buildkit]: https://docs.docker.com/develop/develop-images/build_enhancements/
 
 [argbash-doc]: https://argbash.readthedocs.io/en/stable/index.html
 [badgen]: https://badgen.net/
