@@ -61,7 +61,7 @@ main() {
         -H "Content-Type: application/json" \
         -d '{"username": "'${user_name}'", "password": "'${user_pwd}'"}' | sed -e 's/.*"token": "\(.*\)".*/\1/' )
     
-    echo "UPDATE Docker Hub using template '${readme_template_name}'"
+    echo "UPDATE Docker Hub description using '${readme_upload_file}'"
     response=$( curl -s \
         -X PATCH \
         "${api_base_url}/repositories/${deployment_repo}/" \
