@@ -48,7 +48,7 @@ main() {
     ### ${REPO}     - name of the deployment repository
 
     ### replace the environment variables in the template
-    $( OWNER="${repo_owner}" GIST="${gist}" REPO="${repo_name}" envsubst < "${readme_append_file}" > "${scrap_append_file}" )
+    ( OWNER="${repo_owner}" GIST="${gist}" REPO="${repo_name}" envsubst < "${readme_append_file}" > "${scrap_append_file}" )
 
     ### append the updated template to the main readme part
     cat "${readme_main_file}" "${scrap_append_file}" > "${readme_upload_file}"
