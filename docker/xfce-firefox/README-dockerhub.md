@@ -9,7 +9,8 @@
 ![badge-github-release][badge-github-release]
 ![badge-github-release-date][badge-github-release-date]
 
-`latest` ![badge_latest_created][badge_latest_created][![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
+![badge_latest_created][badge_latest_created]
+[![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
 
 ***
 
