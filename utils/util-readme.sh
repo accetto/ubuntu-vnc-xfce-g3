@@ -25,7 +25,7 @@
 # ARG_OPTIONAL_SINGLE([readme],[],[Readme file main part name],[README-dockerhub.md])
 # ARG_OPTIONAL_SINGLE([template],[],[Readme appendix template file name],[readme-append.template])
 # ARG_OPTIONAL_SINGLE([limit],[],[Max. length of the final README file in bytes (max. 25000)],[25000])
-# ARG_OPTIONAL_SINGLE([secrets],[],[File containing secrets (including path relative to PWD)],[./secrets.rc])
+# ARG_OPTIONAL_SINGLE([secrets],[],[File containing secrets (including path relative to PWD)],[../.secrets/secrets-utils.rc])
 # ARG_OPTIONAL_SINGLE([gist],[],[Gist ID containing metadata (e.g. badge endpoints) (overrides secrets file)])
 # ARG_OPTIONAL_SINGLE([username],[],[Docker Hub user name (overrides secrets file). Only needed for publishing.])
 # ARG_OPTIONAL_SINGLE([password],[],[Docker Hub user password (overrides secrets file). Only needed for publishing.])
@@ -62,7 +62,7 @@ _arg_context=""
 _arg_readme="README-dockerhub.md"
 _arg_template="readme-append.template"
 _arg_limit="25000"
-_arg_secrets="./secrets.rc"
+_arg_secrets="../.secrets/secrets-utils.rc"
 _arg_gist=
 _arg_username=
 _arg_password=
@@ -94,7 +94,7 @@ print_help()
 	printf '\t%s\n' "--readme: Readme file main part name (default: 'README-dockerhub.md')"
 	printf '\t%s\n' "--template: Readme appendix template file name (default: 'readme-append.template')"
 	printf '\t%s\n' "--limit: Max. length of the final README file in bytes (max. 25000) (default: '25000')"
-	printf '\t%s\n' "--secrets: File containing secrets (including path relative to PWD) (default: './secrets.rc')"
+	printf '\t%s\n' "--secrets: File containing secrets (including path relative to PWD) (default: '../.secrets/secrets-utils.rc')"
 	printf '\t%s\n' "--gist: Gist ID containing metadata (e.g. badge endpoints) (overrides secrets file) (no default)"
 	printf '\t%s\n' "--username: Docker Hub user name (overrides secrets file). Only needed for publishing. (no default)"
 	printf '\t%s\n' "--password: Docker Hub user password (overrides secrets file). Only needed for publishing. (no default)"

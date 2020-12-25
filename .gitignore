@@ -14,6 +14,7 @@
 .vscode
 .debugger*
 .developer*
+.secrets*
 *.log
 avanti*
 debug*

@@ -2,6 +2,7 @@
 !src
 .debugger*
 .developer*
+.secrets*
 *.log
 *.md
 *.sh
