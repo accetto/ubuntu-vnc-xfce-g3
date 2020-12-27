@@ -6,6 +6,10 @@
 
 ***
 
+### Release 20.12.2
+
+- **Chromium Browser** release auto-detection added
+
 ### Release 20.12.1
 
 - Utility **util-readme.sh** for previewing and publishing README files from local computer has been added
