@@ -153,6 +153,7 @@ RUN \
 
 FROM stage_vnc as stage_chromium
 ARG ARG_APT_NO_RECOMMENDS
+ARG ARG_CHROMIUM_VERSION
 
 ### Switch to root user before install
 USER 0
@@ -160,7 +161,7 @@ USER 0
 ENV \
     FEATURES_BUILD_SLIM_CHROMIUM=${ARG_APT_NO_RECOMMENDS:+1} \
     FEATURES_CHROMIUM=1 \
-    CHROMIUM_VERSION="87.0.4280.66-0ubuntu0.18.04.1"
+    CHROMIUM_VERSION="${ARG_CHROMIUM_VERSION}"
 
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \

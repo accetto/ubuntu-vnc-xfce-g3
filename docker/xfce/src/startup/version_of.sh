@@ -6,7 +6,7 @@ case "$1" in
         ### source example: Angular CLI: 8.3.2
         echo $(ng --version 2>/dev/null | grep -Po '(?<=Angular CLI:\s)[0-9.]+')
         ;;
-    chromium | chromium-browser | chromiumbrowser | chrome)
+    chromium | chromium-browser | chromiumbrowser)
         ### source example: Chromium 76.0.3809.100 Built on Ubuntu , running on Ubuntu 18.04
         echo $(chromium-browser --version 2>/dev/null | grep -Po '(?<=Chromium\s)[0-9.]+')
         ;;

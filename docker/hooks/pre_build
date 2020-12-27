@@ -30,6 +30,7 @@ main() {
             ${FEATURES_USER_GROUP_OVERRIDE:+--build-arg ARG_FEATURES_USER_GROUP_OVERRIDE=1} \
             ${FEATURES_NOVNC:+--build-arg ARG_FINAL_STAGE_BASE="stage_novnc"} \
             ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_METADATA_STAGE_BASE="stage_firefox_plus"} \
+            ${CHROMIUM_VERSION:+--build-arg ARG_CHROMIUM_VERSION=${CHROMIUM_VERSION}} \
         -t "${DOCKER_REPO}":"${DOCKER_TAG}${helper_suffix}" "${_build_context}"
     set +x
 

@@ -35,6 +35,7 @@ main() {
             ${FEATURES_USER_GROUP_OVERRIDE:+--build-arg ARG_FEATURES_USER_GROUP_OVERRIDE=1} \
             ${FEATURES_NOVNC:+--build-arg ARG_FINAL_STAGE_BASE="stage_novnc"} \
             ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_METADATA_STAGE_BASE="stage_firefox_plus"} \
+            ${CHROMIUM_VERSION:+--build-arg ARG_CHROMIUM_VERSION=${CHROMIUM_VERSION}} \
             --build-arg ARG_CREATED="${now}" \
             --build-arg ARG_DOCKER_TAG=${DOCKER_TAG} \
             --build-arg ARG_VERSION_STICKER="${version_sticker}" \
