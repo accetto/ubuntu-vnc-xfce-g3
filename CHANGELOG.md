@@ -6,6 +6,10 @@
 
 ***
 
+### Release 21.01
+
+- **TigerVNC** switched from the nightly builds (1.11.80) back to the latest release (1.11.0)
+
 ### Release 20.12.2
 
 - **Chromium Browser** release auto-detection added
