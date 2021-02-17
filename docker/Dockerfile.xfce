@@ -29,7 +29,7 @@ SHELL ["/bin/bash", "-c"]
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
-    env DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
         jq \
         nano \
         psmisc \
@@ -46,6 +46,7 @@ RUN \
         # net-tools \
         # unzip \
         # vim \
+        # xz-utils \
         # zip \
 
 
@@ -57,18 +58,16 @@ FROM stage_essentials as stage_xserver
 ARG ARG_APT_NO_RECOMMENDS
 
 ENV \
-    FEATURES_BUILD_SLIM_XSERVER=${ARG_APT_NO_RECOMMENDS:+1}
-
-ENV \
+    FEATURES_BUILD_SLIM_XSERVER=${ARG_APT_NO_RECOMMENDS:+1} \
     NO_AT_BRIDGE=1
-#     LANG='en_US.UTF-8' \
-#     LANGUAGE='en_US:en' \
-#     LC_ALL='en_US.UTF-8'
+    # LANG='en_US.UTF-8' \
+    # LANGUAGE='en_US:en' \
+    # LC_ALL='en_US.UTF-8'
 
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
-    env DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
         dbus-x11 \
         xauth \
         xinit \
@@ -86,13 +85,12 @@ RUN \
 FROM stage_xserver as stage_xfce
 ARG ARG_APT_NO_RECOMMENDS
 
-ENV \
-    FEATURES_BUILD_SLIM_XFCE=${ARG_APT_NO_RECOMMENDS:+1}
+ENV FEATURES_BUILD_SLIM_XFCE=${ARG_APT_NO_RECOMMENDS:+1}
 
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
-    env DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
         xfce4 \
         xfce4-terminal
     # && apt-get -y autoremove \
@@ -119,7 +117,7 @@ ENV \
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
-    env DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
         mousepad \
         ${ARG_FEATURES_SCREENSHOOTING:+ristretto xfce4-screenshooter} \
         ${ARG_FEATURES_THUMBNAILING:+tumbler}
@@ -136,8 +134,7 @@ RUN \
 
 FROM stage_tools as stage_vnc
 
-ENV \
-    FEATURES_VNC=1
+ENV FEATURES_VNC=1
 
 RUN \
     wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.11.0.x86_64.tar.gz | tar xz --strip 1 -C / \
@@ -152,19 +149,17 @@ RUN \
 FROM stage_vnc as stage_novnc
 ARG ARG_APT_NO_RECOMMENDS
 
-ENV \
-    FEATURES_BUILD_SLIM_NOVNC=${ARG_APT_NO_RECOMMENDS:+1} \
-    FEATURES_NOVNC=1
-
 ### using the same parent path as TigerVNC
 ENV \
+    FEATURES_BUILD_SLIM_NOVNC=${ARG_APT_NO_RECOMMENDS:+1} \
+    FEATURES_NOVNC=1 \
     NO_VNC_HOME=/usr/libexec/noVNCdim \
     NO_VNC_PORT="6901"
 
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
-    env DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
         python-numpy \
     && mkdir -p ${NO_VNC_HOME}/utils/websockify \
     && wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C ${NO_VNC_HOME} \
@@ -205,9 +200,7 @@ ARG ARG_VNC_VIEW_ONLY
 
 ENV \
     FEATURES_USER_GROUP_OVERRIDE=${ARG_FEATURES_USER_GROUP_OVERRIDE:+1} \
-    FEATURES_VERSION_STICKER=1
-
-ENV \
+    FEATURES_VERSION_STICKER=1 \
     DISPLAY=:1 \
     HOME=${ARG_HOME:-/home/headless} \
     STARTUPDIR=/dockerstartup \
