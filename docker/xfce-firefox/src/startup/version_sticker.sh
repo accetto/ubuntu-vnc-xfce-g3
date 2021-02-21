@@ -15,6 +15,7 @@ main() {
             key="$1"
             if [ "${key}" = '--' ] ; then shift ; fi
             case "${key}" in
+
                 -h )
                     echo "Usage: version_sticker [-h] [-v] [-V] [-f]"
                     echo "-h    help"
@@ -22,30 +23,42 @@ main() {
                     echo "-V    verbose version sticker"
                     echo "-f    features"
                     ;;
+
                 -v )
-                    echo "Ubuntu ${ubuntu}"
                     echo "Firefox ${firefox}"
-                    ;;
-                -V )
                     echo "Ubuntu ${ubuntu}"
-                    version=$("${_current_dir}/version_of.sh" nano)
-                    if [ -n "${version}" ] ; then echo "nano ${version}" ; fi
+                    ;;
+
+                -V )
+                    echo "Firefox ${firefox}"
+
                     version=$("${_current_dir}/version_of.sh" jq)
                     if [ -n "${version}" ] ; then echo "jq ${version}" ; fi
+
                     version=$("${_current_dir}/version_of.sh" mousepad)
                     if [ -n "${version}" ] ; then echo "Mousepad ${version}" ; fi
-                    version=$("${_current_dir}/version_of.sh" tigervnc)
-                    if [ -n "${version}" ] ; then echo "TigerVNC ${version}" ; fi
-                    version=$("${_current_dir}/version_of.sh" screenshooter)
-                    if [ -n "${version}" ] ; then echo "xfce4-screenshooter ${version}" ; fi
-                    version=$("${_current_dir}/version_of.sh" ristretto)
-                    if [ -n "${version}" ] ; then echo "Ristretto ${version}" ; fi
+
+                    version=$("${_current_dir}/version_of.sh" nano)
+                    if [ -n "${version}" ] ; then echo "nano ${version}" ; fi
+
                     version=$("${_current_dir}/version_of.sh" novnc)
                     if [ -n "${version}" ] ; then echo "noVNC ${version}" ; fi
+
+                    version=$("${_current_dir}/version_of.sh" ristretto)
+                    if [ -n "${version}" ] ; then echo "Ristretto ${version}" ; fi
+
+                    version=$("${_current_dir}/version_of.sh" screenshooter)
+                    if [ -n "${version}" ] ; then echo "Screenshooter ${version}" ; fi
+
+                    version=$("${_current_dir}/version_of.sh" tigervnc)
+                    if [ -n "${version}" ] ; then echo "TigerVNC ${version}" ; fi
+
+                    echo "Ubuntu ${ubuntu}"
+
                     version=$("${_current_dir}/version_of.sh" websockify)
                     if [ -n "${version}" ] ; then echo "websockify ${version}" ; fi
-                    echo "Firefox ${firefox}"
                     ;;
+
                 -f )
                     env | grep "FEATURES_" | sort
                     ;;
@@ -53,7 +66,6 @@ main() {
             shift
         done
     else
-        ### example: ubuntu20.04.1-firefox81.0
         sticker="ubuntu${ubuntu}"-"firefox${firefox}"
         echo "${sticker}"
     fi
