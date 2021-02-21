@@ -169,7 +169,7 @@ RUN \
         "/tmp/chromium-codecs-ffmpeg_${CHROMIUM_VERSION}_amd64.deb" \
         "/tmp/chromium-browser_${CHROMIUM_VERSION}_amd64.deb" \
         "/tmp/chromium-browser-l10n_${CHROMIUM_VERSION}_all.deb" \
-    && apt-get -y -f install \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y -f install \
     && rm \
         "/tmp/chromium-codecs-ffmpeg_${CHROMIUM_VERSION}_amd64.deb" \
         "/tmp/chromium-browser_${CHROMIUM_VERSION}_amd64.deb" \
