@@ -14,14 +14,17 @@ start_vnc () {
         if [ -n "${_verbose}" ] ; then echo "WARNING: No 'vncserver' is available." ; fi
         return 0
     fi
-
+    
     ### VNC requirements
+    ### Since the issue #6 is the VNC password not enforced any more, so it can be set to an empty string
+    ### by 'docker run -e VNC_PW=""'. If you still want to enforce it, bring the following line back:
+    ### || [ -z "${VNC_PW}" ] \
     if [ -z "${DISPLAY}" ] \
     || [ -z "${VNC_PORT}" ] \
-    || [ -z "${VNC_PW}" ] \
     || [ -z "${VNC_COL_DEPTH}" ] \
     || [ -z "${VNC_RESOLUTION}" ] ; then
-        cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT,VNC_PW, VNC_COL_DEPTH, VNC_RESOLUTION"
+        # cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT, VNC_PW, VNC_COL_DEPTH, VNC_RESOLUTION"
+        cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT, VNC_COL_DEPTH, VNC_RESOLUTION"
     fi
 
     passwd_path="${HOME}"/.vnc/passwd

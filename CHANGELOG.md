@@ -6,6 +6,12 @@
 
 ***
 
+### Release 21.02
+
+- VNC password not enforced any more ([issue #6](https://github.com/accetto/ubuntu-vnc-xfce-g3/issues/6))
+  - it can be disabled by `run -e VNC_PW=""`
+  - readme files also updated
+
 ### Release 21.01
 
 - **TigerVNC** switched from nightly builds (1.11.80) back to the latest release (1.11.0)
