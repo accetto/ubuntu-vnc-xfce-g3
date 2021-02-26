@@ -6,6 +6,10 @@
 
 ***
 
+### Release 21.03
+
+- `dconf-editor` simple configuration storage system graphical editor added
+
 ### Release 21.02
 
 - VNC password not enforced any more ([issue #6](https://github.com/accetto/ubuntu-vnc-xfce-g3/issues/6))
