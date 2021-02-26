@@ -24,12 +24,19 @@ main() {
                     echo "-f    features"
                     ;;
 
+                -f )
+                    env | grep "FEATURES_" | sort
+                    ;;
+
                 -v )
                     echo "Firefox ${firefox}"
                     echo "Ubuntu ${ubuntu}"
                     ;;
 
                 -V )
+                    version=$("${_current_dir}/version_of.sh" dconf-editor)
+                    if [ -n "${version}" ] ; then echo "dconf-editor ${version}" ; fi
+
                     echo "Firefox ${firefox}"
 
                     version=$("${_current_dir}/version_of.sh" jq)
@@ -57,10 +64,6 @@ main() {
 
                     version=$("${_current_dir}/version_of.sh" websockify)
                     if [ -n "${version}" ] ; then echo "websockify ${version}" ; fi
-                    ;;
-
-                -f )
-                    env | grep "FEATURES_" | sort
                     ;;
             esac
             shift

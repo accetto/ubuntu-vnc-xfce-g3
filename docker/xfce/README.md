@@ -33,7 +33,7 @@ More information about the image generations can be found in the [project README
 
 The main features and components of the images in the default configuration are:
 
-- utilities **ping**, **wget**, **sudo** (Ubuntu distribution)
+- utilities **ping**, **wget**, **sudo**, **dconf-editor** (Ubuntu distribution)
 - current version of JSON processor [jq][jq]
 - light-weight [Xfce][xfce] desktop environment (Ubuntu distribution)
 - current version of high-performance [TigerVNC][tigervnc] server and client
