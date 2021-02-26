@@ -6,7 +6,7 @@
 
 ***
 
-### Release 21.03
+### Release 21.02.1
 
 - `dconf-editor` simple configuration storage system graphical editor added
 
