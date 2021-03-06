@@ -22,7 +22,7 @@
   - [Running containers in background (detached)](#running-containers-in-background-detached)
   - [Running containers in foreground (interactively)](#running-containers-in-foreground-interactively)
   - [Startup options and help](#startup-options-and-help)
-  - [Issues](#issues)
+  - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
 
 This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
@@ -458,11 +458,13 @@ Use '-h' or '--help' for short startup script help.
 Fore more information visit https://github.com/accetto/ubuntu-vnc-xfce-g3
 ```
 
-## Issues
+## Issues, Wiki and Discussions
 
 If you have found a problem or you just have a question, please check the [Issues][this-issues] and the [Wiki][this-wiki] first. Please do not overlook the closed issues.
 
 If you do not find a solution, you can file a new issue. The better you describe the problem, the bigger the chance it'll be solved soon.
+
+If you have a question or an idea and you don't want to open an issue, you can use the [Discussions][this-discussions].
 
 ## Credits
 
@@ -472,12 +474,13 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 <!-- GitHub project common -->
 
-[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
+[this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
+[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
+[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-readme-dockerhub]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
-[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 
 <!-- Docker image specific -->
 

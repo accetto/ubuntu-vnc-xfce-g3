@@ -25,7 +25,7 @@
     - [Setting shared memory size](#setting-shared-memory-size)
   - [Firefox preferences and the plus features](#firefox-preferences-and-the-plus-features)
   - [Startup options and help](#startup-options-and-help)
-  - [Issues](#issues)
+  - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
 
 ***
@@ -524,11 +524,13 @@ Use '-h' or '--help' for short startup script help.
 Fore more information visit https://github.com/accetto/ubuntu-vnc-xfce-g3
 ```
 
-## Issues
+## Issues, Wiki and Discussions
 
 If you have found a problem or you just have a question, please check the [Issues][this-issues] and the [Wiki][this-wiki] first. Please do not overlook the closed issues.
 
 If you do not find a solution, you can file a new issue. The better you describe the problem, the bigger the chance it'll be solved soon.
+
+If you have a question or an idea and you don't want to open an issue, you can use the [Discussions][this-discussions].
 
 ## Credits
 
@@ -538,12 +540,13 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 <!-- GitHub project common -->
 
-[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
+[this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
+[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
+[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-readme-dockerhub]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
-[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 
 <!-- Docker image specific -->
 

@@ -42,13 +42,14 @@
     - file `example-vnc-override.rc` has been added
 
 - Other changes
-  - Readme files have been significantly updated (long versions for GitHub)
+  - Readme files significantly updated (long versions for GitHub)
   - `Mousepad` editor presets added
   - version sticker's desktop launcher got an icon
   - example files moved into `docker/src/examples`
-  - embedded **readme** files have been introduced
+  - embedded **readme** files introduced
     - base readme file got a desktop launcher
     - other readme files go into the application user's home directory
+  - project [Discussions][this-discussions] introduced
 
 - Updated versions:
   - Ubuntu **20.04.2**
@@ -89,6 +90,7 @@
 
 [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+[this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
 
 [accetto-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [accetto-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3

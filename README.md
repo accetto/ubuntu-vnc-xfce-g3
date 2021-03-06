@@ -42,7 +42,7 @@ The resources for the individual images and their variations (tags) are stored i
       - [Based on Ubuntu 20.04 LTS](#based-on-ubuntu-2004-lts)
       - [Using TigerVNC 1.11](#using-tigervnc-111)
       - [New startup script](#new-startup-script)
-  - [Issues](#issues)
+  - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
 
 ### Image generations
@@ -127,11 +127,13 @@ The startup script has been completely redesigned with the help of [argbash][arg
 
 ***
 
-## Issues
+## Issues, Wiki and Discussions
 
 If you have found a problem or you just have a question, please check the [Issues][this-issues] and the [Wiki][this-wiki] first. Please do not overlook the closed issues.
 
 If you do not find a solution, you can file a new issue. The better you describe the problem, the bigger the chance it'll be solved soon.
+
+If you have a question or an idea and you don't want to open an issue, you can use the [Discussions][this-discussions].
 
 ## Credits
 
@@ -139,8 +141,9 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 ***
 
-[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
+[this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
+[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
