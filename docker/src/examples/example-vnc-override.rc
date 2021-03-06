@@ -1,0 +1,8 @@
+### only lines beginning with 'export ' (at position 1) will be imported and sourced
+;export VNC_COL_DEPTH=32
+;export VNC_VIEW_ONLY=true
+;export VNC_PW=secret
+export VNC_RESOLUTION=1024x768
+export DISPLAY=:2
+export VNC_PORT=5902
+export NO_VNC_PORT=6902
