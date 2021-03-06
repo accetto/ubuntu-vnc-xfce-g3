@@ -32,7 +32,8 @@ The resources for the individual images and their variations (tags) are stored i
       - [Slimmer images](#slimmer-images)
       - [Fewer and more flexible Dockerfiles](#fewer-and-more-flexible-dockerfiles)
       - [Concept of features](#concept-of-features)
-      - [Optional overriding of user group by `docker run`](#optional-overriding-of-user-group-by-docker-run)
+      - [Overriding of container user parameters](#overriding-of-container-user-parameters)
+      - [Overriding of VNC/noVNC parameters](#overriding-of-vncnovnc-parameters)
       - [Different use of version sticker](#different-use-of-version-sticker)
       - [Image metadata](#image-metadata)
       - [Simple self-containing CI](#simple-self-containing-ci)
@@ -64,6 +65,8 @@ Building process is implemented to minimize image pollution. New images are push
 
 ### Changes and new features
 
+**Hint:** More detailed information about new features can be found in [Wiki][this-wiki].
+
 #### Naming scheme
 
 Unlike the first two generations, this one will aim to use less Docker Hub **image repositories** with more **image tags**. For example, previously there have been two Docker Hub repositories `xubuntu-vnc` and `ubuntu-vnc-novnc`. Now there will be only one Docker Hub repository `accetto/ubuntu-vnc-xfce-g3` containing tags `vnc` and `vnc-novnc`.
@@ -78,11 +81,17 @@ Image variations are build from fewer Dockerfiles. This is allowed by using *mul
 
 #### Concept of features
 
-Flexibility in Dockerfiles is supported by introducing the concept of **features**. These are variables that control the building process. For example, the variable **FEATURES_BUILD_SLIM** controls the `--no-install-recommends` switch, the variable **FEATURES_NOVNC** controls the inclusion of *noVNC* and so on. Some other available features include, for example, the **FEATURES_SCREENSHOOTING**, **FEATURES_THUMBNAILING** and **FEATURES_USER_GROUP_OVERRIDE** variables.
+Flexibility in Dockerfiles is supported by introducing the concept of **features**. These are variables that control the building process. For example, the variable **FEATURES_BUILD_SLIM** controls the `--no-install-recommends` switch, the variable **FEATURES_NOVNC** controls the inclusion of *noVNC* and so on. Some other available features include, for example, the **FEATURES_SCREENSHOOTING**, **FEATURES_THUMBNAILING** and **FEATURES_USER_GROUP_OVERRIDE** variables. Also the web browsers [Chromium][chromium] and [Firefox][firefox] are defined as features controlled by the variables **FEATURES_CHROMIUM**, **FEATURES_FIREFOX** and **FEATURES_FIREFOX_PLUS**.
 
-#### Optional overriding of user group by `docker run`
+#### Overriding of container user parameters
 
-Support for overriding the user group by `docker run` has been introduced in the second generation. Please check its documentation for more information. This feature is now controlled by the variable **FEATURES_USER_GROUP_OVERRIDE**.
+Several ways of overriding the container user parameters are supported. The application user name, home directory and password can be overridden at the image build-time. The user ID can be overridden at the container startup-time.
+
+Support for overriding the user group by `docker run` has been introduced in the second generation. This feature is now controlled by the variable **FEATURES_USER_GROUP_OVERRIDE**.
+
+#### Overriding of VNC/noVNC parameters
+
+Several ways of overriding the VNC/noVNC parameters are supported. The password, display, resolution, color depth, view mode and the ports can be overridden at the image build-time, the container startup-time and the VNC startup-time. Using of empty VNC/noVNC password is also supported because it is independent from the container user password.
 
 #### Different use of version sticker
 
@@ -132,6 +141,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
+[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
 [accetto-github-xubuntu-vnc]: https://github.com/accetto/xubuntu-vnc/
@@ -148,7 +158,9 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [argbash-doc]: https://argbash.readthedocs.io/en/stable/index.html
 [badgen]: https://badgen.net/
+[chromium]: https://www.chromium.org/Home
 [dockerhub]: https://hub.docker.com/
+[firefox]: https://www.mozilla.org
 [github]: https://github.com/
 [novnc]: https://github.com/kanaka/noVNC
 [tigervnc]: http://tigervnc.org

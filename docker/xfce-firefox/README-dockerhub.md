@@ -14,7 +14,7 @@
 
 ***
 
-**Tip** This is the short README version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
+**Tip:** This is the short README version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
 
 **Warning** about images with Firefox
 

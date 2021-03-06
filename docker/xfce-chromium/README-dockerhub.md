@@ -14,9 +14,9 @@
 
 ***
 
-**Tip** This is the short README version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
+**Tip:** This is the short README version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
 
-**Attention** [Chromium Browser][chromium] in this image runs in `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
+**Attention:** [Chromium Browser][chromium] in this image runs in `--no-sandbox` mode. You should be aware of the implications. The browser is intended for testing and development.
 
 ***
 
