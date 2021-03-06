@@ -7,3 +7,4 @@ Exec=bash -c 'echo "Wait..." ; /dockerstartup/version_sticker.sh -f -V ; read -p
 Path=/dockerstartup
 Terminal=true
 StartupNotify=false
+Icon=application-certificate

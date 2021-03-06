@@ -3,7 +3,9 @@
 ARG BASEIMAGE=ubuntu
 ARG BASETAG=20.04
 
-ARG ARG_FINAL_STAGE_BASE=stage_vnc
+ARG ARG_MERGE_STAGE_VNC_BASE=stage_vnc
+ARG ARG_MERGE_STAGE_BROWSER_BASE=merge_stage_vnc
+ARG ARG_FINAL_STAGE_BASE=merge_stage_browser
 
 
 ###############
@@ -14,8 +16,6 @@ FROM ${BASEIMAGE}:${BASETAG} as stage_cache
 
 RUN rm -f /etc/apt/apt.conf.d/docker-clean; echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 RUN apt-get update
-    # --mount=type=cache,target=/var/cache/apt \
-    # --mount=type=cache,target=/var/lib/apt \
 
 
 ####################
@@ -36,18 +36,6 @@ RUN \
         sudo \
         tini \
         wget
-    # && apt-get -y autoremove \
-    # && rm -rf /var/lib/apt/lists/*
-        # curl \
-        # gdebi-core \
-        # git \
-        # inetutils-ping \
-        # lsb-release \
-        # net-tools \
-        # unzip \
-        # vim \
-        # xz-utils \
-        # zip \
 
 
 #################
@@ -60,9 +48,6 @@ ARG ARG_APT_NO_RECOMMENDS
 ENV \
     FEATURES_BUILD_SLIM_XSERVER=${ARG_APT_NO_RECOMMENDS:+1} \
     NO_AT_BRIDGE=1
-    # LANG='en_US.UTF-8' \
-    # LANGUAGE='en_US:en' \
-    # LC_ALL='en_US.UTF-8'
 
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
@@ -73,9 +58,6 @@ RUN \
         xinit \
         x11-xserver-utils \
         xdg-utils
-    # && apt-get -y autoremove \
-    # && rm -rf /var/lib/apt/lists/*
-        # x11-utils \ # adds 200MB
 
 
 ##############
@@ -93,11 +75,6 @@ RUN \
     DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
         xfce4 \
         xfce4-terminal
-    # && apt-get -y autoremove \
-    # && rm -rf /var/lib/apt/lists/*
-    # && apt-get purge -y \
-    #     pm-utils \
-    #     xscreensaver* \
 
 
 ###############
@@ -122,11 +99,6 @@ RUN \
         mousepad \
         ${ARG_FEATURES_SCREENSHOOTING:+ristretto xfce4-screenshooter} \
         ${ARG_FEATURES_THUMBNAILING:+tumbler}
-    # && apt-get -y autoremove \
-    # && rm -rf /var/lib/apt/lists/*
-        # ristretto \
-        # xfce4-screenshooter \
-        # tumbler \
 
 
 #############
@@ -134,13 +106,28 @@ RUN \
 #############
 
 FROM stage_tools as stage_vnc
-
-ENV FEATURES_VNC=1
+ARG ARG_VNC_COL_DEPTH
+ARG ARG_VNC_DISPLAY
+ARG ARG_VNC_PORT
+ARG ARG_VNC_PW
+ARG ARG_VNC_RESOLUTION
+ARG ARG_VNC_VIEW_ONLY
 
 RUN \
     wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.11.0.x86_64.tar.gz | tar xz --strip 1 -C / \
     && ln -s /usr/libexec/vncserver /usr/bin/vncserver \
     && sed -i 's/exec(@cmd);/print "@cmd";\nexec(@cmd);/g' /usr/libexec/vncserver
+
+ENV \
+    DISPLAY=${ARG_VNC_DISPLAY:-:1} \
+    FEATURES_VNC=1 \
+    VNC_COL_DEPTH=${ARG_VNC_COL_DEPTH:-24} \
+    VNC_PORT=${ARG_VNC_PORT:-5901} \
+    VNC_PW=${ARG_VNC_PW:-headless} \
+    VNC_RESOLUTION=${ARG_VNC_RESOLUTION:-1360x768} \
+    VNC_VIEW_ONLY=${ARG_VNC_VIEW_ONLY:-false}
+
+EXPOSE ${VNC_PORT}
 
 
 ###############
@@ -149,26 +136,25 @@ RUN \
 
 FROM stage_vnc as stage_novnc
 ARG ARG_APT_NO_RECOMMENDS
+ARG ARG_NO_VNC_PORT
 
 ### using the same parent path as TigerVNC
 ENV \
     FEATURES_BUILD_SLIM_NOVNC=${ARG_APT_NO_RECOMMENDS:+1} \
     FEATURES_NOVNC=1 \
     NO_VNC_HOME=/usr/libexec/noVNCdim \
-    NO_VNC_PORT="6901"
+    NO_VNC_PORT=${ARG_NO_VNC_PORT:-6901}
 
 RUN \
     --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
     --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
     DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
         python-numpy \
-    && mkdir -p ${NO_VNC_HOME}/utils/websockify \
-    && wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C ${NO_VNC_HOME} \
-    && wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C ${NO_VNC_HOME}/utils/websockify \
-    && chmod +x -v ${NO_VNC_HOME}/utils/*.sh \
+    && mkdir -p "${NO_VNC_HOME}"/utils/websockify \
+    && wget -qO- https://github.com/novnc/noVNC/archive/v1.2.0.tar.gz | tar xz --strip 1 -C "${NO_VNC_HOME}" \
+    && wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C "${NO_VNC_HOME}"/utils/websockify \
+    && chmod +x -v "${NO_VNC_HOME}"/utils/*.sh \
     && ln -s /usr/bin/python2.7 /usr/bin/python
-    # && apt-get -y autoremove \
-    # && rm -rf /var/lib/apt/lists/*
 
 ### add 'index.html' for choosing noVNC client
 RUN echo -e \
@@ -183,9 +169,109 @@ RUN echo -e \
 "        <p><a href=\"vnc.html\">noVNC Full Client</a></p>\n" \
 "    </body>\n" \
 "</html>" \
-> ${NO_VNC_HOME}/index.html
+> "${NO_VNC_HOME}"/index.html
 
 EXPOSE ${NO_VNC_PORT}
+
+
+###################
+### merge_stage_vnc
+###################
+
+FROM ${ARG_MERGE_STAGE_VNC_BASE} as merge_stage_vnc
+ARG ARG_HEADLESS_USER_NAME
+ARG ARG_HOME
+
+ENV HOME=${ARG_HOME:-/home/${ARG_HEADLESS_USER_NAME:-headless}}
+
+WORKDIR ${HOME}
+
+
+##################
+### stage_chromium
+##################
+
+FROM merge_stage_vnc as stage_chromium
+ARG ARG_APT_NO_RECOMMENDS
+ARG ARG_CHROMIUM_VERSION
+
+ENV \
+    FEATURES_BUILD_SLIM_CHROMIUM=${ARG_APT_NO_RECOMMENDS:+1} \
+    FEATURES_CHROMIUM=1
+
+RUN \
+    --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
+    CHROMIUM_VERSION="${ARG_CHROMIUM_VERSION}" \
+    && wget -q "http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/chromium-codecs-ffmpeg_${CHROMIUM_VERSION}_amd64.deb" -P /tmp \
+    && wget -q "http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/chromium-browser_${CHROMIUM_VERSION}_amd64.deb" -P /tmp \
+    && wget -q "http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/chromium-browser-l10n_${CHROMIUM_VERSION}_all.deb" -P /tmp \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
+        "/tmp/chromium-codecs-ffmpeg_${CHROMIUM_VERSION}_amd64.deb" \
+        "/tmp/chromium-browser_${CHROMIUM_VERSION}_amd64.deb" \
+        "/tmp/chromium-browser-l10n_${CHROMIUM_VERSION}_all.deb" \
+    && DEBIAN_FRONTEND=noninteractive apt-get -y -f install \
+    && rm \
+        "/tmp/chromium-codecs-ffmpeg_${CHROMIUM_VERSION}_amd64.deb" \
+        "/tmp/chromium-browser_${CHROMIUM_VERSION}_amd64.deb" \
+        "/tmp/chromium-browser-l10n_${CHROMIUM_VERSION}_all.deb" \
+    && apt-mark hold chromium-browser
+
+COPY ./xfce-chromium/src/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce-chromium/src/home/readme*.md "${HOME}"/
+
+### Chromium browser requires some presets
+### Note that 'no-sandbox' flag is required, but intended for development only
+RUN \
+    echo \
+    "CHROMIUM_FLAGS='--no-sandbox --disable-gpu --user-data-dir --window-size=${VNC_RESOLUTION%x*},${VNC_RESOLUTION#*x} --window-position=0,0'" \
+    > ${HOME}/.chromium-browser.init
+
+
+#################
+### stage_firefox
+#################
+
+FROM merge_stage_vnc as stage_firefox
+ARG ARG_APT_NO_RECOMMENDS
+
+ENV \
+    FEATURES_BUILD_SLIM_FIREFOX=${ARG_APT_NO_RECOMMENDS:+1} \
+    FEATURES_FIREFOX=1
+
+RUN \
+    --mount=type=cache,target=/var/cache/apt,from=stage_cache,source=/var/cache/apt \
+    --mount=type=cache,target=/var/lib/apt,from=stage_cache,source=/var/lib/apt \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y ${ARG_APT_NO_RECOMMENDS:+--no-install-recommends} \
+        firefox
+
+COPY ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
+
+
+### ##################
+### stage_firefox_plus
+### ##################
+
+FROM stage_firefox as stage_firefox_plus
+
+ENV FEATURES_FIREFOX_PLUS=1
+
+COPY ./xfce-firefox/src/firefox.plus/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce-firefox/src/firefox.plus/resources "${HOME}"/firefox.plus/
+COPY ./xfce-firefox/src/firefox.plus/resources/*.svg /usr/share/icons/hicolor/scalable/apps/
+COPY ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
+
+RUN \
+    chmod +x "${HOME}"/firefox.plus/*.sh \
+    && gtk-update-icon-cache -f /usr/share/icons/hicolor
+
+
+#######################
+### merge_stage_browser
+#######################
+
+FROM ${ARG_MERGE_STAGE_BROWSER_BASE} as merge_stage_browser
 
 
 ###############
@@ -194,28 +280,19 @@ EXPOSE ${NO_VNC_PORT}
 
 FROM ${ARG_FINAL_STAGE_BASE} as stage_final
 ARG ARG_FEATURES_USER_GROUP_OVERRIDE
-ARG ARG_HOME
-ARG ARG_VNC_PW
-ARG ARG_VNC_RESOLUTION
-ARG ARG_VNC_VIEW_ONLY
+ARG ARG_HEADLESS_USER_NAME
+ARG ARG_SUDO_PW
 
 ENV \
     FEATURES_USER_GROUP_OVERRIDE=${ARG_FEATURES_USER_GROUP_OVERRIDE:+1} \
     FEATURES_VERSION_STICKER=1 \
-    DISPLAY=:1 \
-    HOME=${ARG_HOME:-/home/headless} \
-    STARTUPDIR=/dockerstartup \
-    VNC_COL_DEPTH=24 \
-    VNC_PORT="5901" \
-    VNC_PW=${ARG_VNC_PW:-headless} \
-    VNC_RESOLUTION=${ARG_VNC_RESOLUTION:-1360x768} \
-    VNC_VIEW_ONLY=${ARG_VNC_VIEW_ONLY:-false}
+    STARTUPDIR=/dockerstartup
 
-WORKDIR ${HOME}
+COPY ./src/xfce-startup "${STARTUPDIR}"/
 
-COPY [ "./xfce/src/startup", "${STARTUPDIR}/" ]
-COPY [ "./xfce/src/home/Desktop", "${HOME}/Desktop/" ]
-COPY [ "./xfce/src/home/config/xfce4", "${HOME}/.config/xfce4/" ]
+COPY ./xfce/src/home/config "${HOME}"/.config/
+COPY ./xfce/src/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce/src/home/readme*.md "${HOME}"/
 
 ### Create the default application user (non-root, but member of the group zero)
 ### and allow the group zero to modify '/etc/passwd' and '/etc/group'.
@@ -223,14 +300,13 @@ COPY [ "./xfce/src/home/config/xfce4", "${HOME}/.config/xfce4/" ]
 ### to modify both files and makes user group overriding possible (like 'run --user x:y').
 RUN \
     chmod 664 /etc/passwd /etc/group \
-    && echo "headless:x:1001:0:Default:${HOME}:/bin/bash" >> /etc/passwd \
-    && adduser headless sudo \
-    && echo "headless:${VNC_PW}" | chpasswd \
+    && echo "${ARG_HEADLESS_USER_NAME:-headless}:x:1001:0:Default:${HOME}:/bin/bash" >> /etc/passwd \
+    && adduser "${ARG_HEADLESS_USER_NAME:-headless}" sudo \
+    && echo "${ARG_HEADLESS_USER_NAME:-headless}:${ARG_SUDO_PW:-${VNC_PW}}" | chpasswd \
     && ${ARG_FEATURES_USER_GROUP_OVERRIDE/*/chmod a+w /etc/passwd /etc/group} \
-    && chmod +x "${STARTUPDIR}"/*.sh \
+    && ln -s "${HOME}"/readme.md "${HOME}"/Desktop/README \
+    && chmod 755 "${STARTUPDIR}" \
     && "${STARTUPDIR}"/set_user_permissions.sh "${STARTUPDIR}" "${HOME}"
-
-EXPOSE ${VNC_PORT}
 
 USER 1001
 
@@ -251,7 +327,7 @@ ARG ARG_VERSION_STICKER
 LABEL \
     org.opencontainers.image.authors="accetto" \
     org.opencontainers.image.created="${ARG_CREATED}" \
-    org.opencontainers.image.description="Headless Ubuntu/Xfce containers with VNC/noVNC" \
+    org.opencontainers.image.description="Headless Ubuntu/Xfce/VNC/noVNC containers with Internet browsers" \
     org.opencontainers.image.documentation="https://github.com/accetto/ubuntu-vnc-xfce-g3" \
     org.opencontainers.image.source="https://github.com/accetto/ubuntu-vnc-xfce-g3" \
     org.opencontainers.image.title="accetto/ubuntu-vnc-xfce-g3" \
