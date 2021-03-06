@@ -6,6 +6,54 @@
 
 ***
 
+### Release 21.03
+
+- **Chromium** and **Firefox** web browsers are **image features** now
+  - they are controlled by the following variables in the hook script `env.rc`:
+    - `FEATURES_CHROMIUM`, `FEATURES_FIREFOX` and `FEATURES_FIREFOX_PLUS`
+  - Dockerfiles `Dockerfile.xfce`, `Dockerfile.xfce.chromium`, `Dockerfile.xfce.firefox` have been merged into the file `Dockerfile.xfce`
+
+- Both the **application user name** and the **sudo password** can be set independently from the **VNC password** now (in build-time)
+  - build argument `ARG_HEADLESS_USER_NAME` sets the **application user name** and also the **home directory name**
+  - build argument `ARG_SUDO_PW` sets the default application user's password, which is also the default `sudo` password
+
+- Container startup scripts have been updated
+  - startup scripts have been moved into `docker/src/xfce-startup`
+  - script `set_user_permissions.sh` has been improved
+    - file permissions are not set to `777` any more
+    - different permissions are assigned in images built with the feature `FEATURES_USER_GROUP_OVERRIDE` (`fugo` tags)
+  - script `user_generator.rc` has been improved
+    - supports renaming the application user (build argument `ARG_HEADLESS_USER_NAME`)
+  - script `vnc_startup.rc` has been improved
+    - supports overriding VNC/noVNC parameters in run-time
+  - all `version_sticker.sh` scripts have been merged into the file `docker/src/xfce-startup/version_sticker.sh`
+
+- VNC/noVNC parameters, ports, password and DISPLAY can be overridden three ways now
+  - **at image build-time** by setting the environment variables through build arguments:
+    - `ARG_VNC_PW` sets the variable `VNC_PW` (VNV/noVNC password)
+    - `ARG_VNC_DISPLAY` sets the variable `DISPLAY`
+    - `ARG_VNC_PORT` sets the variable `VNC_PORT`
+    - `ARG_VNC_RESOLUTION` sets the variable `VNC_RESOLUTION`
+    - `ARG_VNC_COL_DEPTH` sets the variable `VNC_COL_DEPTH`
+    - `ARG_VNC_VIEW_ONLY` set the variable `VNC_VIEW_ONLY`
+    - `ARG_NO_VNC_PORT` sets the variable `NO_VNC_PORT`
+  - **at container startup-time** by setting the above environment variables through the `docker run -e` options
+  - **at VNC/noVNC startup-time** by setting the above environment variables through a mounted external file (see README for more information)
+    - file `example-vnc-override.rc` has been added
+
+- Other changes
+  - Readme files have been significantly updated (long versions for GitHub)
+  - `Mousepad` editor presets added
+  - version sticker's desktop launcher got an icon
+  - example files moved into `docker/src/examples`
+  - embedded **readme** files have been introduced
+    - base readme file got a desktop launcher
+    - other readme files go into the application user's home directory
+
+- Updated versions:
+  - Ubuntu **20.04.2**
+  - Firefox **86.0**
+
 ### Release 21.02.1
 
 - `dconf-editor` simple configuration storage system graphical editor added
