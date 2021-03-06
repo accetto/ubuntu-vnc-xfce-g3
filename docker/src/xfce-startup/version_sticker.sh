@@ -5,6 +5,7 @@
 _current_dir="$(dirname "$(readlink -f "$0")")"
 
 ubuntu=$("${_current_dir}/version_of.sh" ubuntu)
+chromium=$("${STARTUPDIR}/version_of.sh" chromium)
 firefox=$("${STARTUPDIR}/version_of.sh" firefox)
 
 main() {
@@ -29,15 +30,18 @@ main() {
                     ;;
 
                 -v )
-                    echo "Firefox ${firefox}"
+                    if [ -n "${chromium}" ] ; then echo "Chromium ${chromium}" ; fi
+                    if [ -n "${firefox}" ] ; then echo "Firefox ${firefox}" ; fi
                     echo "Ubuntu ${ubuntu}"
                     ;;
 
                 -V )
-                    version=$("${_current_dir}/version_of.sh" dconf-editor)
-                    if [ -n "${version}" ] ; then echo "dconf-editor ${version}" ; fi
+                    if [ -n "${chromium}" ] ; then echo "Chromium ${chromium}" ; fi
 
-                    echo "Firefox ${firefox}"
+                    # version=$("${_current_dir}/version_of.sh" dconf-editor)
+                    # if [ -n "${version}" ] ; then echo "dconf-editor ${version}" ; fi
+
+                    if [ -n "${firefox}" ] ; then echo "Firefox ${firefox}" ; fi
 
                     version=$("${_current_dir}/version_of.sh" jq)
                     if [ -n "${version}" ] ; then echo "jq ${version}" ; fi
@@ -69,7 +73,14 @@ main() {
             shift
         done
     else
-        sticker="ubuntu${ubuntu}"-"firefox${firefox}"
+        sticker="ubuntu${ubuntu}"
+
+        if [ -n "${chromium}" ] ; then
+            sticker="${sticker}-chromium${chromium}"
+        elif [ -n "${firefox}" ] ; then
+            sticker="${sticker}-firefox${firefox}"
+        fi
+        
         echo "${sticker}"
     fi
 }

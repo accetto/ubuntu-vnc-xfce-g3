@@ -1,0 +1,68 @@
+generate_container_user() {
+
+    ### Adjusts the '/etc/passwd' and '/etc/group' files according the current application user
+    ### to cope with randomly assigned IDs using 'docker run --user x:y'.
+    ### It is assumed, that there is no user or group in the files yet, having the same name 
+    ### as the current application user.
+    ### The default application user name is 'headless'.
+
+    local user_id=$(id -u)
+    local group_id=$(id -g)
+    local application_user_name=$(basename "${HOME}")
+
+    ### only in debug mode
+    if [ -n "${_verbose}" ] ; then
+
+        id
+
+        echo "ls -la /etc/passwd" ; ls -la /etc/passwd
+        echo "ls -la /etc/group" ; ls -la /etc/group
+    fi
+
+    ### user 'root (0)' is always created by default
+    ### user '<application_user_name> (1001)' is created by Dockerfile
+    if [ "${user_id}" != "0" ] && [ "${user_id}" != "1001" ] ; then
+
+        ### this test fails if the current user misses permissions
+        touch /etc/passwd
+        if [ "$?" != "0" ] ; then return 1 ; fi
+
+        ### rename an existing application user '<application_user_name> (1001)' to 'builder (1001)'
+        if [ $( grep -c "${application_user_name}:x:1001:" /etc/passwd ) -ne 0 ] ; then
+
+            cat /etc/passwd | sed -e "s/^${application_user_name}:x:1001:0:Default:/builder:x:1001:0:Builder:/" > /tmp/passwd
+
+            cp /tmp/passwd /etc/
+            rm /tmp/passwd
+
+            if [ -n "${_verbose}" ] ; then echo "User '${application_user_name} (1001:0)' renamed to 'builder (1001:0)' in '/etc/passwd'" ; fi
+        fi
+
+        ### add the current application user ID as a new application user '<application_user_name>', but only once
+        if [ $( grep -c "${application_user_name}:x:${user_id}:" /etc/passwd ) -eq 0 ] ; then
+
+            cat /etc/passwd > /tmp/passwd
+            echo "${application_user_name}:x:${user_id}:${group_id}:Default:${HOME}:/bin/bash" >> /tmp/passwd
+
+            cp /tmp/passwd /etc/
+            rm /tmp/passwd
+
+            if [ -n "${_verbose}" ] ; then echo "User '${application_user_name} (${user_id}:${group_id})' added into '/etc/passwd'" ; fi
+        fi
+
+        ### add the new group if the same GID does not exist yet
+        if [ "${group_id}" != "0" ] ; then
+
+            if [ $( grep -c -E ":x:${group_id}:$" /etc/group ) -eq 0 ] ; then
+
+                cat /etc/group > /tmp/group
+                echo "${application_user_name}:x:${group_id}:" >> /tmp/group
+
+                cp /tmp/group /etc/
+                rm /tmp/group
+
+                if [ -n "${_verbose}" ] ; then echo "Group '${application_user_name} (${group_id})' added into '/etc/group'" ; fi
+            fi
+        fi
+    fi
+}

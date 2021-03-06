@@ -1,3 +1,16 @@
+declare _tmp
+declare _vnc_override_file
+
+_vnc_override_file="${HOME}"/.vnc_override.rc
+
+### if the vnc-override file exists, then import and source
+### only the lines beginning with 'export ' (at position 1)
+if [ -f "${_vnc_override_file}" ] ; then
+    _tmp=$( mktemp )
+    ( grep -E '^export\s+' "${_vnc_override_file}" 2>/dev/null 1>"${_tmp}" )
+    source "${_tmp}"
+    rm -f "${_tmp}"
+fi
 
 start_vnc () {
     local vnc_ip
@@ -14,10 +27,10 @@ start_vnc () {
         if [ -n "${_verbose}" ] ; then echo "WARNING: No 'vncserver' is available." ; fi
         return 0
     fi
-    
+
     ### VNC requirements
-    ### Since the issue #6 is the VNC password not enforced any more, so it can be set to an empty string
-    ### by 'docker run -e VNC_PW=""'. If you still want to enforce it, bring the following line back:
+    ### VNC password not enforced any more, so it can be set to an empty string by 'docker run -e VNC_PW=""'.
+    ### If you still want to enforce it, bring the following line back:
     ### || [ -z "${VNC_PW}" ] \
     if [ -z "${DISPLAY}" ] \
     || [ -z "${VNC_PORT}" ] \
@@ -41,6 +54,7 @@ start_vnc () {
 
     ### create VNC configuration file
     echo "
+    rfbport=${VNC_PORT}
     depth=${VNC_COL_DEPTH}
     geometry=${VNC_RESOLUTION}
     " > "${HOME}"/.vnc/config
