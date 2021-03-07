@@ -24,13 +24,20 @@ main() {
             --build-arg BUILDKIT_INLINE_CACHE=1 \
             --build-arg BASEIMAGE="${BASEIMAGE}" \
             --build-arg BASETAG="${BASETAG}" \
+            \
             ${FEATURES_BUILD_SLIM:+--build-arg ARG_APT_NO_RECOMMENDS=1} \
             ${FEATURES_SCREENSHOOTING:+--build-arg ARG_FEATURES_SCREENSHOOTING=1} \
             ${FEATURES_THUMBNAILING:+--build-arg ARG_FEATURES_THUMBNAILING=1} \
             ${FEATURES_USER_GROUP_OVERRIDE:+--build-arg ARG_FEATURES_USER_GROUP_OVERRIDE=1} \
-            ${FEATURES_NOVNC:+--build-arg ARG_FINAL_STAGE_BASE="stage_novnc"} \
-            ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_METADATA_STAGE_BASE="stage_firefox_plus"} \
-            ${CHROMIUM_VERSION:+--build-arg ARG_CHROMIUM_VERSION=${CHROMIUM_VERSION}} \
+            \
+            ${FEATURES_NOVNC:+--build-arg ARG_MERGE_STAGE_VNC_BASE="stage_novnc"} \
+            \
+            ${FEATURES_CHROMIUM:+--build-arg ARG_CHROMIUM_VERSION=${CHROMIUM_VERSION}} \
+            ${FEATURES_CHROMIUM:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_chromium"} \
+            \
+            ${FEATURES_FIREFOX:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox"} \
+            ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox_plus"} \
+            \
         -t "${DOCKER_REPO}":"${DOCKER_TAG}${helper_suffix}" "${_build_context}"
     set +x
 
