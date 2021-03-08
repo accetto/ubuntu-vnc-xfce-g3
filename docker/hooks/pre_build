@@ -10,6 +10,7 @@ main() {
     local version_sticker
 
     local should_build=${FORCE_BUILDING}
+    local build_prohibited=${PROHIBIT_BUILDING}
 
     ### debugging support
     # dump_environment
@@ -76,7 +77,7 @@ main() {
 
         else
             ### verbose version sticker has changed since the last build - a new image should be built
-            echo "Verbose version sticker has changed, a new image will be built."
+            echo "Verbose version sticker has changed, a new image should be built."
             should_build="1"
         fi
     fi
@@ -88,6 +89,14 @@ main() {
         version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker )"
         echo -n "${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}" > "${_build_context}/${_scrap_version_sticker_current}"
         echo "Current version sticker: $( cat ${_build_context}/${_scrap_version_sticker_current} )"
+    fi
+
+    ### building prohibitid by environment variable
+    ### useful for testing the autobuilding on DockerHub before release
+    if [ "${should_build}" == "1" ] && [ "${build_prohibited}" == "1" ] ; then
+        ### if this file is present, the building will not continue
+        echo ; echo "Building has been prohibited. Demanding building stop..."
+        touch "${_build_context}/${_scrap_demand_stop_building}"
     fi
 
     ### delete the helper image in any case

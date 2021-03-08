@@ -41,6 +41,10 @@
   - **at VNC/noVNC startup-time** by setting the above environment variables through a mounted external file (see README for more information)
     - file `example-vnc-override.rc` has been added
 
+- hook script `pre_build` has been improved
+  - environment variable `PROHIBIT_BUILDING` can be used to prevent the building and publishing of the image unconditionally
+  - it is useful for testing the auto-building on Docker Hub before release
+
 - Other changes
   - Readme files significantly updated (long versions for GitHub)
   - `Mousepad` editor presets added
