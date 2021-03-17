@@ -9,8 +9,36 @@
 ![badge-github-release][badge-github-release]
 ![badge-github-release-date][badge-github-release-date]
 
+***
+
+**Warning** about images with Firefox
+
+There is no single-process Firefox image in this repository and the multi-process mode is always enabled. Be aware, that multi-process requires larger shared memory (`/dev/shm`). At least 256MB is recommended. Please check the **Firefox multi-process** page in [this Wiki][that-wiki-firefox-multiprocess] for more information and the instructions, how to set the shared memory size in different scenarios.
+
+***
+
+This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox Quantum][firefox] web browser.
+
+### TL;DR
+
+The fastest way to build the images locally:
+
+```shell
+### PWD = project root
+./docker/hooks/build dev latest-firefox
+./docker/hooks/build dev vnc-novnc-firefox
+./docker/hooks/build dev vnc-firefox
+./docker/hooks/build dev vnc-firefox-plus
+```
+
+Find more in the hook script `env.rc` and in [Wiki][this-wiki].
+
+### Table of contents
+
 - [Headless Ubuntu/Xfce container with VNC/noVNC and Firefox Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-firefox-browser)
   - [accetto/ubuntu-vnc-xfce-firefox-g3](#accettoubuntu-vnc-xfce-firefox-g3)
+    - [TL;DR](#tldr)
+    - [Table of contents](#table-of-contents)
     - [Image tags](#image-tags)
     - [Ports](#ports)
     - [Volumes](#volumes)
@@ -28,15 +56,7 @@
   - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
 
-***
 
-**Warning** about images with Firefox
-
-There is no single-process Firefox image in this repository and the multi-process mode is always enabled. Be aware, that multi-process requires larger shared memory (`/dev/shm`). At least 256MB is recommended. Please check the **Firefox multi-process** page in [this Wiki][that-wiki-firefox-multiprocess] for more information and the instructions, how to set the shared memory size in different scenarios.
-
-***
-
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox Quantum][firefox] web browser.
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repositories [accetto/ubuntu-vnc-xfce-firefox][accetto-github-ubuntu-vnc-xfce-firefox] and [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-github-ubuntu-vnc-xfce-firefox-plus].
 

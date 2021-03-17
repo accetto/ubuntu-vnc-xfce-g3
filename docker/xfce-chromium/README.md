@@ -9,8 +9,26 @@
 ![badge-github-release][badge-github-release]
 ![badge-github-release-date][badge-github-release-date]
 
+This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
+
+### TL;DR
+
+The fastest way to build the images locally:
+
+```shell
+### PWD = project root
+./docker/hooks/build dev latest-chromium
+./docker/hooks/build dev vnc-chromium
+```
+
+Find more in the hook script `env.rc` and in [Wiki][this-wiki].
+
+### Table of contents
+
 - [Headless Ubuntu/Xfce container with VNC/noVNC and Chromium Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-chromium-browser)
   - [accetto/ubuntu-vnc-xfce-chromium-g3](#accettoubuntu-vnc-xfce-chromium-g3)
+    - [TL;DR](#tldr)
+    - [Table of contents](#table-of-contents)
     - [Image tags](#image-tags)
     - [Ports](#ports)
     - [Volumes](#volumes)
@@ -25,7 +43,7 @@
   - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
+
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce-chromium][accetto-github-ubuntu-vnc-xfce-chromium].
 

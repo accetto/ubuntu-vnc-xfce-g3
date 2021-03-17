@@ -9,8 +9,27 @@
 ![badge-github-release][badge-github-release]
 ![badge-github-release-date][badge-github-release-date]
 
+This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
+
+### TL;DR
+
+The fastest way to build the images locally:
+
+```shell
+### PWD = project root
+./docker/hooks/build dev latest
+./docker/hooks/build dev vnc
+./docker/hooks/build dev vnc-fugo
+```
+
+Find more in the hook script `env.rc` and in [Wiki][this-wiki].
+
+### Table of contents
+
 - [Headless Ubuntu/Xfce container with VNC/noVNC](#headless-ubuntuxfce-container-with-vncnovnc)
   - [accetto/ubuntu-vnc-xfce-g3](#accettoubuntu-vnc-xfce-g3)
+    - [TL;DR](#tldr)
+    - [Table of contents](#table-of-contents)
     - [Image tags](#image-tags)
     - [Ports](#ports)
     - [Volumes](#volumes)
@@ -25,7 +44,7 @@
   - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
+
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
