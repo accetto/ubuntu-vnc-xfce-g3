@@ -23,8 +23,31 @@ This repository contains resources for building Docker images based on [Ubuntu 2
 
 The resources for the individual images and their variations (tags) are stored in the subfolders of the **master** branch. Each image has its own README file describing its features and usage.
 
+### TL;DR
+
+There are currently resources for the following Docker images:
+
+- [accetto/ubuntu-vnc-xfce-g3][accetto-docker-ubuntu-vnc-xfce-g3]
+- [accetto/ubuntu-vnc-xfce-chromium-g3][accetto-docker-ubuntu-vnc-xfce-chromium-g3]
+- [accetto/ubuntu-vnc-xfce-firefox-g3][accetto-docker-ubuntu-vnc-xfce-firefox-g3]
+
+The fastest way to build the images locally:
+
+```shell
+### PWD = project root
+./docker/hooks/build dev latest
+./docker/hooks/build dev latest-chromium
+./docker/hooks/build dev latest-firefox
+```
+
+Find more in the hook script `env.rc` and in [Wiki][this-wiki].
+
+### Table of contents
+
 - [Headless Ubuntu/Xfce containers with VNC/noVNC](#headless-ubuntuxfce-containers-with-vncnovnc)
   - [Project `accetto/ubuntu-vnc-xfce-g3`](#project-accettoubuntu-vnc-xfce-g3)
+    - [TL;DR](#tldr)
+    - [Table of contents](#table-of-contents)
     - [Image generations](#image-generations)
     - [Project goals](#project-goals)
     - [Changes and new features](#changes-and-new-features)
@@ -147,12 +170,18 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
+[accetto-docker-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
+[accetto-docker-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
+
 [accetto-github-xubuntu-vnc]: https://github.com/accetto/xubuntu-vnc/
 [accetto-github-xubuntu-vnc-novnc]: https://github.com/accetto/xubuntu-vnc-novnc/
+[accetto-docker-ubuntu-vnc-xfce-firefox-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3
+
 [accetto-docker-ubuntu-vnc-xfce]: https://github.com/accetto/ubuntu-vnc-xfce
+[accetto-docker-ubuntu-vnc-xfce-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-chromium
 [accetto-docker-ubuntu-vnc-xfce-firefox]: https://github.com/accetto/ubuntu-vnc-xfce-firefox
 [accetto-docker-ubuntu-vnc-xfce-firefox-plus]: https://github.com/accetto/ubuntu-vnc-xfce-firefox-plus
-[accetto-docker-ubuntu-vnc-xfce-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-chromium
+
 [accetto-docker-argbash-docker]: https://hub.docker.com/r/accetto/argbash-docker
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
