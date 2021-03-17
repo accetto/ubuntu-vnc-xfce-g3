@@ -43,7 +43,9 @@ main() {
     set +x
 
     ### get the actual verbose version sticker value from the helper image and store it as the current one
-    version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker-verbose )"
+    ### note that some apps require display to report their versions correctly (e.g. Ristretto or Screenshooter)
+    # version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker-verbose )"
+    version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --version-sticker-verbose )"
     echo "${version_sticker}" > "${_build_context}/${_scrap_version_sticker_verbose_current}"
     echo -e "Current verbose version sticker:\n$( cat ${_build_context}/${_scrap_version_sticker_verbose_current} )"
 
@@ -85,8 +87,9 @@ main() {
     if [ "${should_build}" == "1" ] ; then
 
         ### get also the actual short version sticker value from the helper image and store it as the current one
-        ### note that some apps require a display to report their versions correctly, do not use '--skip-vnc' then
-        version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker )"
+        ### note that some apps require display to report their versions correctly (e.g. Ristretto or Screenshooter)
+        # version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker )"
+        version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --version-sticker )"
         echo -n "${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}" > "${_build_context}/${_scrap_version_sticker_current}"
         echo "Current version sticker: $( cat ${_build_context}/${_scrap_version_sticker_current} )"
     fi
