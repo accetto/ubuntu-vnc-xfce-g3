@@ -16,13 +16,13 @@
 
 **Tip:** This is the **short README** version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
 
-**Attention:** [Chromium Browser][chromium] in this image runs in `--no-sandbox` mode. You should be aware of the implications. The browser is intended for testing and development.
-
 ***
 
 This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
 
-**Remark**: This container contains the current `Chromium Browser` version for `Ubuntu 18.04 LTS`, because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
+**Remark:** This image contains the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
+
+**Attention:** The [Chromium Browser][chromium] in this image runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce-chromium][accetto-github-ubuntu-vnc-xfce-chromium].
 
@@ -40,7 +40,7 @@ The main features and components of the images in the default configuration are:
 - current version of [tini][tini] as the entry-point initial process (PID 1)
 - support for overriding both the container user account and its group
 - support of **version sticker** (see below)
-- current version of [Chromium Browser][chromium] open-source web browser (version for `Ubuntu 18.04 LTS`)
+- current version of [Chromium Browser][chromium] open-source web browser (from the `Ubuntu 18.04 LTS` distribution)
 
 The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
@@ -48,7 +48,7 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags are regularly maintained and rebuilt:
+The following image tags are regularly rebuilt and published on Docker Hub:
 
 - `latest` is identical to `vnc-novnc`
 

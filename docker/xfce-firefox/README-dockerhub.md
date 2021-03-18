@@ -1,4 +1,4 @@
-# Headless Ubuntu/Xfce container with VNC/noVNC and Firefox Browser
+# Headless Ubuntu/Xfce container with VNC/noVNC and Firefox browser
 
 ## accetto/ubuntu-vnc-xfce-firefox-g3
 
@@ -22,7 +22,7 @@ There is no single-process Firefox image in this repository and the multi-proces
 
 ***
 
-This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox Quantum][firefox] web browser.
+This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox][firefox] web browser.
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repositories [accetto/ubuntu-vnc-xfce-firefox][accetto-github-ubuntu-vnc-xfce-firefox] and [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-github-ubuntu-vnc-xfce-firefox-plus].
 
@@ -40,7 +40,7 @@ The main features and components of the images in the default configuration are:
 - current version of [tini][tini] as the entry-point initial process (PID 1)
 - support for overriding both the container user account and its group
 - support of **version sticker** (see below)
-- current version of [Firefox Quantum][firefox] web browser and some additional **plus** features described below
+- current version of [Firefox][firefox] web browser and some additional **plus** features described below
 
 The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
@@ -48,7 +48,7 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags are regularly maintained and rebuilt:
+The following image tags are regularly rebuilt and published on Docker Hub:
 
 - `latest` is identical to `vnc-novnc-plus`
 

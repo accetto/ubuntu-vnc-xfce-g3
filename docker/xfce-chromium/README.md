@@ -47,9 +47,9 @@ This is the **third generation** (G3) of my headless images. The **second genera
 
 More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
 
-**Remark:** This image contains the current `Chromium Browser` version for `Ubuntu 18.04 LTS`, because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
+**Remark:** This image contains the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
 
-**Attention:** The [Chromium Browser][chromium] in this image runs in `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
+**Attention:** The [Chromium Browser][chromium] in this image runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
 
 The main features and components of the images in the default configuration are:
 
@@ -63,7 +63,7 @@ The main features and components of the images in the default configuration are:
 - current version of [tini][tini] as the entry-point initial process (PID 1)
 - support for overriding both the container user account and its group
 - support of **version sticker** (see below)
-- current version of [Chromium Browser][chromium] open-source web browser (version for `Ubuntu 18.04 LTS`)
+- current version of [Chromium Browser][chromium] open-source web browser (from the `Ubuntu 18.04 LTS` distribution)
 
 The history of notable changes is documented in the [CHANGELOG][this-changelog].
 

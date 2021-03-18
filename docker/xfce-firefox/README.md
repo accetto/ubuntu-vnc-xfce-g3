@@ -1,4 +1,4 @@
-# Headless Ubuntu/Xfce container with VNC/noVNC and Firefox Browser
+# Headless Ubuntu/Xfce container with VNC/noVNC and Firefox browser
 
 ## accetto/ubuntu-vnc-xfce-firefox-g3
 
@@ -17,7 +17,7 @@ There is no single-process Firefox image in this repository and the multi-proces
 
 ***
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox Quantum][firefox] web browser.
+This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox][firefox] web browser.
 
 ### TL;DR
 
@@ -35,7 +35,7 @@ Find more in the hook script `env.rc` and in [Wiki][this-wiki].
 
 ### Table of contents
 
-- [Headless Ubuntu/Xfce container with VNC/noVNC and Firefox Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-firefox-browser)
+- [Headless Ubuntu/Xfce container with VNC/noVNC and Firefox browser](#headless-ubuntuxfce-container-with-vncnovnc-and-firefox-browser)
   - [accetto/ubuntu-vnc-xfce-firefox-g3](#accettoubuntu-vnc-xfce-firefox-g3)
     - [TL;DR](#tldr)
     - [Table of contents](#table-of-contents)
@@ -72,7 +72,7 @@ The main features and components of the images in the default configuration are:
 - current version of [tini][tini] as the entry-point initial process (PID 1)
 - support for overriding both the container user account and its group
 - support of **version sticker** (see below)
-- current version of [Firefox Quantum][firefox] web browser and some additional **plus** features described below
+- current version of [Firefox][firefox] web browser and some additional **plus** features described below
 
 The history of notable changes is documented in the [CHANGELOG][this-changelog].
 

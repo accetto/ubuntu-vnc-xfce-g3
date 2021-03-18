@@ -43,7 +43,7 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags are regularly maintained and rebuilt:
+The following image tags are regularly rebuilt and published on Docker Hub:
 
 - `latest` is identical to `vnc-novnc`
 
