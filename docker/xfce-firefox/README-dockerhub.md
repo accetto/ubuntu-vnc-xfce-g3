@@ -2,7 +2,7 @@
 
 ## accetto/ubuntu-vnc-xfce-firefox-g3
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ![badge-docker-pulls][badge-docker-pulls]
 ![badge-docker-stars][badge-docker-stars]
@@ -14,7 +14,7 @@
 
 ***
 
-**Tip:** This is the short README version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
+**Tip:** This is the **short README** version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
 
 **Warning** about images with Firefox
 
@@ -22,7 +22,7 @@ There is no single-process Firefox image in this repository and the multi-proces
 
 ***
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox Quantum][firefox] web browser.
+This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox Quantum][firefox] web browser.
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repositories [accetto/ubuntu-vnc-xfce-firefox][accetto-github-ubuntu-vnc-xfce-firefox] and [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-github-ubuntu-vnc-xfce-firefox-plus].
 
@@ -85,12 +85,13 @@ More information about these images can be found in the [full-length README][thi
 
 <!-- GitHub project common -->
 
-[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
+[this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
+[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
+[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-readme-full]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-firefox/README.md
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
-[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 
 [that-readme-startup-help]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README-dockerhub.md#startup-options-and-help
 

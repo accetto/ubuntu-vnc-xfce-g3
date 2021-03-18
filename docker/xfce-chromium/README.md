@@ -2,7 +2,7 @@
 
 ## accetto/ubuntu-vnc-xfce-chromium-g3
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Docker Readme][this-readme-dockerhub] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Docker Readme][this-readme-dockerhub] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ![badge-docker-pulls][badge-docker-pulls]
 ![badge-docker-stars][badge-docker-stars]
@@ -47,14 +47,13 @@ This is the **third generation** (G3) of my headless images. The **second genera
 
 More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
 
-**Remark:** This container contains the current `Chromium Browser` version for `Ubuntu 18.04 LTS`, because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
+**Remark:** This image contains the current `Chromium Browser` version for `Ubuntu 18.04 LTS`, because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
 
-**Attention:** [Chromium Browser][chromium] in this image runs in `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
+**Attention:** The [Chromium Browser][chromium] in this image runs in `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
 
 The main features and components of the images in the default configuration are:
 
-utilities **ping**, **wget**, **sudo**, **dconf-editor** (Ubuntu distribution)
-
+- utilities **ping**, **wget**, **sudo**, **dconf-editor** (Ubuntu distribution)
 - current version of JSON processor [jq][jq]
 - light-weight [Xfce][xfce] desktop environment (Ubuntu distribution)
 - current version of high-performance [TigerVNC][tigervnc] server and client

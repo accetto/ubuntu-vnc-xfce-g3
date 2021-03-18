@@ -2,7 +2,7 @@
 
 ## accetto/ubuntu-vnc-xfce-chromium-g3
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ![badge-docker-pulls][badge-docker-pulls]
 ![badge-docker-stars][badge-docker-stars]
@@ -14,13 +14,13 @@
 
 ***
 
-**Tip:** This is the short README version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
+**Tip:** This is the **short README** version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
 
 **Attention:** [Chromium Browser][chromium] in this image runs in `--no-sandbox` mode. You should be aware of the implications. The browser is intended for testing and development.
 
 ***
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
+This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
 
 **Remark**: This container contains the current `Chromium Browser` version for `Ubuntu 18.04 LTS`, because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
 
@@ -75,12 +75,13 @@ More information about these images can be found in the [full-length README][thi
 
 <!-- GitHub project common -->
 
-[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
+[this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
+[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
+[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-readme-full]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
-[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 
 <!-- Docker image specific -->
 

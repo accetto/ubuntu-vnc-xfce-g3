@@ -2,7 +2,7 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Wiki][this-wiki]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ***
 
