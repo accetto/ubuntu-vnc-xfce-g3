@@ -1,0 +1,23 @@
+# blank lines are ignored
+# lines starting with '#' are ignored
+# starting patterns with '/' disables recursivity
+# ending patterns with '/' specifies directories
+# starting patterns with '!' negates them
+# standard glob patterns (shell paterns) work:
+# '*' matches zero oro more characters
+# '?' matches a single characters
+# '[abc]' matches the characters inside the brackets
+# '[0-9]' matches the characters inside the brackets
+# '**' matches nested directories (e.g. 'a/**/z')
+# recommended files on 'https://github.com/github/gitignore'
+
+.vscode
+.debugger*
+.developer*
+.secrets*
+*.log
+avanti*
+debug*
+scrap*
+secret*
+TODO*
