@@ -200,7 +200,7 @@ update_gist() {
 trigger_post_push_workflow() {
     ### Trigger the 'post_push' workflow on GitHub.
     ### Secret 'POST_PUSH_WORKFLOW_TOKEN' with the scopes 'repo' and 'workflow' is needed.
-    ### Currently there is no real benefit of triggering this workflow.
+    ### The workflow generates the up-to-date README file and publishes it to the deployment repository on Docker Hub.
 
     ### example of 'repo' on Docker Hub: 'index.docker.io/accetto/ubuntu-vnc-xfce-g3'
     ### 'repo' should be including the owner as 'owner/repo'
