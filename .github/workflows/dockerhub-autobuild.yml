@@ -1,15 +1,15 @@
 ### This workflow triggers auto-building on Docker Hub.
 name: dockerhub-autobuild
 on:
-  release:
-    ### published: a release, pre-release, or draft of a release is published
-    ### unpublished: a release or pre-release is deleted
-    ### created: a draft is saved, or a release or pre-release is published without previously being saved as a draft
-    ### edited: a release, pre-release, or draft release is edited
-    ### deleted: a release, pre-release, or draft release is deleted
-    ### prereleased: a pre-release is created
-    ### released: a release or draft of a release is published, or a pre-release is changed to a release
-    types: [published]
+  # release:
+  #   ### published: a release, pre-release, or draft of a release is published
+  #   ### unpublished: a release or pre-release is deleted
+  #   ### created: a draft is saved, or a release or pre-release is published without previously being saved as a draft
+  #   ### edited: a release, pre-release, or draft release is edited
+  #   ### deleted: a release, pre-release, or draft release is deleted
+  #   ### prereleased: a pre-release is created
+  #   ### released: a release or draft of a release is published, or a pre-release is changed to a release
+  #   types: [published]
   schedule:
     ### * is a special character in YAML so you have to quote this string
     ### every 5 minutes (for testing only)
