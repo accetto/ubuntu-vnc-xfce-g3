@@ -6,6 +6,12 @@
 
 ***
 
+### Release 21.03.1
+
+- hook script `post_push` has been improved
+  - environment variable `PROHIBIT_README_PUBLISHING` can be used to prevent the publishing of readme file to Docker Hub deployment repositories
+  - useful for testing on Docker Hub or by building from non-default branches
+
 ### Release 21.03
 
 - **Chromium** and **Firefox** web browsers are **image features** now
