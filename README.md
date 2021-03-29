@@ -25,13 +25,19 @@ This repository contains resources for building Docker images based on [Ubuntu 2
 
 The resources for the individual images and their variations (tags) are stored in the subfolders of the **master** branch. Each image has its own README file describing its features and usage.
 
+There are also sibling projects containing images for headless programming in `Node.js` and `Python` ([accetto/headless-coding-g3][accetto-github-headless-coding-g3]) or headless diagramming, vector drawing and bitmap image editing ([accetto/headless-drawing-g3][accetto-github-headless-drawing-g3]).
+
 ### TL;DR
 
 There are currently resources for the following Docker images:
 
 - [accetto/ubuntu-vnc-xfce-g3][accetto-docker-ubuntu-vnc-xfce-g3]
+  - [full Readme][this-readme-image-base]
+  - [Dockerfile][this-dockerfile-base] (common for all images)
 - [accetto/ubuntu-vnc-xfce-chromium-g3][accetto-docker-ubuntu-vnc-xfce-chromium-g3]
+  - [full Readme][this-readme-image-chromium]
 - [accetto/ubuntu-vnc-xfce-firefox-g3][accetto-docker-ubuntu-vnc-xfce-firefox-g3]
+  - [full Readme][this-readme-image-firefox]
 
 The fastest way to build the images locally:
 
@@ -174,6 +180,12 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
+[this-dockerfile-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+
+[this-readme-image-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README.md
+[this-readme-image-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
+[this-readme-image-firefox]: https://github.com/accetto/ubuntu-vnc-xfce-g3/tree/master/docker/xfce-firefox
+
 [accetto-docker-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [accetto-docker-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
 
@@ -187,6 +199,13 @@ Credit goes to all the countless people and companies, who contribute to open so
 [accetto-docker-ubuntu-vnc-xfce-firefox-plus]: https://github.com/accetto/ubuntu-vnc-xfce-firefox-plus
 
 [accetto-docker-argbash-docker]: https://hub.docker.com/r/accetto/argbash-docker
+
+<!-- sibling projects -->
+
+[accetto-github-headless-coding-g3]:https://github.com/accetto/headless-coding-g3
+[accetto-github-headless-drawing-g3]: https://github.com/accetto/headless-drawing-g3
+
+<!-- external links -->
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
 
@@ -225,5 +244,3 @@ Credit goes to all the countless people and companies, who contribute to open so
 [badge-github-closed-issues]: https://badgen.net/github/closed-issues/accetto/ubuntu-vnc-xfce-g3?icon=github&label=closed%20issues
 
 [badge-github-open-issues]: https://badgen.net/github/open-issues/accetto/ubuntu-vnc-xfce-g3?icon=github&label=open%20issues
-
-<!-- Appendix -->
