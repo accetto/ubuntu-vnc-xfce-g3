@@ -1,23 +1,37 @@
 # README placeholder
 
-This placeholder will be replaced by the image deployment workflow.
+This is only a README placeholder, which will be replaced by the image deployment workflow.
 
-Useful links:
+Useful links from **this project's** GitHub repository [accetto/ubuntu-vnc-xfce-g3][this-home]:
 
-- Project [Home][project-home], [Readme][project-readme], [Changelog][project-changelog], [Issues][project-issues], [Wiki][project-wiki] and [Discussions][project-discussions]
-- Base image full [Readme][base-image-readme]
-- Chromium image full [Readme][chromium-image-readme]
-- Firefox image full [Readme][firefox-image-readme]
+- project [Readme][this-readme], [Changelog][this-changelog], [Issues][this-issues], [Wiki][this-wiki] and [Discussions][this-discussions]
+- base images **Ubuntu/Xfce/VNC/noVNC**
+  - [full Readme][this-readme-image-base] file on GitHub
+  - [image repository][this-dockerhub-image-base] on Docker Hub
+  - [Dockerfile][this-dockerfile] (common for all images) on GitHub
+- images with **Chromium**
+  - [full Readme][this-readme-image-chromium] file on GitHub
+  - [image repository][this-dockerhub-image-chromium] on Docker Hub
+- images with **Firefox**
+  - [full Readme][this-readme-image-firefox] file on GitHub
+  - [image repository][this-dockerhub-image-firefox] on Docker Hub
 
 ***
 
-[project-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
-[project-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
-[project-home]: https://github.com/accetto/ubuntu-vnc-xfce-g3
-[project-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
-[project-readme]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
-[project-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+[this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
+[this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
+[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
 
-[base-image-readme]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README.md
-[chromium-image-readme]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
-[firefox-image-readme]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-firefox/README.md
+[this-home]: https://github.com/accetto/ubuntu-vnc-xfce-g3
+[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
+[this-readme]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
+[this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+
+[this-dockerhub-image-base]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
+[this-readme-image-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README.md
+
+[this-dockerhub-image-chromium]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
+[this-readme-image-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
+
+[this-dockerhub-image-firefox]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3
+[this-readme-image-firefox]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-firefox/README.md
