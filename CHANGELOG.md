@@ -6,6 +6,10 @@
 
 ***
 
+### Release 21.04
+
+- TigerVNC from [Release Mirror on accetto/tigervnc][accetto-tigervnc-release-mirror] because **Bintray** is closing on 2021-05-01
+
 ### Release 21.03.1
 
 - hook script `post_push` has been improved

@@ -113,8 +113,10 @@ ARG ARG_VNC_PW
 ARG ARG_VNC_RESOLUTION
 ARG ARG_VNC_VIEW_ONLY
 
+### Bintray has been deprecated and disabled since 2021-05-01
+# wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.11.0.x86_64.tar.gz | tar xz --strip 1 -C / \
 RUN \
-    wget -qO- https://dl.bintray.com/tigervnc/stable/tigervnc-1.11.0.x86_64.tar.gz | tar xz --strip 1 -C / \
+    wget -qO- https://github.com/accetto/tigervnc/releases/download/v1.11.0-mirror/tigervnc-1.11.0.x86_64.tar.gz | tar xz --strip 1 -C / \
     && ln -s /usr/libexec/vncserver /usr/bin/vncserver \
     && sed -i 's/exec(@cmd);/print "@cmd";\nexec(@cmd);/g' /usr/libexec/vncserver
 
