@@ -80,7 +80,7 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags are regularly maintained and rebuilt:
+The following images will be regularly built and published on Docker Hub:
 
 - `latest` is identical to `vnc-novnc-plus`
 - `vnc` implements only VNC
