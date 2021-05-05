@@ -84,23 +84,28 @@ main() {
         fi
     fi
 
-    if [ "${should_build}" == "1" ] ; then
+    ### get also the actual short version sticker value from the helper image and store it as the current one
+    ### note that some apps require display to report their versions correctly (e.g. Ristretto or Screenshooter)
+    # version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker )"
+    version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --version-sticker )"
 
-        ### get also the actual short version sticker value from the helper image and store it as the current one
-        ### note that some apps require display to report their versions correctly (e.g. Ristretto or Screenshooter)
-        # version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker )"
-        version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --version-sticker )"
+    if [ "${should_build}" == "1" ] ; then
+        
         echo -n "${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}" > "${_build_context}/${_scrap_version_sticker_current}"
-        echo "Current version sticker: $( cat ${_build_context}/${_scrap_version_sticker_current} )"
+        # echo "Current version sticker: $( cat ${_build_context}/${_scrap_version_sticker_current} )"
     fi
 
     ### building prohibitid by environment variable
     ### useful for testing the autobuilding on DockerHub before release
     if [ "${should_build}" == "1" ] && [ "${build_prohibited}" == "1" ] ; then
         ### if this file is present, the building will not continue
-        echo ; echo "Building has been prohibited. Demanding building stop..."
+        echo "Building has been prohibited. Demanding building stop..."
+        echo
         touch "${_build_context}/${_scrap_demand_stop_building}"
     fi
+
+    ### display the actual short version sticker
+    echo "Current version sticker: ${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}"
 
     ### delete the helper image in any case
     echo; echo "Removing helper image..."
