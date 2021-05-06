@@ -6,7 +6,7 @@
 
 ***
 
-### Release 21.05 (unreleased)
+### Release 21.05
 
 - package **dconf-editor** has been removed
 
