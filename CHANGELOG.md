@@ -6,6 +6,10 @@
 
 ***
 
+### Release 21.05.1
+
+- fix in `env.rc` hook script
+
 ### Release 21.05
 
 - package **dconf-editor** has been removed
