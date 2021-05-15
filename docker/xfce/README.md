@@ -43,6 +43,8 @@ Find more in the hook script `env.rc` and in [Wiki][this-wiki].
   - [Startup options and help](#startup-options-and-help)
   - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
+  - [Diagrams](#diagrams)
+    - [Dockerfile.xfce](#dockerfilexfce)
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
@@ -481,6 +483,12 @@ If you have a question or an idea and you don't want to open an issue, you can u
 
 Credit goes to all the countless people and companies, who contribute to open source community and make so many dreamy things real.
 
+## Diagrams
+
+### Dockerfile.xfce
+
+![Dockerfile.xfce stages][this-diagram-dockerfile-stages]
+
 ***
 
 <!-- GitHub project common -->
@@ -497,6 +505,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3/
 [this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+
+[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/Dockerfile.xfce.png
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/xfce/ubuntu-vnc-xfce-g3.jpg
 
