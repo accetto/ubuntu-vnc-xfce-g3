@@ -6,6 +6,11 @@
 
 ***
 
+### Release 21.05.2
+
+- [Dockerfile stages diagram][this-diagram-dockerfile-stages] added
+- script `release_of.sh` improved
+
 ### Release 21.05.1
 
 - fix in `env.rc` hook script
@@ -113,6 +118,8 @@
 [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
+
+[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/Dockerfile.xfce.png
 
 [accetto-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [accetto-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3

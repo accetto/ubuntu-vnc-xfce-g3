@@ -34,6 +34,7 @@ There are currently resources for the following Docker images:
 - [accetto/ubuntu-vnc-xfce-g3][accetto-docker-ubuntu-vnc-xfce-g3]
   - [full Readme][this-readme-image-base]
   - [Dockerfile][this-dockerfile-base] (common for all images)
+  - [Dockerfile stages diagram][this-diagram-dockerfile-stages] (common for all images)
 - [accetto/ubuntu-vnc-xfce-chromium-g3][accetto-docker-ubuntu-vnc-xfce-chromium-g3]
   - [full Readme][this-readme-image-chromium]
 - [accetto/ubuntu-vnc-xfce-firefox-g3][accetto-docker-ubuntu-vnc-xfce-firefox-g3]
@@ -179,6 +180,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+
+[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/Dockerfile.xfce.png
 
 [this-dockerfile-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
 
