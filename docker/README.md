@@ -9,6 +9,7 @@ Useful links from **this project's** GitHub repository [accetto/ubuntu-vnc-xfce-
   - [full Readme][this-readme-image-base] file on GitHub
   - [image repository][this-dockerhub-image-base] on Docker Hub
   - [Dockerfile][this-dockerfile] (common for all images) on GitHub
+  - [Dockerfile stages diagram][this-diagram-dockerfile-stages] on GitHub (common for all images)
 - images with **Chromium**
   - [full Readme][this-readme-image-chromium] file on GitHub
   - [image repository][this-dockerhub-image-chromium] on Docker Hub
@@ -26,6 +27,8 @@ Useful links from **this project's** GitHub repository [accetto/ubuntu-vnc-xfce-
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-readme]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+
+[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 
 [this-dockerhub-image-base]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [this-readme-image-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README.md
