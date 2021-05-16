@@ -119,7 +119,7 @@
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
 
-[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/Dockerfile.xfce.png
+[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 
 [accetto-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [accetto-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3

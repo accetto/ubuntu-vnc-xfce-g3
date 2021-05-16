@@ -181,7 +181,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
-[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/Dockerfile.xfce.png
+[this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 
 [this-dockerfile-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
 

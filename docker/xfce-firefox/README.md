@@ -571,7 +571,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3/
 [this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.firefox
 
-[this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/xfce-firefox/ubuntu-vnc-xfce-firefox-plus.jpg
+[this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/ubuntu-vnc-xfce-firefox-plus.jpg
 
 <!-- Previous generations -->
 

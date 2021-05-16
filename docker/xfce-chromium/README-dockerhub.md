@@ -88,7 +88,7 @@ More information about these images can be found in the [full-length README][thi
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3/
 [this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.chromium
 
-[this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/xfce-chromium/ubuntu-vnc-xfce-chromium.jpg
+[this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/ubuntu-vnc-xfce-chromium.jpg
 
 <!-- Previous generations -->
 
