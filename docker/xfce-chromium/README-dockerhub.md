@@ -20,6 +20,37 @@
 
 This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
 
+### TL;DR
+
+I try to keep the images slim. Consequently you can encounter missing dependencies while adding more applications yourself. You can track the missing libraries on the [Ubuntu Packages Search][ubuntu-packages-search] page and install them subsequently.
+
+You can also try to fix it by executing the following (the default `sudo` password is **headless**):
+
+```shell
+### apt cache needs to be updated only once
+sudo apt-get update
+
+sudo apt --fix-broken install
+```
+
+Sharing the audio device for video with sound (only Linux and Chromium):
+
+```bash
+docker run -it -P --rm \
+  --device /dev/snd:/dev/snd:rw \
+  --group-add audio \
+accetto/ubuntu-vnc-xfce-chromium-g3
+```
+
+### Table of contents
+
+- [Headless Ubuntu/Xfce container with VNC/noVNC and Chromium Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-chromium-browser)
+  - [accetto/ubuntu-vnc-xfce-chromium-g3](#accettoubuntu-vnc-xfce-chromium-g3)
+    - [TL;DR](#tldr)
+    - [Table of contents](#table-of-contents)
+    - [Image tags](#image-tags)
+    - [More information](#more-information)
+
 **Remark:** This image contains the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
 
 **Attention:** The [Chromium Browser][chromium] in this image runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
@@ -102,6 +133,8 @@ More information about these images can be found in the [full-length README][thi
 
 [docker-doc]: https://docs.docker.com/
 [docker-doc-managing-data]: https://docs.docker.com/storage/
+
+[ubuntu-packages-search]: https://packages.ubuntu.com/
 
 [jq]: https://stedolan.github.io/jq/
 [mousepad]: https://github.com/codebrainz/mousepad

@@ -40,6 +40,17 @@ There are currently resources for the following Docker images:
 - [accetto/ubuntu-vnc-xfce-firefox-g3][accetto-docker-ubuntu-vnc-xfce-firefox-g3]
   - [full Readme][this-readme-image-firefox]
 
+I try to keep the images slim. Consequently you can encounter missing dependencies while adding more applications yourself. You can track the missing libraries on the [Ubuntu Packages Search][ubuntu-packages-search] page and install them subsequently.
+
+You can also try to fix it by executing the following (the default `sudo` password is **headless**):
+
+```shell
+### apt cache needs to be updated only once
+sudo apt-get update
+
+sudo apt --fix-broken install
+```
+
 The fastest way to build the images locally:
 
 ```shell
@@ -47,9 +58,25 @@ The fastest way to build the images locally:
 ./docker/hooks/build dev latest
 ./docker/hooks/build dev latest-chromium
 ./docker/hooks/build dev latest-firefox
+./docker/hooks/build dev vnc
+./docker/hooks/build dev vnc-novnc
+./docker/hooks/build dev vnc-chromium
+./docker/hooks/build dev vnc-novnc-chromium
+./docker/hooks/build dev vnc-firefox
+./docker/hooks/build dev vnc-novnc-firefox
+### and so on
 ```
 
 Find more in the hook script `env.rc` and in [Wiki][this-wiki].
+
+Sharing the audio device for video with sound (only Linux and Chromium):
+
+```bash
+docker run -it -P --rm \
+  --device /dev/snd:/dev/snd:rw \
+  --group-add audio \
+accetto/ubuntu-vnc-xfce-chromium-g3
+```
 
 ### Table of contents
 
@@ -213,6 +240,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
 
 [docker-doc-build-with-buildkit]: https://docs.docker.com/develop/develop-images/build_enhancements/
+
+[ubuntu-packages-search]: https://packages.ubuntu.com/
 
 [argbash-doc]: https://argbash.readthedocs.io/en/stable/index.html
 [badgen]: https://badgen.net/

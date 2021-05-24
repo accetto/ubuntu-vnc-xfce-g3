@@ -13,15 +13,37 @@ This repository contains resources for building Docker images based on [Ubuntu 2
 
 ### TL;DR
 
+I try to keep the images slim. Consequently you can encounter missing dependencies while adding more applications yourself. You can track the missing libraries on the [Ubuntu Packages Search][ubuntu-packages-search] page and install them subsequently.
+
+You can also try to fix it by executing the following (the default `sudo` password is **headless**):
+
+```shell
+### apt cache needs to be updated only once
+sudo apt-get update
+
+sudo apt --fix-broken install
+```
+
 The fastest way to build the images locally:
 
 ```shell
 ### PWD = project root
 ./docker/hooks/build dev latest-chromium
 ./docker/hooks/build dev vnc-chromium
+./docker/hooks/build dev vnc-novnc-chromium
+### and so on
 ```
 
 Find more in the hook script `env.rc` and in [Wiki][this-wiki].
+
+Sharing the audio device for video with sound (only Linux and Chromium):
+
+```bash
+docker run -it -P --rm \
+  --device /dev/snd:/dev/snd:rw \
+  --group-add audio \
+accetto/ubuntu-vnc-xfce-chromium-g3
+```
 
 ### Table of contents
 
@@ -526,6 +548,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [docker-doc]: https://docs.docker.com/
 [docker-doc-managing-data]: https://docs.docker.com/storage/
+
+[ubuntu-packages-search]: https://packages.ubuntu.com/
 
 [jq]: https://stedolan.github.io/jq/
 [mousepad]: https://github.com/codebrainz/mousepad
