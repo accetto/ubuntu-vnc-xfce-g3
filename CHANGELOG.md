@@ -6,6 +6,22 @@
 
 ***
 
+### Release 21.07
+
+- Docker Hub has removed auto-builds from free plans since 2021-07-26, therefore
+  - both GitHub Actions workflows `dockerhub-autobuild.yml` and `dockerhub-post-push.yml` have been disabled because they are not needed on free plans any more
+    - just re-enable them if you are on a higher plan
+  - **if you stay on the free plan**, then
+    - you can still build the images locally and then push them to Docker Hub
+      - pushing to Docker Hub is optional
+      - just follow the added file `local-building-example.md`
+    - you can publish the `readme` files to Docker Hub using the utility `util-readme.sh`
+      - just follow the added file `examples-util-readme.md`
+  - regularity of updates of images on Docker Hub cannot be guaranteed any more
+- Other `Xfce4` related changes since the last release
+  - keyboard layout explicit config added
+  - `xfce4-terminal` set to unicode `utf-8` explicitly
+
 ### Release 21.05.3
 
 - fix in script `release_of.sh`

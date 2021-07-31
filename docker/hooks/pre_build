@@ -89,13 +89,12 @@ main() {
     # version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --skip-vnc --version-sticker )"
     version_sticker="$( docker run --rm ${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix} --version-sticker )"
 
-    if [ "${should_build}" == "1" ] ; then
-        
-        echo -n "${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}" > "${_build_context}/${_scrap_version_sticker_current}"
-        # echo "Current version sticker: $( cat ${_build_context}/${_scrap_version_sticker_current} )"
-    fi
+    ### save the current short version sticker in any case
+    ### this allows to delete the blocking file manually and continue building
+    ### metadata label value 'any.accetto.version-sticker' is filled from this file
+    echo -n "${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}" > "${_build_context}/${_scrap_version_sticker_current}"
 
-    ### building prohibitid by environment variable
+    ### building prohibitdd by environment variable
     ### useful for testing the autobuilding on DockerHub before release
     if [ "${should_build}" == "1" ] && [ "${build_prohibited}" == "1" ] ; then
         ### if this file is present, the building will not continue
