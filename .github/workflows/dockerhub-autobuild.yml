@@ -15,7 +15,7 @@ on:
     ### every 5 minutes (for testing only)
     # - cron:  '*/5 * * * *'
     ### disarmed  
-    - cron: '0 0 31 2 *'
+    - cron: '0 0 4 2 *'
     ### at 00:15 on every Sunday
     # - cron:  '15 0 * * 0'
 jobs:
