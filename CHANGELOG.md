@@ -6,6 +6,11 @@
 
 ***
 
+### Release 21.08
+
+- `builder.sh` utility added
+  - see also `local-building-example.md`
+
 ### Release 21.07
 
 - Docker Hub has removed auto-builds from free plans since 2021-07-26, therefore
