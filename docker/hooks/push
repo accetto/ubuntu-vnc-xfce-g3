@@ -1,4 +1,5 @@
 #!/bin/bash -e
+### @accetto, August 2021
 
 declare _mydir=$(dirname $0)
 source "${_mydir}"/env.rc
@@ -40,12 +41,12 @@ main() {
     if [ "${_stage}" == "local" ] ; then
         if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_PASSWORD}" ] ; then
 
-        echo "Logging-in on Docker Hub..."
-        echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
-        if [ ! $? ] ; then
-            echo "Docker Hub login failed"
-            return 1
-        fi
+            echo "Logging-in on Docker Hub..."
+            echo "${DOCKERHUB_PASSWORD}" | docker login -u "${DOCKERHUB_USERNAME}" --password-stdin
+            if [ ! $? ] ; then
+                echo "Docker Hub login failed"
+                return 1
+            fi
         else
             echo "Local pushing requires Docker Hub login."
             echo "However, your environment does not provide required authentication data."
