@@ -53,6 +53,9 @@ The helper utility `builder.sh` will be used. Alternatively you can also use the
 ```bash
 ./builder.sh latest pre_build
 
+### optionally
+./builder.sh latest pre_build --no-cache
+
 ### alternatively
 ./docker/hooks/pre_build dev latest
 ```
@@ -74,6 +77,9 @@ The other option is to set the environment variable `FORCE_BUILDING=1` **before*
 
 ```bash
 ./builder.sh latest build
+
+### optionally
+./builder.sh latest build --no-cache
 
 ### alternatively
 ./docker/hooks/build dev latest
@@ -145,6 +151,9 @@ Alternatively you can execute the whole building pipeline using the `all` comman
 
 ```bash
 ./builder.sh latest-nodejs all
+
+### optionally
+./builder.sh latest-nodejs all --no-cache
 ```
 
 Note that you still have to execute the step 5 yourself.
