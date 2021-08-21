@@ -20,6 +20,10 @@ main() {
 
             ./docker/hooks/pre_build dev "${blend}" $@ > "${log}"
 
+            echo "Excerpt from the pre_build log..."
+            echo
+            grep -A100 'Current verbose version sticker:' "${log}"
+
             if [[ $? -eq 0 ]] ; then
 
                 if grep -Po 'new image should be built|Building of new image has been forced' "${log}" ; then
