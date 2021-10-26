@@ -6,6 +6,11 @@
 
 ***
 
+### Release 21.10
+
+- `builder.sh` utility accepts additional parameters
+- local building example updated
+
 ### Release 21.08
 
 - `builder.sh` utility added
