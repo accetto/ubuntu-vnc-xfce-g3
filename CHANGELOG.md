@@ -6,6 +6,10 @@
 
 ***
 
+### Release 22.01
+
+- `Dockerfile.xfce` uses **TigerVNC** releases from **SourceForge** website
+
 ### Release 21.10
 
 - `builder.sh` utility accepts additional parameters
