@@ -6,6 +6,39 @@
 
 ***
 
+### Release 22.02
+
+- Updated components:
+
+  - **TigerVNC** to version **1.12.0**
+  - **noVNC** to version **1.3.0**
+  - **websockify** to version **0.10.0**
+
+- Added components:
+
+  - **python3** (also added into the `verbose version sticker`)
+  - **systemctl**
+
+- Updated files:
+
+  - `Dockerfile.xfce` (components updated and added)
+  - `vnc_startup.rc` (new **noVNC** startup)
+  - `version_of.sh` (**python3** included)
+  - `version_sticker.sh` (**python3** included)
+  - `env.rc` (handling of tags)
+  - `util-readme.sh` (fixed token parsing)
+  - all readme files
+
+- Added files:
+
+  - `local-builder-readme.md`
+
+- Changes in building and publishing policy:
+
+  - The images without **noVNC** will not be published on Docker Hub any more, because the size difference is now only 2MB. However, they always can be built locally.
+  - The images tagged `latest` will always implement **VNC** and **noVNC**.
+  - The Firefox image `latest` will not include the *Firefox plus features* now. They will be available in the Firefox image `latest-plus`.
+
 ### Release 22.01
 
 - `Dockerfile.xfce` uses **TigerVNC** releases from **SourceForge** website
