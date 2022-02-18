@@ -77,7 +77,7 @@ The following image tags on Docker Hub are regularly rebuilt:
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
 
-- `latest-plus` implements VNC, noVNC and Firefox plus features
+- `latest-plus` implements VNC/noVNC and Firefox plus features
 
     ![badge_latest-plus_created][badge_latest-plus_created]
     [![badge_latest-plus_version-sticker][badge_latest-plus_version-sticker]][link_latest-plus_version-sticker-verbose]

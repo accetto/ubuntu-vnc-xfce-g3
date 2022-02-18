@@ -98,7 +98,7 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 The following image tag on Docker Hub is regularly rebuilt:
 
-- `latest` is identical to `vnc-novnc`
+- `latest` implements VNC and noVNC
 
 Clicking on the version sticker badge in the [README on Docker Hub][this-readme-dockerhub] reveals more information about the actual configuration of the image.
 
