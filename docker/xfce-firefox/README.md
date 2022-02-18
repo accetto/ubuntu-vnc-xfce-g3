@@ -37,11 +37,13 @@ The fastest way to build the images locally:
 ```shell
 ### PWD = project root
 ./docker/hooks/build dev latest-firefox
-./docker/hooks/build dev vnc-novnc-firefox
+./docker/hooks/build dev latest-firefox-plus
 ./docker/hooks/build dev vnc-firefox
 ./docker/hooks/build dev vnc-firefox-plus
 ### and so on
 ```
+
+You can also use the provided helper script `builder.sh`, which can also publish the images on Docker Hub, if you correctly set the required environment variables (see the file `example-secrets.rc`). Check the `builder-readme.md` file.
 
 Find more in the hook script `env.rc` and in [Wiki][this-wiki].
 
@@ -94,13 +96,10 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following images will be regularly built and published on Docker Hub:
+The following image tags on Docker Hub are regularly rebuilt:
 
-- `latest` is identical to `vnc-novnc-plus`
-- `vnc` implements only VNC
-- `vnc-novnc` implements VNC and noVNC
-- `vnc-plus` implements only VNC and Firefox plus features
-- `vnc-novnc-plus` implements VNC, noVNC and Firefox plus features
+- `latest` implements VNC and noVNC
+- `latest-plus` implements VNC/noVNC and Firefox plus features
 
 Clicking on the version sticker badge in the [README on Docker Hub][this-readme-dockerhub] reveals more information about the actual configuration of the image.
 

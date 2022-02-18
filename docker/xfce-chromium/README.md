@@ -30,9 +30,10 @@ The fastest way to build the images locally:
 ### PWD = project root
 ./docker/hooks/build dev latest-chromium
 ./docker/hooks/build dev vnc-chromium
-./docker/hooks/build dev vnc-novnc-chromium
 ### and so on
 ```
+
+You can also use the provided helper script `builder.sh`, which can also publish the images on Docker Hub, if you correctly set the required environment variables (see the file `example-secrets.rc`). Check the `builder-readme.md` file.
 
 Find more in the hook script `env.rc` and in [Wiki][this-wiki].
 
@@ -95,11 +96,9 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following images will be regularly built and published on Docker Hub:
+The following image tag on Docker Hub is regularly rebuilt:
 
 - `latest` is identical to `vnc-novnc`
-- `vnc` implements only VNC
-- `vnc-novnc` implements VNC and noVNC
 
 Clicking on the version sticker badge in the [README on Docker Hub][this-readme-dockerhub] reveals more information about the actual configuration of the image.
 

@@ -8,19 +8,3 @@
 [badge_latest_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker.json
 
 [link_latest_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker-verbose.txt
-
-<!-- vnc -->
-
-[badge_vnc_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@created.json
-
-[badge_vnc_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@version-sticker.json
-
-[link_vnc_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@version-sticker-verbose.txt
-
-<!-- vnc-novnc -->
-
-[badge_vnc-novnc_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@created.json
-
-[badge_vnc-novnc_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@version-sticker.json
-
-[link_vnc-novnc_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@version-sticker-verbose.txt

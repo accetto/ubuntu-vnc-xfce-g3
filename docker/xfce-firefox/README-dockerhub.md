@@ -70,32 +70,17 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following images will be regularly built and published on Docker Hub:
+The following image tags on Docker Hub are regularly rebuilt:
 
-- `latest` is identical to `vnc-novnc-plus`
+- `latest` implements VNC and noVNC
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
 
-- `vnc` implements only VNC
+- `latest-plus` implements VNC, noVNC and Firefox plus features
 
-    ![badge_vnc_created][badge_vnc_created]
-    [![badge_vnc_version-sticker][badge_vnc_version-sticker]][link_vnc_version-sticker-verbose]
-
-- `vnc-novnc` implements VNC and noVNC
-
-    ![badge_vnc-novnc_created][badge_vnc-novnc_created]
-    [![badge_vnc-novnc_version-sticker][badge_vnc-novnc_version-sticker]][link_vnc-novnc_version-sticker-verbose]
-
-- `vnc-plus` implements only VNC and Firefox plus features
-
-    ![badge_vnc-plus_created][badge_vnc-plus_created]
-    [![badge_vnc-plus_version-sticker][badge_vnc-plus_version-sticker]][link_vnc-plus_version-sticker-verbose]
-
-- `vnc-novnc-plus` implements VNC, noVNC and Firefox plus features
-
-    ![badge_vnc-novnc-plus_created][badge_vnc-novnc-plus_created]
-    [![badge_vnc-novnc-plus_version-sticker][badge_vnc-novnc-plus_version-sticker]][link_vnc-novnc-plus_version-sticker-verbose]
+    ![badge_latest-plus_created][badge_latest-plus_created]
+    [![badge_latest-plus_version-sticker][badge_latest-plus_version-sticker]][link_latest-plus_version-sticker-verbose]
 
 Clicking on the version sticker badge reveals more information about the actual configuration of the image.
 

@@ -65,32 +65,17 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags are regularly rebuilt and published on Docker Hub:
+The following image tags on Docker Hub are regularly rebuilt:
 
-- `latest` is identical to `vnc-novnc`
+- `latest` implements VNC and noVNC
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
 
-- `vnc` implements only VNC
+- `latest-fugo` implements VNC/noVNC and supports user group overriding
 
-    ![badge_vnc_created][badge_vnc_created]
-    [![badge_vnc_version-sticker][badge_vnc_version-sticker]][link_vnc_version-sticker-verbose]
-
-- `vnc-novnc` implements VNC and noVNC
-
-    ![badge_vnc-novnc_created][badge_vnc-novnc_created]
-    [![badge_vnc-novnc_version-sticker][badge_vnc-novnc_version-sticker]][link_vnc-novnc_version-sticker-verbose]
-
-- `vnc-fugo` implements only VNC and supports user group overriding
-
-    ![badge_vnc-fugo_created][badge_vnc-fugo_created]
-    [![badge_vnc-fugo_version-sticker][badge_vnc-fugo_version-sticker]][link_vnc-fugo_version-sticker-verbose]
-
-- `vnc-novnc-fugo` implements VNC/noVNC and supports user group overriding
-
-    ![badge_vnc-fugo-novnc_created][badge_vnc-novnc-fugo_created]
-    [![badge_vnc-novnc-fugo_version-sticker][badge_vnc-novnc-fugo_version-sticker]][link_vnc-novnc-fugo_version-sticker-verbose]
+    ![badge_latest-fugo_created][badge_latest-fugo_created]
+    [![badge_latest-fugo_version-sticker][badge_latest-fugo_version-sticker]][link_latest-fugo_version-sticker-verbose]
 
 Clicking on the version sticker badge reveals more information about the actual configuration of the image.
 
