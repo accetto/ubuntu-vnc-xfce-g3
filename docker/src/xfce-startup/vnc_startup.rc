@@ -95,7 +95,7 @@ start_vnc () {
             if [ -n "${NO_VNC_PORT}" ] ; then
 
                 ### noVNC startup (in the background)
-                "${NO_VNC_HOME}"/utils/launch.sh --vnc localhost:${VNC_PORT} --listen ${NO_VNC_PORT} &> "${_novnc_log}" &
+                "${NO_VNC_HOME}"/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NO_VNC_PORT} &> "${_novnc_log}" &
                 
                 if [ -n "${_verbose}" ] ; then 
                     echo "noVNC started on TCP port '${NO_VNC_PORT}'"
