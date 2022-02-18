@@ -15,7 +15,7 @@ Examples:
 ```bash
 ./builder.sh latest build --no-cache
 
-### set the environment variables first, e.g. 'source secrets.rc'
+### set the environment variables first, e.g. 'source ./secrets.rc'
 ./builder.sh latest all
 ```
 
