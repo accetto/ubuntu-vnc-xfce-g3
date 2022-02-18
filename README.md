@@ -16,8 +16,8 @@
 ![badge-github-commits][badge-github-commits]
 ![badge-github-last-commit][badge-github-last-commit]
 
-![badge-github-workflow-dockerhub-autobuild][badge-github-workflow-dockerhub-autobuild]
-![badge-github-workflow-dockerhub-post-push][badge-github-workflow-dockerhub-post-push]
+<!-- ![badge-github-workflow-dockerhub-autobuild][badge-github-workflow-dockerhub-autobuild] -->
+<!-- ![badge-github-workflow-dockerhub-post-push][badge-github-workflow-dockerhub-post-push] -->
 
 ***
 
@@ -58,14 +58,15 @@ The fastest way to build the images locally:
 ./docker/hooks/build dev latest
 ./docker/hooks/build dev latest-chromium
 ./docker/hooks/build dev latest-firefox
+./docker/hooks/build dev latest-firefox-plus
 ./docker/hooks/build dev vnc
-./docker/hooks/build dev vnc-novnc
 ./docker/hooks/build dev vnc-chromium
-./docker/hooks/build dev vnc-novnc-chromium
 ./docker/hooks/build dev vnc-firefox
-./docker/hooks/build dev vnc-novnc-firefox
+./docker/hooks/build dev vnc-firefox-plus
 ### and so on
 ```
+
+You can also use the provided helper script `builder.sh`, which can also publish the images if you correctly set the required environment variables (see the file `example-secrets.rc`).
 
 Find more in the hook script `env.rc` and in [Wiki][this-wiki].
 

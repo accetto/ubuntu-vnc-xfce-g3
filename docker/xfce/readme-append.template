@@ -9,34 +9,10 @@
 
 [link_latest_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker-verbose.txt
 
-<!-- vnc -->
+<!-- latest-fugo -->
 
-[badge_vnc_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@created.json
+[badge_latest-fugo_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest-fugo@created.json
 
-[badge_vnc_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@version-sticker.json
+[badge_latest-fugo_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest-fugo@version-sticker.json
 
-[link_vnc_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc@version-sticker-verbose.txt
-
-<!-- vnc-novnc -->
-
-[badge_vnc-novnc_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@created.json
-
-[badge_vnc-novnc_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@version-sticker.json
-
-[link_vnc-novnc_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc@version-sticker-verbose.txt
-
-<!-- vnc-fugo -->
-
-[badge_vnc-fugo_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-fugo@created.json
-
-[badge_vnc-fugo_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-fugo@version-sticker.json
-
-[link_vnc-fugo_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-fugo@version-sticker-verbose.txt
-
-<!-- vnc-novnc-fugo -->
-
-[badge_vnc-novnc-fugo_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc-fugo@created.json
-
-[badge_vnc-novnc-fugo_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc-fugo@version-sticker.json
-
-[link_vnc-novnc-fugo_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@vnc-novnc-fugo@version-sticker-verbose.txt
+[link_latest-fugo_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest-fugo@version-sticker-verbose.txt

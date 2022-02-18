@@ -29,12 +29,13 @@ The fastest way to build the images locally:
 ```shell
 ### PWD = project root
 ./docker/hooks/build dev latest
+./docker/hooks/build dev latest-fugo
 ./docker/hooks/build dev vnc
 ./docker/hooks/build dev vnc-fugo
-./docker/hooks/build dev vnc-novnc
-./docker/hooks/build dev vnc-novnc-fugo
 ### and so on
 ```
+
+You can also use the provided helper script `builder.sh`, which can also publish the images on Docker Hub, if you correctly set the required environment variables (see the file `example-secrets.rc`). Check the `builder-readme.md` file.
 
 Find more in the hook script `env.rc` and in [Wiki][this-wiki].
 
@@ -83,13 +84,10 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags are regularly maintained and rebuilt:
+The following image tags on Docker Hub are regularly rebuilt:
 
-- `latest` is identical to `vnc-novnc`
-- `vnc` implements only VNC
-- `vnc-novnc` implements VNC and noVNC
-- `vnc-fugo` implements only VNC and supports user group overriding
-- `vnc-novnc-fugo` implements VNC/noVNC and supports user group overriding
+- `latest` implements VNC and noVNC
+- `latest-fugo` implements VNC/noVNC and supports user group overriding
 
 Clicking on the version sticker badge in the [README on Docker Hub][this-readme-dockerhub] reveals more information about the actual configuration of the image.
 

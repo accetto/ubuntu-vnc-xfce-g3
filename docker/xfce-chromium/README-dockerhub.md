@@ -79,22 +79,12 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following images will be regularly built and published on Docker Hub:
+The following image tag on Docker Hub is regularly rebuilt:
 
 - `latest` is identical to `vnc-novnc`
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
-
-- `vnc` implements only VNC
-
-    ![badge_vnc_created][badge_vnc_created]
-    [![badge_vnc_version-sticker][badge_vnc_version-sticker]][link_vnc_version-sticker-verbose]
-
-- `vnc-novnc` implements VNC and noVNC
-
-    ![badge_vnc-novnc_created][badge_vnc-novnc_created]
-    [![badge_vnc-novnc_version-sticker][badge_vnc-novnc_version-sticker]][link_vnc-novnc_version-sticker-verbose]
 
 Clicking on the version sticker badge reveals more information about the actual configuration of the image.
 
