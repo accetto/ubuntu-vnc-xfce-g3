@@ -384,11 +384,12 @@ do_publish() {
 
 	# get token to be able to talk to Docker Hub
 	echo "GET token"
+
 	token=$( curl -s \
 		-X POST \
 		"${api_base_url}/users/login/" \
 		-H "Content-Type: application/json" \
-		-d '{"username": "'${user_name}'", "password": "'${user_pwd}'"}' | sed -e 's/.*"token": "\(.*\)".*/\1/' )
+		-d '{"username": "'${user_name}'", "password": "'${user_pwd}'"}' | sed -e 's/.*"token":"\(.*\)".*/\1/' )
 
 	echo "UPDATE Docker Hub description using '${_readme_upload_file}'"
 
