@@ -81,6 +81,10 @@ case "$1" in
         ### source example: psql (PostgreSQL) 10.10 (Ubuntu 10.10-0ubuntu0.18.04.1)
         echo $(psql --version 2>/dev/null | grep -Po -m1 '(?<=psql \(PostgreSQL\)\s)[0-9.]+')
         ;;
+    python3 )
+        ## source example: 
+        echo $(python3 --version 2>/dev/null | grep -Po -m1 '[0-9.]+$')
+        ;;
     ristretto )
         ### source example: ristretto 0.8.2
         echo $(ristretto --version 2>/dev/null | grep -Po -m1 '[0-9.]+$')
