@@ -313,7 +313,7 @@ Otherwise the following command would fail:
 docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:latest
 
 ### This will work (image has been built with ARG_SUPPORT_USER_GROUP_OVERRIDE)
-docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:vnc-novnc-fugo
+docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:latest-fugo
 ```
 
 The images having the tag suffix `-fugo` (**f**eatures **u**ser **g**roup **o**verride) are built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE`.
