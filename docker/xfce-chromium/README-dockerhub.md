@@ -35,11 +35,11 @@ sudo apt --fix-broken install
 
 Sharing the audio device for video with sound (only Linux and Chromium):
 
-```bash
+```shell
 docker run -it -P --rm \
   --device /dev/snd:/dev/snd:rw \
   --group-add audio \
-accetto/ubuntu-vnc-xfce-chromium-g3
+accetto/ubuntu-vnc-xfce-chromium-g3:latest
 ```
 
 ### Table of contents

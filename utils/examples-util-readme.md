@@ -8,7 +8,7 @@ Open a terminal window and change the current directory to `utils`.
 
 Then copy the secrets example file, modify the copy and source it:
 
-```bash
+```shell
 ### make a copy and then modify it
 cp example-secrets-utils.rc secrets-utils.rc
 
@@ -22,13 +22,13 @@ You can also provide the secrets file as a command line parameter instead of sou
 
 Embedded help describes the parameters:
 
-```bash
+```shell
 ./util-readme.sh -h
 ```
 
 ## Usage examples
 
-```bash
+```shell
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-g3 --context=../docker/xfce -- preview
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-g3 --context=../docker/xfce -- publish
 

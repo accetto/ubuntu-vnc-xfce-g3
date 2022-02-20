@@ -227,7 +227,7 @@ If you want to check, what parameter values have been actually applied, then you
 For example:
 
 ```shell
-docker run -it -P --rm accetto/ubuntu-vnc-xfce-g3:vnc-novnc --debug
+docker run -it -P --rm accetto/ubuntu-vnc-xfce-g3:latest --debug
 
 ### output (excerpt)
 VNC server started on display ':1' and TCP port '5901'
@@ -298,7 +298,7 @@ Otherwise the following command would fail:
 
 ```shell
 ### This will fail (Permission denied)
-docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:vnc-novnc
+docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:latest
 
 ### This will work (image has been built with ARG_SUPPORT_USER_GROUP_OVERRIDE)
 docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:vnc-novnc-fugo
@@ -325,13 +325,13 @@ docker run -d -p 25901:5901 accetto/ubuntu-vnc-xfce-g3
 The following container will create (or re-use) the local named volume **my\_Downloads** mounted as `/home/headless/Downloads`:
 
 ```shell
-docker run -d -P -v my_Downloads:/home/headless/Downloads accetto/ubuntu-vnc-xfce-g3
+docker run -d -P -v my_Downloads:/home/headless/Downloads accetto/ubuntu-vnc-xfce-g3:latest
 ```
 
 or using the newer syntax with **--mount** flag:
 
 ```shell
-docker run -d -P --mount source=my_Downloads,target=/home/headless/Downloads accetto/ubuntu-vnc-xfce-g3
+docker run -d -P --mount source=my_Downloads,target=/home/headless/Downloads accetto/ubuntu-vnc-xfce-g3:latest
 ```
 
 ## Running containers in foreground (interactively)
@@ -339,7 +339,7 @@ docker run -d -P --mount source=my_Downloads,target=/home/headless/Downloads acc
 The following container can be used interactively:
 
 ```shell
-docker run -it --rm accetto/ubuntu-vnc-xfce-g3 bash
+docker run -it --rm accetto/ubuntu-vnc-xfce-g3:latest bash
 ```
 
 The opened `bash` session can be used as usual and then closed by entering `^C` (CTRL-C):
@@ -364,7 +364,7 @@ The image supports multiple **start-up options** and **start-up modifiers**. The
 The following container will print out the short help and then it will remove itself:
 
 ```shell
-docker run --rm accetto/ubuntu-vnc-xfce-g3 --help
+docker run --rm accetto/ubuntu-vnc-xfce-g3:latest --help
 ```
 
 Example of the short help text:
@@ -394,7 +394,7 @@ For more information visit https://github.com/accetto/ubuntu-vnc-xfce-g3
 The following container will print out the long help and then it will remove itself:
 
 ```shell
-docker run --rm accetto/ubuntu-vnc-xfce-g3 --help-usage
+docker run --rm accetto/ubuntu-vnc-xfce-g3:latest --help-usage
 ```
 
 Example of the long help text:
