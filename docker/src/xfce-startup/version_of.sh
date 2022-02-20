@@ -82,7 +82,7 @@ case "$1" in
         echo $(psql --version 2>/dev/null | grep -Po -m1 '(?<=psql \(PostgreSQL\)\s)[0-9.]+')
         ;;
     python3 )
-        ## source example: 
+        ## source example: Python 3.8.5
         echo $(python3 --version 2>/dev/null | grep -Po -m1 '[0-9.]+$')
         ;;
     ristretto )
