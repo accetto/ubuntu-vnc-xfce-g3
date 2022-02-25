@@ -21,40 +21,46 @@ Examples:
 
 ## ubuntu-vnc-xfce-g3
 
-On Docker Hub:
+Builds for Docker Hub:
 
-- [x] latest
-- [x] latest-fugo
+| Blend       | Deployment tag |
+| ----------- | -------------- |
+| latest      | latest         |
+| latest-fugo | latest-fugo    |
 
-```plain
-Local only:
+Local builds only:
 
-- vnc
-- vnc-fugo
-```
+| Blend    | Deployment tag |
+| -------- | -------------- |
+| vnc      | vnc            |
+| vnc-fugo | vnc-fugo       |
 
 ## ubuntu-vnc-xfce-chromium-g3
 
-On Docker Hub:
+Builds for Docker Hub:
 
-- [x] latest-chromium
+| Blend           | Deployment tag |
+| --------------- | -------------- |
+| latest-chromium | latest         |
 
-```plain
-Local only:
+Local builds only:
 
-- vnc-chromium
-```
+| Blend        | Deployment tag |
+| ------------ | -------------- |
+| vnc-chromium | vnc            |
 
 ## ubuntu-vnc-xfce-firefox-g3
 
-On Docker Hub:
+Builds for Docker Hub:
 
-- [x] latest-firefox
-- [x] latest-firefox-plus
+| Blend               | Deployment tag |
+| ------------------- | -------------- |
+| latest-firefox      | latest         |
+| latest-firefox-plus | latest-plus    |
 
-```plain
-Local only:
+Local builds only:
 
-- vnc-firefox
-- vnc-firefox-plus
-```
+| Blend            | Deployment tag |
+| ---------------- | -------------- |
+| vnc-firefox      | vnc            |
+| vnc-firefox-plus | vnc-plus       |
