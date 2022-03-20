@@ -74,6 +74,11 @@ start_vnc () {
         rm -rfv /tmp/.X*-lock /tmp/.X11-unix &> "${_vnc_log}"
     fi
 
+    if [ -n "${_verbose}" ] ; then
+        echo "Starting VNC"
+        echo "vncserver ${DISPLAY} &> ${_vnc_log}"
+    fi
+
     ### VNC startup (in the background)
     vncserver "${DISPLAY}" &> "${_vnc_log}" &
 
@@ -89,20 +94,29 @@ start_vnc () {
     if [ "${_arg_skip_novnc}" == "off" ] ; then
 
         ### noVNC is not necessarily installed
-        if [ -n "${NO_VNC_HOME}" ] || [ -d "${NO_VNC_HOME}/utils/websockify" ] ; then
+        if [ -n "${NOVNC_HOME}" ] || [ -d "${NOVNC_HOME}/utils/websockify" ] ; then
 
             ### noVNC requirements
-            if [ -n "${NO_VNC_PORT}" ] ; then
+            if [ -n "${NOVNC_PORT}" ] ; then
+
+                if [ -n "${_verbose}" ] ; then
+                    echo "Starting noVNC"
+                    echo "${NOVNC_HOME}/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NOVNC_PORT} ${NOVNC_HEARTBEAT:+--heartbeat ${NOVNC_HEARTBEAT}} &> ${_novnc_log}"
+                fi
 
                 ### noVNC startup (in the background)
-                "${NO_VNC_HOME}"/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NO_VNC_PORT} &> "${_novnc_log}" &
+                "${NOVNC_HOME}"/utils/novnc_proxy \
+                    --vnc localhost:${VNC_PORT} \
+                    --listen ${NOVNC_PORT} \
+                    ${NOVNC_HEARTBEAT:+--heartbeat ${NOVNC_HEARTBEAT}} \
+                    &> "${_novnc_log}" &
                 
                 if [ -n "${_verbose}" ] ; then 
-                    echo "noVNC started on TCP port '${NO_VNC_PORT}'"
+                    echo "noVNC started on TCP port '${NOVNC_PORT}' ${NOVNC_HEARTBEAT:+with heartbeat ${NOVNC_HEARTBEAT} seconds}"
                     echo "Connect via web browser"
                 fi
             else
-                cleanup "ERROR: Environment variable 'NO_VNC_PORT' is not set."
+                cleanup "ERROR: Environment variable 'NOVNC_PORT' is not set."
             fi
         else
             if [ -n "${_verbose}" ] ; then echo "WARNING: noVNC is not available." ; fi
