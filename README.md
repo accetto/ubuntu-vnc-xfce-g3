@@ -153,7 +153,7 @@ Support for overriding the user group by `docker run` has been introduced in the
 
 Several ways of overriding the VNC/noVNC parameters are supported. The password, display, resolution, color depth, view mode and the ports can be overridden at the image build-time, the container startup-time and the VNC startup-time. Using of empty VNC/noVNC password is also supported because it is independent from the container user password.
 
-If your session disconnnects, it might be related to a network equipment (load-balancer, reverse proxy, ...) dropping the websocket session for inactivity (more info [here](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout) and [here](https://nginx.org/en/docs/http/websocket.html) for nginx). In such case, try defining the NO_VNC_HEARTBEAT=<xx environment variable at startup-time, where <xx> is the number of seconds between each [websocket ping/pong](https://github.com/websockets/ws/issues/977) packet.
+If your session disconnects, it might be related to a network equipment (load-balancer, reverse proxy, ...) dropping the websocket session for inactivity (more info [here](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout) and [here](https://nginx.org/en/docs/http/websocket.html) for nginx). In such case, try defining the **NOVNC_HEARTBEAT=XX** environment variable at startup-time, where **XX** is the number of seconds between [websocket ping/pong](https://github.com/websockets/ws/issues/977) packets.
 
 #### Different use of version sticker
 

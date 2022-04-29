@@ -6,6 +6,24 @@
 
 ***
 
+### Release 22.04
+
+- **noVNC** improvements
+
+  - **noVNC** got a new optional argument, which is passed through a new environment variable **NOVNC_HEARTBEAT**
+  
+    - set the variable by creating the container, like `docker run -e NOVNC_HEARTBEAT=30` for the ping interval 30 seconds
+    - it should prevent disconnections because of inactivity, if the container is used behind load-balancers or reverse proxies ([issue #23](https://github.com/accetto/ubuntu-vnc-xfce-g3/issues/23))
+
+  - script `vnc_startup.rc` has been adjusted and improved
+  - script `version_of.sh` has been adjusted
+  - **numpy** module has been added to make the HyBi protocol faster
+
+  - following variables related to **noVNC** has been renamed in all related files
+    - `ARG_NO_VNC_PORT` renamed to `ARG_NOVNC_PORT`
+    - `NO_VNC_HOME` renamed to `NOVNC_HOME`
+    - `NO_VNC_PORT` renamed to `NOVNC_PORT`
+
 ### Release 22.02
 
 - Updated components:

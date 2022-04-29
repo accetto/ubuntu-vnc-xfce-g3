@@ -126,7 +126,7 @@ The default `VNC_PORT` value is `5901`. The default `DISPLAY` value is `:1`. The
 
 The containers that are created from the images built with the **noVNC feature** can be also accessed over [noVNC][noVNC] by any web browser supporting HTML5.
 
-The default `NO_VNC_PORT` value is `6901`. The noVNC password is always identical to the VNC password.
+The default `NOVNC_PORT` value is `6901`. The noVNC password is always identical to the VNC password.
 
 There are several ways of connecting to headless containers and the possibilities also differ between the Linux and Windows environments, but usually it is done by mapping the VNC/noVNC ports exposed by the container to some free TCP ports on its host system.
 
@@ -160,7 +160,7 @@ They have the following default values:
 
 ```shell
 DISPLAY=:1
-NO_VNC_PORT=6901
+NOVNC_PORT=6901
 VNC_COL_DEPTH=24
 VNC_PORT=5901
 VNC_PW=headless
@@ -178,7 +178,7 @@ These environment variables can be overridden several ways.
 - `ARG_VNC_RESOLUTION` sets the variable `VNC_RESOLUTION`
 - `ARG_VNC_COL_DEPTH` sets the variable `VNC_COL_DEPTH`
 - `ARG_VNC_VIEW_ONLY` set the variable `VNC_VIEW_ONLY`
-- `ARG_NO_VNC_PORT` sets the variable `NO_VNC_PORT`
+- `ARG_NOVNC_PORT` sets the variable `NOVNC_PORT`
 
 For example:
 
@@ -212,7 +212,8 @@ The content of the file should be similar to the provided example file `example-
 export VNC_RESOLUTION=1024x768
 export DISPLAY=:2
 export VNC_PORT=5902
-export NO_VNC_PORT=6902
+export NOVNC_PORT=6902
+;export NOVNC_HEARTBEAT=25
 ```
 
 Please note that only the lines beginning with `export` at the first position will be imported.
@@ -239,11 +240,13 @@ You should be aware, that overriding the VNC/noVNC parameters incorrectly could 
 
 This feature assumes some preliminary knowledge and it is provided for advanced users that already know what they want to achieve.
 
-For example, by default there is a relation between the `DISPLAY` and `VNC_PORT` values. Generally the convention `VNC_PORT = 5900 + DISPLAY` is followed (similarly `NO_VNC_PORT = 6900 + DISPLAY`).
+For example, by default there is a relation between the `DISPLAY` and `VNC_PORT` values. Generally the convention `VNC_PORT = 5900 + DISPLAY` is followed (similarly `NOVNC_PORT = 6900 + DISPLAY`).
 
 You may decide not to follow the conventions. This image allows you to set the parameters differently, but again, you should know, what you are doing.
 
 Be also aware, that there are differences between the Linux and Windows environments.
+
+If your session disconnects, it might be related to a network equipment (load-balancer, reverse proxy, ...) dropping the websocket session for inactivity (more info [here](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout) and [here](https://nginx.org/en/docs/http/websocket.html) for nginx). In such case, try defining the **NOVNC_HEARTBEAT=XX** environment variable at startup-time, where **XX** is the number of seconds between [websocket ping/pong](https://github.com/websockets/ws/issues/977) packets.
 
 ## Container user accounts
 
