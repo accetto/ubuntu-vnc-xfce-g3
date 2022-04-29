@@ -94,8 +94,12 @@ start_vnc () {
             ### noVNC requirements
             if [ -n "${NO_VNC_PORT}" ] ; then
 
+                if [ -n "${NO_VNC_HEARTBEAT}" ]; then
+                    HEARTBEAT_OPT="--heartbeat ${NO_VNC_HEARTBEAT}"
+                fi
+
                 ### noVNC startup (in the background)
-                "${NO_VNC_HOME}"/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NO_VNC_PORT} &> "${_novnc_log}" &
+                "${NO_VNC_HOME}"/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NO_VNC_PORT} ${HEARTBEAT_OPT} &> "${_novnc_log}" &
                 
                 if [ -n "${_verbose}" ] ; then 
                     echo "noVNC started on TCP port '${NO_VNC_PORT}'"
