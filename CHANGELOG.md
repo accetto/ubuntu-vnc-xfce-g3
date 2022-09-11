@@ -6,6 +6,13 @@
 
 ***
 
+### Release 22.09
+
+This is just a maintenance release.
+
+- Warnings about the *README publishing not always working* problem have been added.
+- Some comments have been updated.
+
 ### Release 22.04
 
 - **noVNC** improvements
