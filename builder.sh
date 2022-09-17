@@ -7,7 +7,7 @@ main() {
     local cmd=${2?Need command}
     shift 2
 
-    local log="scrap_builder.log"
+    local log="scrap_buildersh.log"
 
     case "${cmd}" in
 
@@ -31,9 +31,7 @@ main() {
                     for c in "build" "push" "post_push" ; do
 
                         echo
-                        echo "-------------"
-                        echo "--> ${c}"
-                        echo "-------------"
+                        echo "==> ${c} '${blend}'"
                         echo
 
                         ### note that the rest-parameters are not included here
@@ -42,21 +40,16 @@ main() {
                         if [[ $? -ne 0 ]] ; then exit ; fi
                     done
 
-                    rm -f "${log}"
-
                     echo
-                    echo "----"
-                    echo "Done"
-                    echo "----"
+                    echo "==> Published '${blend}'"
                     echo
-
                 else
                     echo
-                    echo "------------------------------------------------"
-                    echo "No build needed for '${blend}'"
-                    echo "------------------------------------------------"
+                    echo "==> No build needed for '${blend}'"
                     echo
                 fi
+
+                rm -f "${log}"
             fi
             ;;
 
