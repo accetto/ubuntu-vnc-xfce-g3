@@ -25,6 +25,7 @@ main() {
 
     if [ -f "${_build_context}/${_scrap_demand_stop_building}" ] ; then
 
+        # DEPRECATED: This 'if' block is deprecated and it will be removed from the future releases.
         if [ "${FORCE_README_PUBLISHING}" != "1" ] ; then
 
             echo "Skipping post_push on demand."
@@ -77,6 +78,7 @@ main() {
 
             ### trigger the GitHub Actions workflow to push the readme file into the deployment repository
             ### essential environment variables must be already set
+            # DEPRECATED: This 'if' block is deprecated and it will be removed from the future releases.
             if [ -n "${POST_PUSH_WORKFLOW_BRANCH}" ] && [ -n "${POST_PUSH_WORKFLOW_TOKEN}" ] && [ "${PROHIBIT_README_PUBLISHING}" != "1" ] ; then
 
                 ### 'git branch --show-current' helps by testing local building

@@ -117,6 +117,8 @@ This step updates the GitHub Gists and removes the temporary helper files create
 
 **Remark**: If this script would be executed on Docker Hub, then it would also publish the readme file. However, it doesn't work correctly by local building. Therefore it's recommended to set the environment variable `PROHIBIT_README_PUBLISHING=1`. You can do it also in the secrets file.
 
+DEPRECATED: Note that the environment variable `PROHIBIT_README_PUBLISHING` and also the whole automatic README publishing have been deprecated and they will be removed.
+
 ### Step 5: `util-readme.sh`
 
 You have to have `curl` installed for this step.

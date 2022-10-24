@@ -14,10 +14,13 @@
 .vscode
 .debugger*
 .developer*
-.secrets*
+.secret*
+.vscode
 *.log
 avanti*
 debug*
 scrap*
 secret*
 TODO*
+.favorites.json
+*cache*

@@ -100,7 +100,7 @@ accetto/ubuntu-vnc-xfce-chromium-g3:latest
       - [Separated builder and deployment repositories](#separated-builder-and-deployment-repositories)
       - [Separate README files for Docker Hub](#separate-readme-files-for-docker-hub)
       - [Based on Ubuntu 20.04 LTS](#based-on-ubuntu-2004-lts)
-      - [Using TigerVNC 1.11](#using-tigervnc-111)
+      - [Using TigerVNC 1.12](#using-tigervnc-112)
       - [New startup script](#new-startup-script)
   - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
@@ -179,9 +179,9 @@ Each deployment repository has its own README file for Docker Hub, which is publ
 
 The current images are based on the official [Ubuntu 20.04 LTS][docker-ubuntu] image.
 
-#### Using TigerVNC 1.11
+#### Using TigerVNC 1.12
 
-The images use the latest [TigerVNC 1.11.0][tigervnc] server, which has introduced some significant changes in its startup process. Actually the images implement the newer TigerVNC nightly builds, that fix or mitigate some of the issues.
+The images use the latest [TigerVNC 1.12.0][tigervnc] server, which has introduced some significant changes in its startup process. Actually the images implement the newer TigerVNC nightly builds, that fix or mitigate some of the issues.
 
 #### New startup script
 

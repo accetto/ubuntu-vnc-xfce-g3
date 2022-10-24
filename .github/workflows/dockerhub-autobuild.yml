@@ -1,3 +1,6 @@
+
+### DEPRECATED: This file is deprecated and it will be removed.
+
 ### This workflow triggers auto-building on Docker Hub.
 name: dockerhub-autobuild
 on:

@@ -38,6 +38,7 @@ main() {
         return 0
     fi
 
+    # DEPRECATED: This if block is deprecated and it will be replaced.
     if [ "${_stage}" == "local" ] ; then
         if [ -n "${DOCKERHUB_USERNAME}" ] && [ -n "${DOCKERHUB_PASSWORD}" ] ; then
 
@@ -54,12 +55,14 @@ main() {
         fi
     fi
 
+    # DEPRECATED: This if block is deprecated and it will be replaced.
     ### push image into the builder repository
     if [ "${_stage}" != "local" ] ; then builder_push ; fi
 
     ### push images into the deployment repository
     deployment_push
 
+    # DEPRECATED: This if block is deprecated and it will be replaced.
     if [ "${_stage}" == "local" ] ; then docker logout ; fi
 }
 

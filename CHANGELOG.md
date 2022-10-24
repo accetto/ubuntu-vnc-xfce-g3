@@ -6,6 +6,12 @@
 
 ***
 
+### Release 22.10
+
+This is the last release of the current building pipeline generation `G3v1`, which will still be available in the repository as the branch `archived-generation-g3v1`.
+
+The next milestone release will bring some significant changes and improvements in the building pipeline (generation `G3v2`) . The changing parts marked as `DEPRECATED` will be replaced or removed.
+
 ### Release 22.09
 
 This is just a maintenance release.

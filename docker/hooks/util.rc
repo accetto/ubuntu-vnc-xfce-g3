@@ -197,6 +197,7 @@ update_gist() {
     fi
 }
 
+# DEPRECATED This procedure is deprecated and it will be removed.
 trigger_post_push_workflow() {
     ### Trigger the 'post_push' workflow on GitHub.
     ### Secret 'POST_PUSH_WORKFLOW_TOKEN' with the scopes 'repo' and 'workflow' is needed.
