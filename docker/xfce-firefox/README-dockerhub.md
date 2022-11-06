@@ -14,15 +14,27 @@
 
 ***
 
-**Tip:** This is the **short README** version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
-
-**Warning** about images with Firefox
-
-There is no single-process Firefox image in this repository and the multi-process mode is always enabled. Be aware, that multi-process requires larger shared memory (`/dev/shm`). At least 256MB is recommended. Please check the **Firefox multi-process** page in [this Wiki][that-wiki-firefox-multiprocess] for more information and the instructions, how to set the shared memory size in different scenarios.
+- [Headless Ubuntu/Xfce container with VNC/noVNC and Firefox browser](#headless-ubuntuxfce-container-with-vncnovnc-and-firefox-browser)
+  - [accetto/ubuntu-vnc-xfce-firefox-g3](#accettoubuntu-vnc-xfce-firefox-g3)
+    - [Introduction](#introduction)
+    - [TL;DR](#tldr)
+    - [Description](#description)
+    - [Image tags](#image-tags)
+    - [More information](#more-information)
 
 ***
 
+**Warning** about the images with Firefox
+
+There is no single-process Firefox image in this repository any more and the **multi-process mode** is always enabled. Be aware, that the multi-process mode requires larger shared memory (`/dev/shm`). At least 256MB is recommended. Please check the **Firefox multi-process** page in [this Wiki][that-wiki-firefox-multiprocess] for more information and the instructions, how to set the shared memory size in different scenarios.
+
+***
+
+### Introduction
+
 This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox][firefox] web browser.
+
+This is the **short README** version for the **Docker Hub**. There is also the [full-length README][this-readme-full] on the **GitHub**.
 
 ### TL;DR
 
@@ -37,14 +49,7 @@ sudo apt-get update
 sudo apt --fix-broken install
 ```
 
-### Table of contents
-
-- [Headless Ubuntu/Xfce container with VNC/noVNC and Firefox browser](#headless-ubuntuxfce-container-with-vncnovnc-and-firefox-browser)
-  - [accetto/ubuntu-vnc-xfce-firefox-g3](#accettoubuntu-vnc-xfce-firefox-g3)
-    - [TL;DR](#tldr)
-    - [Table of contents](#table-of-contents)
-    - [Image tags](#image-tags)
-    - [More information](#more-information)
+### Description
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repositories [accetto/ubuntu-vnc-xfce-firefox][accetto-github-ubuntu-vnc-xfce-firefox] and [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-github-ubuntu-vnc-xfce-firefox-plus].
 

@@ -126,7 +126,7 @@ fn_die()
 	test -n "$_ret" || _ret=1
 	test "$_PRINT_HELP" = yes && print_help >&2
 	echo "$1" >&2
-	read -rp $"Press any key to close this window ... " -n1 _input
+	read -rp $"Press any key to close this window" -n1 _input
 	exit ${_ret}
 }
 

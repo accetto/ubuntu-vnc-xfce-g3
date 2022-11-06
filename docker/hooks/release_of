@@ -15,7 +15,7 @@ main() {
             ;;
 
         * )
-            echo "Unknown key '$1'"
+            echo "Exiting '${0}' with code '1' because of unknown key '${1}'"
             return 1
             ;;
 

@@ -12,15 +12,17 @@
 # recommended files on 'https://github.com/github/gitignore'
 
 .vscode
+.cache*
 .debugger*
 .developer*
+.favorites.json
+.g3-cache*
 .secret*
+.util*
 .vscode
-*.log
 avanti*
 debug*
 scrap*
 secret*
 TODO*
-.favorites.json
-*cache*
+*.log

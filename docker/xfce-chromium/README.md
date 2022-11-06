@@ -9,6 +9,33 @@
 ![badge-github-release][badge-github-release]
 ![badge-github-release-date][badge-github-release-date]
 
+***
+
+- [Headless Ubuntu/Xfce container with VNC/noVNC and Chromium Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-chromium-browser)
+  - [accetto/ubuntu-vnc-xfce-chromium-g3](#accettoubuntu-vnc-xfce-chromium-g3)
+    - [Introduction](#introduction)
+    - [TL;DR](#tldr)
+    - [Description](#description)
+    - [Image tags](#image-tags)
+    - [Ports](#ports)
+    - [Volumes](#volumes)
+    - [Version sticker](#version-sticker)
+  - [Using headless containers](#using-headless-containers)
+    - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
+  - [Container user accounts](#container-user-accounts)
+    - [Overriding container user parameters](#overriding-container-user-parameters)
+  - [Running containers in background (detached)](#running-containers-in-background-detached)
+  - [Running containers in foreground (interactively)](#running-containers-in-foreground-interactively)
+  - [Startup options and help](#startup-options-and-help)
+  - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
+  - [Credits](#credits)
+  - [Diagrams](#diagrams)
+    - [Dockerfile.xfce](#dockerfilexfce)
+
+***
+
+### Introduction
+
 This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
 
 ### TL;DR
@@ -28,16 +55,24 @@ The fastest way to build the images locally:
 
 ```shell
 ### PWD = project root
-./docker/hooks/build dev latest-chromium
-./docker/hooks/build dev vnc-chromium
-### and so on
+### prepare and source the 'secrets.rc' file first (see 'example-secrets.rc')
+
+### examples of building and publishing the individual images 
+./builder.sh latest-chromium all
+
+### or skipping the publishing to the Docker Hub
+./builder.sh latest-chromium all-no-push
+
+### examples of building and publishing the images as a group
+./ci-builder.sh all group latest-chromium
+
+### or also
+./ci-builder.sh all family latest-chromium
 ```
 
-You can also use the provided helper script `builder.sh`, which can also publish the images on Docker Hub, if you correctly set the required environment variables (see the file `example-secrets.rc`). Check the files `local-builder-readme.md` and `local-building-example.md`.
+You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
 
-Find more in the hook script `env.rc` and in [Wiki][this-wiki].
-
-Sharing the audio device for video with sound (only Linux and Chromium):
+Sharing the audio device for video with sound (only on Linux):
 
 ```shell
 docker run -it -P --rm \
@@ -46,27 +81,7 @@ docker run -it -P --rm \
 accetto/ubuntu-vnc-xfce-chromium-g3:latest
 ```
 
-### Table of contents
-
-- [Headless Ubuntu/Xfce container with VNC/noVNC and Chromium Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-chromium-browser)
-  - [accetto/ubuntu-vnc-xfce-chromium-g3](#accettoubuntu-vnc-xfce-chromium-g3)
-    - [TL;DR](#tldr)
-    - [Table of contents](#table-of-contents)
-    - [Image tags](#image-tags)
-    - [Ports](#ports)
-    - [Volumes](#volumes)
-    - [Version sticker](#version-sticker)
-  - [Using headless containers](#using-headless-containers)
-    - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
-  - [Container user accounts](#container-user-accounts)
-    - [Overriding container user parameters](#overriding-container-user-parameters)
-  - [Running containers in background (detached)](#running-containers-in-background-detached)
-  - [Running containers in foreground (interactively)](#running-containers-in-foreground-interactively)
-  - [Startup options and help](#startup-options-and-help)
-  - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
-  - [Credits](#credits)
-  - [Diagrams](#diagrams)
-    - [Dockerfile.xfce](#dockerfilexfce)
+### Description
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce-chromium][accetto-github-ubuntu-vnc-xfce-chromium].
 

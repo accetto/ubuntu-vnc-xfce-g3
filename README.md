@@ -2,6 +2,8 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
+Version: G3v2
+
 ***
 
 [Docker Hub][this-docker] - [Changelog][this-changelog] - [Wiki][this-wiki] - [Discussions][this-discussions]
@@ -21,11 +23,39 @@
 
 ***
 
+- [Headless Ubuntu/Xfce containers with VNC/noVNC](#headless-ubuntuxfce-containers-with-vncnovnc)
+  - [Project `accetto/ubuntu-vnc-xfce-g3`](#project-accettoubuntu-vnc-xfce-g3)
+    - [Introduction](#introduction)
+    - [TL;DR](#tldr)
+    - [Image generations](#image-generations)
+    - [Project versions](#project-versions)
+    - [Project goals](#project-goals)
+    - [Changes and new features](#changes-and-new-features)
+      - [Naming scheme](#naming-scheme)
+      - [Slimmer images](#slimmer-images)
+      - [Fewer and more flexible Dockerfiles](#fewer-and-more-flexible-dockerfiles)
+      - [Concept of features](#concept-of-features)
+      - [Faster building with `g3-cache`](#faster-building-with-g3-cache)
+      - [Overriding of container user parameters](#overriding-of-container-user-parameters)
+      - [Overriding of VNC/noVNC parameters](#overriding-of-vncnovnc-parameters)
+      - [Different use of version sticker](#different-use-of-version-sticker)
+      - [Image metadata](#image-metadata)
+      - [Simple self-containing CI](#simple-self-containing-ci)
+      - [Separated builder and deployment repositories](#separated-builder-and-deployment-repositories)
+      - [Separate README files for Docker Hub](#separate-readme-files-for-docker-hub)
+      - [Based on `Ubuntu 20.04 LTS`](#based-on-ubuntu-2004-lts)
+      - [Using `TigerVNC 1.12`](#using-tigervnc-112)
+      - [New startup script](#new-startup-script)
+  - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
+  - [Credits](#credits)
+
+### Introduction
+
 This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
 
-The resources for the individual images and their variations (tags) are stored in the subfolders of the **master** branch. Each image has its own README file describing its features and usage.
+The resources for the individual images and their variations (tags) are stored in the subfolder of the **master** branch. Each image has its own README file describing its features and usage.
 
-There are also sibling projects containing images for headless programming in `Node.js` and `Python` ([accetto/headless-coding-g3][accetto-github-headless-coding-g3]) or headless diagramming, vector drawing and bitmap image editing ([accetto/headless-drawing-g3][accetto-github-headless-drawing-g3]).
+There are also sibling projects containing images for headless programming ([accetto/headless-coding-g3][accetto-github-headless-coding-g3]) or headless diagramming, vector drawing and bitmap image editing ([accetto/headless-drawing-g3][accetto-github-headless-drawing-g3]).
 
 ### TL;DR
 
@@ -40,7 +70,7 @@ There are currently resources for the following Docker images:
 - [accetto/ubuntu-vnc-xfce-firefox-g3][accetto-docker-ubuntu-vnc-xfce-firefox-g3]
   - [full Readme][this-readme-image-firefox]
 
-I try to keep the images slim. Consequently you can encounter missing dependencies while adding more applications yourself. You can track the missing libraries on the [Ubuntu Packages Search][ubuntu-packages-search] page and install them subsequently.
+I try to keep the images slim. Consequently you can sometimes encounter missing dependencies while adding more applications yourself. You can track the missing libraries on the [Ubuntu Packages Search][ubuntu-packages-search] page and install them subsequently.
 
 You can also try to fix it by executing the following (the default `sudo` password is **headless**):
 
@@ -55,22 +85,40 @@ The fastest way to build the images locally:
 
 ```shell
 ### PWD = project root
-./docker/hooks/build dev latest
-./docker/hooks/build dev latest-chromium
-./docker/hooks/build dev latest-firefox
-./docker/hooks/build dev latest-firefox-plus
-./docker/hooks/build dev vnc
-./docker/hooks/build dev vnc-chromium
-./docker/hooks/build dev vnc-firefox
-./docker/hooks/build dev vnc-firefox-plus
+### prepare and source the 'secrets.rc' file first (see 'example-secrets.rc')
+
+### examples of building and publishing the individual images
+./builder.sh latest all
+./builder.sh latest-chromium all
+./builder.sh latest-firefox all
+
+### or skipping the publishing to the Docker Hub
+./builder.sh latest all-no-push
+./builder.sh latest-chromium all-no-push
+./builder.sh latest-firefox all-no-push
+
+### examples of building and publishing the groups of images
+./ci-builder.sh all group latest latest-fugo
+./ci-builder.sh all group latest-chromium
+./ci-builder.sh all group latest-firefox latest-firefox-plus
+
+### or even more efficient
+./ci-builder.sh all family latest -fugo
+./ci-builder.sh all family latest-chromium
+./ci-builder.sh all family latest-firefox -plus
+
+### or all the images at once
+./ci-builder.sh all group complete
+
+### or skipping the publishing to the Docker Hub
+./ci-builder.sh all-no-push group complete
+
 ### and so on
 ```
 
-You can also use the provided helper script `builder.sh`, which can also publish the images on Docker Hub, if you correctly set the required environment variables (see the file `example-secrets.rc`). Check the files `local-builder-readme.md` and `local-building-example.md`.
+You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
 
-Find more in the hook script `env.rc` and in [Wiki][this-wiki].
-
-Sharing the audio device for video with sound (only Linux and Chromium):
+Sharing the audio device for video with sound (only Chromium and only on Linux):
 
 ```shell
 docker run -it -P --rm \
@@ -79,49 +127,43 @@ docker run -it -P --rm \
 accetto/ubuntu-vnc-xfce-chromium-g3:latest
 ```
 
-### Table of contents
-
-- [Headless Ubuntu/Xfce containers with VNC/noVNC](#headless-ubuntuxfce-containers-with-vncnovnc)
-  - [Project `accetto/ubuntu-vnc-xfce-g3`](#project-accettoubuntu-vnc-xfce-g3)
-    - [TL;DR](#tldr)
-    - [Table of contents](#table-of-contents)
-    - [Image generations](#image-generations)
-    - [Project goals](#project-goals)
-    - [Changes and new features](#changes-and-new-features)
-      - [Naming scheme](#naming-scheme)
-      - [Slimmer images](#slimmer-images)
-      - [Fewer and more flexible Dockerfiles](#fewer-and-more-flexible-dockerfiles)
-      - [Concept of features](#concept-of-features)
-      - [Overriding of container user parameters](#overriding-of-container-user-parameters)
-      - [Overriding of VNC/noVNC parameters](#overriding-of-vncnovnc-parameters)
-      - [Different use of version sticker](#different-use-of-version-sticker)
-      - [Image metadata](#image-metadata)
-      - [Simple self-containing CI](#simple-self-containing-ci)
-      - [Separated builder and deployment repositories](#separated-builder-and-deployment-repositories)
-      - [Separate README files for Docker Hub](#separate-readme-files-for-docker-hub)
-      - [Based on Ubuntu 20.04 LTS](#based-on-ubuntu-2004-lts)
-      - [Using TigerVNC 1.12](#using-tigervnc-112)
-      - [New startup script](#new-startup-script)
-  - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
-  - [Credits](#credits)
-
 ### Image generations
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) contains the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) contains the GitHub repositories [accetto/ubuntu-vnc-xfce][accetto-docker-ubuntu-vnc-xfce], [accetto/ubuntu-vnc-xfce-firefox][accetto-docker-ubuntu-vnc-xfce-firefox], [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-docker-ubuntu-vnc-xfce-firefox-plus] and [accetto/ubuntu-vnc-xfce-chromium][accetto-docker-ubuntu-vnc-xfce-chromium].
 
+### Project versions
+
+This file describes the **second version** (G3v2) of the project.
+
+The **first version** (G3v1, or simply G3) will still be available in this **GitHub** repository as the branch `archived-generation-g3v1`.
+
+The version `G3v2` brings the following major changes comparing to the previous version `G3v1`:
+
+- Significantly improved building performance by introducing a local cache (`g3-cache`).
+- Auto-building on the **Docker Hub** and using of the **GitHub Actions** have been abandoned.
+- The enhanced building pipeline moves towards building the images outside the **Docker Hub** and aims to support also stages with CI/CD capabilities (e.g. the **GitLab**).
+- The **local stage** is the default building stage now. However, the new building pipeline has already been tested also with a local **GitLab** installation in a Docker container on a Linux machine.
+- Automatic publishing of README files to the **Docker Hub** has been removed, because it was not working properly any more. However, the README files for the **Docker Hub** can still be prepared with the provided utility `util-readme.sh` and then copy-and-pasted to the **Docker Hub** manually.
+
+The changes affect only the building pipeline, not the Docker images themselves. The `Dockerfile`, apart from using the new local `g3-cache`, stays conceptually unchanged.
+
 ### Project goals
 
-Unlike the first two generations, this one aims to support CI. One of the main project goals has been to implement a simple and cheap *self-containing* CI with minimal dependencies outside the project itself. There are only three service providers used, all available for free:
+Unlike the first two generations, this one aims to support CI/CD.
 
-- [**GitHub**][github] hosts everything required for building the Docker images. Both public and private repositories can be used. **GitHub Gists** are used for persisting data, e.g. badge endpoints. **GitHub Actions** are also used.
+The main project goal is to develop a **free, simple and self-containing CI/CD pipeline** for **building sets of configurable Docker images** with minimal dependencies outside the project itself.
 
-- [**Docker Hub**][dockerhub] hosts the Docker images and is also used for building them. Public or private repositories can be used.
+There are indeed only three service providers used, all available for free:
+
+- [**GitHub**][github] repository contains everything required for building the Docker images. Both public and private repositories can be used. **GitHub Gists** are used for persisting data, e.g. badge endpoints.
+
+- [**Docker Hub**][dockerhub] hosts the repositories for the final Docker images. Public or private repositories can be used.
 
 - [**Badgen.net**][badgen] is used for generating and hosting most of the badges.
 
-None of the above service providers is really required. Images can be built locally under Linux or Windows and published elsewhere.
+None of the above service providers is really required. All images can be built locally under Linux or Windows and published elsewhere, if needed.
 
-Building process is implemented to minimize image pollution. New images are pushed to the repositories only if something essential has changed. This could be overridden if needed.
+Building process is implemented to minimize image pollution. New images are pushed to the repositories only if something essential has changed. This can be overridden if needed.
 
 ### Changes and new features
 
@@ -129,7 +171,7 @@ Building process is implemented to minimize image pollution. New images are push
 
 #### Naming scheme
 
-Unlike the first two generations, this one will aim to use less Docker Hub **image repositories** with more **image tags**. For example, previously there have been two Docker Hub repositories `xubuntu-vnc` and `ubuntu-vnc-novnc`. Now there will be only one Docker Hub repository `accetto/ubuntu-vnc-xfce-g3` containing tags `vnc` and `vnc-novnc`.
+Unlike the first two generations, this one will aim to use less Docker Hub **image repositories** with more **image tags**. For example, previously there have been two Docker Hub repositories `xubuntu-vnc` and `ubuntu-vnc-novnc`. Now there will be only one Docker Hub repository `accetto/ubuntu-vnc-xfce-g3`.
 
 #### Slimmer images
 
@@ -137,11 +179,15 @@ New images are significantly slimmer than the previous ones. It's because that t
 
 #### Fewer and more flexible Dockerfiles
 
-Image variations are build from fewer Dockerfiles. This is allowed by using *multi-stage builds* and [Buildkit][docker-doc-build-with-buildkit]. On the other hand, flexible and configurable Dockerfiles are slightly more complex.
+Image variations are build from fewer Dockerfiles. This is allowed by using *multi-stage builds* and the [Buildkit][docker-doc-build-with-buildkit]. On the other hand, flexible and configurable Dockerfiles are slightly more complex.
 
 #### Concept of features
 
-Flexibility in Dockerfiles is supported by introducing the concept of **features**. These are variables that control the building process. For example, the variable **FEATURES_BUILD_SLIM** controls the `--no-install-recommends` switch, the variable **FEATURES_NOVNC** controls the inclusion of *noVNC* and so on. Some other available features include, for example, the **FEATURES_SCREENSHOOTING**, **FEATURES_THUMBNAILING** and **FEATURES_USER_GROUP_OVERRIDE** variables. Also the web browsers [Chromium][chromium] and [Firefox][firefox] are defined as features controlled by the variables **FEATURES_CHROMIUM**, **FEATURES_FIREFOX** and **FEATURES_FIREFOX_PLUS**.
+Flexibility in Dockerfiles is supported by introducing the concept of **features**. These are variables that control the building process. For example, the variable **FEATURES_BUILD_SLIM** controls the `--no-install-recommends` switch, the variable **FEATURES_NOVNC** controls the inclusion of `noVNC` and so on. Some other available features include, for example, the **FEATURES_SCREENSHOOTING**, **FEATURES_THUMBNAILING** and **FEATURES_USER_GROUP_OVERRIDE** variables. Also the web browsers [Chromium][chromium] and [Firefox][firefox] are defined as features controlled by the variables **FEATURES_CHROMIUM**, **FEATURES_FIREFOX** and **FEATURES_FIREFOX_PLUS**.
+
+#### Faster building with `g3-cache`
+
+Building performance has been significantly improved by introducing a local cache (`g3-cache`), which contains the external packages that would be otherwise downloaded by each build. Refreshing the cache is part of the building pipeline. The Dockerfiles fall back to the ad-hoc downloading if the local cache is not available.
 
 #### Overriding of container user parameters
 
@@ -157,7 +203,7 @@ If your session disconnects, it might be related to a network equipment (load-ba
 
 #### Different use of version sticker
 
-The concept of version sticker has been introduced in the second generation and later implemented also in the first generation. Check this [Wiki page](https://github.com/accetto/xubuntu-vnc/wiki/Version-sticker) for more information. However, the usage of the version sticker has been changed in the third generation. Previously it has been used for testing, if there are some newer packages available by following the *try-and-fail* pattern. That was sufficient for human controlled building process, but it became a problem for CI. Therefore it is used differently now. The verbose version sticker is used for minimizing image pollution. The short form of the version sticker is available as an image *label* and a *badge* in the README file. The version sticker badge is also linked with the verbose version sticker *gist*, so it is possible to check the actual image configuration even without downloading it.
+The concept of version sticker has been introduced in the second generation and later implemented also in the first generation. Check this [Wiki page](https://github.com/accetto/xubuntu-vnc/wiki/Version-sticker) for more information. However, the usage of the version sticker has been changed in the third generation. Previously it has been used for testing, if there are any newer packages available by following the *try-and-fail* pattern. That was sufficient for human controlled building process, but it became a problem for CI/CD. Therefore it is used differently now. The verbose version sticker is used for minimizing image pollution. The short form of the version sticker is available as an image *label* and a *badge* in the README file. The *version sticker badge* is also linked with the *verbose version sticker gist*, so it is possible to check the actual image configuration even without downloading it.
 
 #### Image metadata
 
@@ -165,27 +211,46 @@ The image metadata are now stored exclusively as image *labels*. The previous en
 
 #### Simple self-containing CI
 
-The third generation implements a relatively simple self-containing CI by utilizing the Docker Hub builder *hooks*. The same build pipeline can be executed also manually if building locally. For example, an image can be refreshed by executing the `/hooks/pre_build` and `/hooks/build` scripts. The script `/hooks/push` will push the image to the deployment repository. The script `/hooks/post_push` will update the *gist* data and trigger the **GitHub Actions** workflow, which will publish the image's README file to Docker Hub.
+The **first version** of the third generation (G3v1) implemented a relatively simple self-containing CI by utilizing the **Docker Hub** builder *hooks*. The same build pipeline could be executed also manually if building locally. For example, an image could be refreshed by executing the `/hooks/pre_build` and `/hooks/build` scripts. The script `/hooks/push` would push the image to the deployment repository. The script `/hooks/post_push` would update the *gist* data and trigger the **GitHub Actions** workflow, which would publish the image's README file to the **Docker Hub**.
+
+However, in the middle of the year 2021 the **Docker Hub** removed the auto-building feature from the free plan. Because one of the main objectives of this project is not to depend on any paid services, I had to remove the dependency on the Docker Hub's auto-building. There has also not been any use for the **GitHub Actions** any more.
+
+The **second version** (G3v2) of the building pipeline does not depend on the **Docker Hub**'s auto-building feature or the **GitHub Actions** any more. The original hook scripts have been enhanced and some new ones have been introduced (.e.g. `/hooks/cache`). The provided utility script `builder.sh` not only allows executing the individual hook scripts, but also implements the complete workflow for building the individual images. The another utility script `ci-builder.sh` makes use of it and adds the workflow for building sets of images. Both scripts can optionally also publish the images to the **Docker Hub**.
+
+The **local stage** is the default for the new building pipeline. Also a local **GitLab** installation in a Docker container has already been successfully tested as a CI building stage.
 
 #### Separated builder and deployment repositories
 
-While there is only one GitHub repository, containing the resources for building all images, there are two kinds of repositories on Docker Hub. A single *builder repository* is used for building all images. The final images are then published into one or more *deployment repositories*. This separation allows to keep permutations by naming reasonable. Not all repositories must have the same visibility, they can be private or public as required. The same repository could be also used for building and deployment.
+While there is only one GitHub repository, containing the resources for building all the images,
+the **first pipeline version** (G3v1) have used two kinds of repositories on the **Docker Hub**. A single *builder repository* has been used for building all the images. The final images have then been published into one or more *deployment repositories*. This separation allowed to keep permutations by naming reasonable. Not all repositories had to have the same visibility, they could be private or public as required.
+
+The **second pipeline version** (G3v2) does not really need the **builder repository** for building the images, because it's done outside the **Docker Hub**, which previously hosted the builder repository. However, the pipeline is still based on the original hook scripts and therefore it depends on the **builder repository** object by managing the names and tags of the images first by building and later by publishing to the **Docker Hub**.
+
+All the images are still build in a single **building repository** and then published to one or more **deployment repositories** on the **Docker Hub**.
+
+The **builder repository** can also server as a **secondary deployment repository** during development and testing.
 
 #### Separate README files for Docker Hub
 
-Each deployment repository has its own README file for Docker Hub, which is published by CI workflows after the image has been pushed. The file is split into parts. The part containing the badge links is separated into a template file. The final README file is then generated by the script just before publishing. Re-publishing can be forced even if the image has not been actually refreshed. These README files are shorter, because their length is limited by Docker Hub. Therefore there are also full-length README files published only on GitHub.
+Each **deployment repository** has its own `README` file for the **Docker Hub**.
 
-#### Based on Ubuntu 20.04 LTS
+The **first pipeline version** (G3v1) has originally published it using the **GitHub Actions** workflows after the image has been pushed. However, some time later it has stopped working properly.
+
+The **second pipeline version** (G3v2) does not try to publish the `README` file to the **Docker Hub** any more. However, there is still a utility script, which can prepare the `README` version for the **Docker Hub**, which can be then copy-and-pasted there manually.
+
+The source `README` files for the **Docker Hub** are split into two parts. The part containing the badge links is separated into a **template file**. The final `README` files are then generated by the utility script. These files are usually shorter, because their length is limited by the **Docker Hub**. Therefore there are also the full-length versions, that are published only on the **GitHub**.
+
+#### Based on `Ubuntu 20.04 LTS`
 
 The current images are based on the official [Ubuntu 20.04 LTS][docker-ubuntu] image.
 
-#### Using TigerVNC 1.12
+#### Using `TigerVNC 1.12`
 
-The images use the latest [TigerVNC 1.12.0][tigervnc] server, which has introduced some significant changes in its startup process. Actually the images implement the newer TigerVNC nightly builds, that fix or mitigate some of the issues.
+The images use the latest [TigerVNC 1.12.0][tigervnc] server, which has introduced some significant changes in its startup process.
 
 #### New startup script
 
-The startup script has been completely redesigned with the help of [argbash][argbash-doc] tool and the image [accetto/argbash-docker][accetto-docker-argbash-docker]. Several new startup switches has been added. For example, there are startup switches `--wait`, `--skip-startup`, `--tail-null`, `--tail-vnc`, `--version-sticker` and `--version-sticker-verbose`. There are also startup modifiers `--skip-vnc`, `--skip-novnc`, `--debug` and `--verbose`. Also the utility switches `--help-usage`, `--help` and `--version` are available.
+The startup script has been completely redesigned with the help of the [argbash][argbash-doc] tool and the image [accetto/argbash-docker][accetto-docker-argbash-docker]. Several new startup switches has been added. For example, there are startup switches `--wait`, `--skip-startup`, `--tail-null`, `--tail-vnc`, `--version-sticker` and `--version-sticker-verbose`. There are also startup modifiers `--skip-vnc`, `--skip-novnc`, `--debug` and `--verbose`. Also the utility switches `--help-usage`, `--help` and `--version` are available.
 
 ***
 
@@ -235,7 +300,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 <!-- sibling projects -->
 
-[accetto-github-headless-coding-g3]:https://github.com/accetto/headless-coding-g3
+[accetto-github-headless-coding-g3]: https://github.com/accetto/headless-coding-g3
 [accetto-github-headless-drawing-g3]: https://github.com/accetto/headless-drawing-g3
 
 <!-- external links -->

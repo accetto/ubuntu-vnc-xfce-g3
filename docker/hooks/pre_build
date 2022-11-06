@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
+
 declare _mydir=$(dirname $0)
 source "${_mydir}"/env.rc
 source "${_mydir}"/util.rc
@@ -8,14 +10,21 @@ main() {
     local helper_suffix="_helper"
     local now
     local version_sticker
+    local -i exit_code=0
 
     local should_build=${FORCE_BUILDING}
     local build_prohibited=${PROHIBIT_BUILDING}
+    local cache_script="cache"
+
+    ### refresh local cache
+    "${_mydir}/${cache_script}" "${_branch}" "${_blend}"
+    exit_code=$?
+    if [[ ${exit_code} -ne 0 ]] ; then die "Script '${cache_script}' failed with code ${exit_code}." ${exit_code} ; fi
 
     ### debugging support
     # dump_environment
 
-    echo "Removing helper files..."
+    echo -e "\nRemoving helper files\n"
     cleanup_scrap_files
 
     ### build a temporary helper image for getting the current version sticker values
@@ -31,8 +40,14 @@ main() {
             ${FEATURES_THUMBNAILING:+--build-arg ARG_FEATURES_THUMBNAILING=1} \
             ${FEATURES_USER_GROUP_OVERRIDE:+--build-arg ARG_FEATURES_USER_GROUP_OVERRIDE=1} \
             \
+            ${FEATURES_VNC:+--build-arg ARG_TIGERVNC_DISTRO=${TIGERVNC_DISTRO}} \
+            ${FEATURES_VNC:+--build-arg ARG_TIGERVNC_VERSION=${TIGERVNC_VERSION}} \
+            \
+            ${FEATURES_NOVNC:+--build-arg ARG_NOVNC_VERSION=${NOVNC_VERSION}} \
+            ${FEATURES_NOVNC:+--build-arg ARG_WEBSOCKIFY_VERSION=${WEBSOCKIFY_VERSION}} \
             ${FEATURES_NOVNC:+--build-arg ARG_MERGE_STAGE_VNC_BASE="stage_novnc"} \
             \
+            ${FEATURES_CHROMIUM:+--build-arg ARG_CHROMIUM_DISTRO=${CHROMIUM_DISTRO}} \
             ${FEATURES_CHROMIUM:+--build-arg ARG_CHROMIUM_VERSION=${CHROMIUM_VERSION}} \
             ${FEATURES_CHROMIUM:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_chromium"} \
             \
@@ -49,7 +64,7 @@ main() {
     echo "${version_sticker}" > "${_build_context}/${_scrap_version_sticker_verbose_current}"
     echo -e "Current verbose version sticker:\n$( cat ${_build_context}/${_scrap_version_sticker_verbose_current} )"
 
-    if [ "${should_build}" == "1" ] ; then
+    if [[ "${should_build}" == "1" ]] ; then
 
         echo ; echo "Building of new image has been forced."
 
@@ -57,8 +72,8 @@ main() {
 
         echo; echo "Building of new image has not been forced."
 
-        echo "Getting the previous verbose version sticker value from the builder repository gist..."
-        if [ -n "${GIST_ID}" ] ; then
+        echo "Getting the previous verbose version sticker value from the builder gist '${GIST_ID}'"
+        if [[ -n "${GIST_ID}" ]] ; then
 
             get_gist_file "${GIST_ID}" "${DOCKER_REPO}" "${DOCKER_TAG}" "version-sticker-verbose.txt" "${_build_context}/${_scrap_version_sticker_verbose_previous}"
 
@@ -67,14 +82,14 @@ main() {
             echo -n "" > "${_build_context}/${_scrap_version_sticker_verbose_previous}"
         fi
 
-        echo "Comparing verbose version stickers..."
+        echo "Comparing verbose version stickers"
         if cmp -s "${_build_context}/${_scrap_version_sticker_verbose_current}" "${_build_context}/${_scrap_version_sticker_verbose_previous}" ; then
 
             ### verbose version sticker hasn't changed since the last build - stop building
             echo "Verbose version sticker has not changed since the last build, no need for building a new image." ; echo
 
             ### if this file is present, the building will not continue
-            echo "Demanding building stop..."
+            echo "Demanding building stop"
             touch "${_build_context}/${_scrap_demand_stop_building}"
 
         else
@@ -96,19 +111,21 @@ main() {
 
     ### building prohibitdd by environment variable
     ### useful for testing the autobuilding on DockerHub before release
-    if [ "${should_build}" == "1" ] && [ "${build_prohibited}" == "1" ] ; then
+    if [[ "${should_build}" == "1" && "${build_prohibited}" == "1" ]] ; then
         ### if this file is present, the building will not continue
-        echo "Building has been prohibited. Demanding building stop..."
+        echo "Building has been prohibited. Demanding building stop"
         echo
         touch "${_build_context}/${_scrap_demand_stop_building}"
     fi
 
     ### display the actual short version sticker
-    echo "Current version sticker: ${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}"
+    echo "Current version sticker of '${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix}': ${VERSION_STICKER_PREFIX}${version_sticker}${VERSION_STICKER_SUFFIX}"
 
     ### delete the helper image in any case
-    echo; echo "Removing helper image..."
+    echo; echo "Removing helper image"
     docker rmi "${DOCKER_REPO}":"${DOCKER_TAG}${helper_suffix}"
 }
 
 main $@
+
+echo -e "\n==> FINISHED  @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"

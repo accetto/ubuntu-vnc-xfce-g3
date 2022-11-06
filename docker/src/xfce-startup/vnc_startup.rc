@@ -5,7 +5,8 @@ _vnc_override_file="${HOME}"/.vnc_override.rc
 
 ### if the vnc-override file exists, then import and source
 ### only the lines beginning with 'export ' (at position 1)
-if [ -f "${_vnc_override_file}" ] ; then
+if [[ -f "${_vnc_override_file}" ]] ; then
+
     _tmp=$( mktemp )
     ( grep -E '^export\s+' "${_vnc_override_file}" 2>/dev/null 1>"${_tmp}" )
     source "${_tmp}"
@@ -18,33 +19,52 @@ start_vnc () {
     local xinit_pid
 
     ### option '--skip-vnc'
-    if [ "${_arg_skip_vnc}" == "on" ] ; then
-        if [ -n "${_verbose}" ] ; then echo "INFO: VNC/noVNC startup skipped as requested." ; fi
+    if [[ "${_arg_skip_vnc}" == "on" ]] ; then
+
+        if [[ -n "${_verbose}" ]] ; then
+        
+            echo "INFO: VNC/noVNC startup skipped as requested."
+        fi
+        
         return 0
     fi
 
-    if [ -z "$(which vncserver)" ] ; then
-        if [ -n "${_verbose}" ] ; then echo "WARNING: No 'vncserver' is available." ; fi
+    if [[ -z "$(which vncserver)" ]] ; then
+
+        if [[ -n "${_verbose}" ]] ; then
+            echo "WARNING: No 'vncserver' is available."
+        fi
+        
         return 0
     fi
 
     ### VNC requirements
     ### VNC password not enforced any more, so it can be set to an empty string by 'docker run -e VNC_PW=""'.
     ### If you still want to enforce it, bring the following line back:
-    ### || [ -z "${VNC_PW}" ] \
-    if [ -z "${DISPLAY}" ] \
-    || [ -z "${VNC_PORT}" ] \
-    || [ -z "${VNC_COL_DEPTH}" ] \
-    || [ -z "${VNC_RESOLUTION}" ] ; then
+    ### || [[ -z "${VNC_PW}" ]] \
+    if [[ -z "${DISPLAY}" \
+    || -z "${VNC_PORT}" \
+    || -z "${VNC_COL_DEPTH}" \
+    || -z "${VNC_RESOLUTION}" ]] ; then
+
         # cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT, VNC_PW, VNC_COL_DEPTH, VNC_RESOLUTION"
         cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT, VNC_COL_DEPTH, VNC_RESOLUTION"
     fi
 
     passwd_path="${HOME}"/.vnc/passwd
-    if [ ! -d "${HOME}"/.vnc ] ; then mkdir "${HOME}"/.vnc ; fi
+    
+    if [[ ! -d "${HOME}"/.vnc ]] ; then
+    
+        mkdir "${HOME}"/.vnc
+    fi
 
-    if [ "${VNC_VIEW_ONLY,,}" == "true" ]; then
-        if [ -n "${_verbose}" ] ; then echo "Starting VNC server in view-only mode ..." ; fi
+    if [[ "${VNC_VIEW_ONLY,,}" == "true" ]] ; then
+    
+        if [[ -n "${_verbose}" ]] ; then
+
+            echo "Starting VNC server in view-only mode"
+        fi
+        
         ### create random pw to prevent access
         echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > "${passwd_path}"
     fi
@@ -64,17 +84,28 @@ start_vnc () {
 
     ### removing old VNC locks to be a re-attachable container
     xinit_pid="$(pidof xinit)"
-    if [ -n "${xinit_pid}" ] ; then
-        if [ -n "${_verbose}" ] ; then echo "Killing xinit PID ${xinit_pid}" ; fi
+
+    if [[ -n "${xinit_pid}" ]] ; then
+
+        if [[ -n "${_verbose}" ]] ; then
+            echo "Killing xinit PID ${xinit_pid}"
+        fi
+        
         ### ignore the errors if not alive any more
         kill "${xinit_pid}" > /dev/null 2>&1
     fi
-    if [ -n $(compgen -G /tmp/.X*-lock) ] || [ -n $(compgen -G /tmp/.X11-unix) ] ; then
-        if [ -n "${_verbose}" ] ; then echo "Removing old VNC locks to be a re-attachable container" ; fi
+    if [[ -n $(compgen -G /tmp/.X*-lock) || -n $(compgen -G /tmp/.X11-unix) ]] ; then
+
+        if [[ -n "${_verbose}" ]] ; then
+
+            echo "Removing old VNC locks to be a re-attachable container"
+        fi
+
         rm -rfv /tmp/.X*-lock /tmp/.X11-unix &> "${_vnc_log}"
     fi
 
-    if [ -n "${_verbose}" ] ; then
+    if [[ -n "${_verbose}" ]] ; then
+
         echo "Starting VNC"
         echo "vncserver ${DISPLAY} &> ${_vnc_log}"
     fi
@@ -85,21 +116,23 @@ start_vnc () {
     ### container will wait on this VNC server PID
     _wait_pid=$!
 
-    if [ -n "${_verbose}" ] ; then 
+    if [[ -n "${_verbose}" ]] ; then
+
         echo "VNC server started on display '${DISPLAY}' and TCP port '${VNC_PORT}'"
         echo "Connect via VNC viewer with ${vnc_ip}:${VNC_PORT}"
     fi
 
     ### option '--skip-novnc'
-    if [ "${_arg_skip_novnc}" == "off" ] ; then
+    if [[ "${_arg_skip_novnc}" == "off" ]] ; then
 
         ### noVNC is not necessarily installed
-        if [ -n "${NOVNC_HOME}" ] || [ -d "${NOVNC_HOME}/utils/websockify" ] ; then
+        if [[ -n "${NOVNC_HOME}" || -d "${NOVNC_HOME}/utils/websockify" ]] ; then
 
             ### noVNC requirements
-            if [ -n "${NOVNC_PORT}" ] ; then
+            if [[ -n "${NOVNC_PORT}" ]] ; then
 
-                if [ -n "${_verbose}" ] ; then
+                if [[ -n "${_verbose}" ]] ; then
+
                     echo "Starting noVNC"
                     echo "${NOVNC_HOME}/utils/novnc_proxy --vnc localhost:${VNC_PORT} --listen ${NOVNC_PORT} ${NOVNC_HEARTBEAT:+--heartbeat ${NOVNC_HEARTBEAT}} &> ${_novnc_log}"
                 fi
@@ -111,7 +144,8 @@ start_vnc () {
                     ${NOVNC_HEARTBEAT:+--heartbeat ${NOVNC_HEARTBEAT}} \
                     &> "${_novnc_log}" &
                 
-                if [ -n "${_verbose}" ] ; then 
+                if [[ -n "${_verbose}" ]] ; then
+
                     echo "noVNC started on TCP port '${NOVNC_PORT}' ${NOVNC_HEARTBEAT:+with heartbeat ${NOVNC_HEARTBEAT} seconds}"
                     echo "Connect via web browser"
                 fi
@@ -119,9 +153,15 @@ start_vnc () {
                 cleanup "ERROR: Environment variable 'NOVNC_PORT' is not set."
             fi
         else
-            if [ -n "${_verbose}" ] ; then echo "WARNING: noVNC is not available." ; fi
+            if [[ -n "${_verbose}" ]] ; then
+
+                echo "WARNING: noVNC is not available."
+            fi
         fi
     else
-        if [ -n "${_verbose}" ] ; then echo "INFO: noVNC startup skipped as requested." ; fi
+        if [[ -n "${_verbose}" ]] ; then
+        
+            echo "INFO: noVNC startup skipped as requested."
+        fi
     fi
 }

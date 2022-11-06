@@ -6,7 +6,7 @@
 main() {
     local verbose=""
 
-    if [ -n "${DEBUG}" ] ; then
+    if [[ -n "${DEBUG}" ]] ; then
         echo "Current user: $(id -u)"
         verbose="-v"
     fi
@@ -14,12 +14,15 @@ main() {
     ### Fix file permissions
     for i in "$@" ; do
 
-        if [ -n "${verbose}" ] ; then echo "Fixing permissions for: ${i}" ; fi
+        if [[ -n "${verbose}" ]] ; then
+
+            echo "Fixing permissions for: ${i}"
+        fi
 
         ### folder and its current content belong to the group zero for better portability (recursively)
         chgrp -R 0 "$i"
 
-        if [ -z "${FEATURES_USER_GROUP_OVERRIDE}" ] ; then
+        if [[ -z "${FEATURES_USER_GROUP_OVERRIDE}" ]] ; then
 
             ### set directory permissions (recursively)
             find "$i" -type d -exec chmod ${verbose} 775 {} +

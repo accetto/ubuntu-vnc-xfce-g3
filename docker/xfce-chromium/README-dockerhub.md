@@ -14,11 +14,21 @@
 
 ***
 
-**Tip:** This is the **short README** version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
+- [Headless Ubuntu/Xfce container with VNC/noVNC and Chromium Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-chromium-browser)
+  - [accetto/ubuntu-vnc-xfce-chromium-g3](#accettoubuntu-vnc-xfce-chromium-g3)
+    - [Introduction](#introduction)
+    - [TL;DR](#tldr)
+    - [Description](#description)
+    - [Image tags](#image-tags)
+    - [More information](#more-information)
 
 ***
 
+### Introduction
+
 This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
+
+This is the **short README** version for the **Docker Hub**. There is also the [full-length README][this-readme-full] on the **GitHub**.
 
 ### TL;DR
 
@@ -33,7 +43,7 @@ sudo apt-get update
 sudo apt --fix-broken install
 ```
 
-Sharing the audio device for video with sound (only Linux and Chromium):
+Sharing the audio device for video with sound (only on Linux):
 
 ```shell
 docker run -it -P --rm \
@@ -42,14 +52,7 @@ docker run -it -P --rm \
 accetto/ubuntu-vnc-xfce-chromium-g3:latest
 ```
 
-### Table of contents
-
-- [Headless Ubuntu/Xfce container with VNC/noVNC and Chromium Browser](#headless-ubuntuxfce-container-with-vncnovnc-and-chromium-browser)
-  - [accetto/ubuntu-vnc-xfce-chromium-g3](#accettoubuntu-vnc-xfce-chromium-g3)
-    - [TL;DR](#tldr)
-    - [Table of contents](#table-of-contents)
-    - [Image tags](#image-tags)
-    - [More information](#more-information)
+### Description
 
 **Remark:** This image contains the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
 

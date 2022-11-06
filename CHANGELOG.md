@@ -6,6 +6,42 @@
 
 ***
 
+### Release 22.11
+
+This is a milestone release. It's the first release of the new building pipeline version `G3v2`. The previous version `G3v1` will still be available in this repository as the branch `archived-generation-g3v1`.
+
+The version `G3v2` brings the following major changes:
+
+- Significantly improved building performance by introducing a local cache (`g3-cache`).
+- Auto-building on the **Docker Hub** and using of the **GitHub Actions** have been abandoned.
+- The enhanced building pipeline moves towards building the images outside the **Docker Hub** and aims to support also stages with CI/CD capabilities (e.g. **GitLab**).
+- The **local stage** is the default building stage. The new building pipeline has already been tested also with a local **GitLab** installation in a Docker container on a Linux machine.
+- Automatic publishing of README files to the **Docker Hub** has been removed, because it hasn't work properly any more. However, the README files can be still prepared with the provided utility and then copy-and-pasted to the **Docker Hub** manually.
+
+Added files:
+
+- `docker/hooks/cache`
+- `ci-builder.sh`
+- `readme-builder.md`
+- `readme-ci-builder.md`
+- `readme-g3-cache.md`
+- `readme-local-building-example.md`
+- `utils/readme-util-readme-examples.md`
+
+Removed files:
+
+- `local-builder-readme.md`
+- `local-building-example.md`
+- `utils/example-secrets-utils.rc`
+- `utils/examples-util-readme.md`
+- `.github/workflows/dockerhub-autobuild.yml`
+- `.github/workflows/dockerhub-post-push.yml`
+- `.github/workflows/deploy-readme.sh`
+
+Many other files have been updated, some of them significantly.
+
+Hoverer, the changes affect only the building pipeline, not the Docker images themselves. The `Dockerfile`, apart from using the new local `g3-cache`, stays conceptually unchanged.
+
 ### Release 22.10
 
 This is the last release of the current building pipeline generation `G3v1`, which will still be available in the repository as the branch `archived-generation-g3v1`.

@@ -1,20 +1,31 @@
 #!/bin/bash -e
 
+echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
+
 declare _mydir=$(dirname $0)
 source "${_mydir}"/env.rc
 source "${_mydir}"/util.rc
 
 main() {
+    local now
+    local version_sticker
+    local cache_script="cache"
+    local -i exit_code=0
 
-    if [ -f "${_build_context}/${_scrap_demand_stop_building}" ] ; then
+    if [[ -f "${_build_context}/${_scrap_demand_stop_building}" ]] ; then
+    
         echo "Skipping build on demand."
         return 0
     fi
 
-    local now
-    local version_sticker
+    ### refresh local cache for the case the 'pre_build' was not run
+    "${_mydir}/${cache_script}" "${_branch}" "${_blend}"
+    exit_code=$?
+    if [[ ${exit_code} -ne 0 ]] ; then die "Script '${cache_script}' failed with code ${exit_code}." ${exit_code} ; fi
 
-    if [ -f "${_build_context}/${_scrap_version_sticker_current}" ] ; then
+    ### get current version sticker
+    if [[ -f "${_build_context}/${_scrap_version_sticker_current}" ]] ; then
+
         version_sticker="$( cat ${_build_context}/${_scrap_version_sticker_current} )"
     else
         version_sticker="null"
@@ -39,8 +50,14 @@ main() {
             ${FEATURES_THUMBNAILING:+--build-arg ARG_FEATURES_THUMBNAILING=1} \
             ${FEATURES_USER_GROUP_OVERRIDE:+--build-arg ARG_FEATURES_USER_GROUP_OVERRIDE=1} \
             \
+            ${FEATURES_VNC:+--build-arg ARG_TIGERVNC_DISTRO=${TIGERVNC_DISTRO}} \
+            ${FEATURES_VNC:+--build-arg ARG_TIGERVNC_VERSION=${TIGERVNC_VERSION}} \
+            \
+            ${FEATURES_NOVNC:+--build-arg ARG_NOVNC_VERSION=${NOVNC_VERSION}} \
+            ${FEATURES_NOVNC:+--build-arg ARG_WEBSOCKIFY_VERSION=${WEBSOCKIFY_VERSION}} \
             ${FEATURES_NOVNC:+--build-arg ARG_MERGE_STAGE_VNC_BASE="stage_novnc"} \
             \
+            ${FEATURES_CHROMIUM:+--build-arg ARG_CHROMIUM_DISTRO=${CHROMIUM_DISTRO}} \
             ${FEATURES_CHROMIUM:+--build-arg ARG_CHROMIUM_VERSION=${CHROMIUM_VERSION}} \
             ${FEATURES_CHROMIUM:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_chromium"} \
             \
@@ -52,3 +69,5 @@ main() {
 }
 
 main $@
+
+echo -e "\n==> FINISHED  @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"

@@ -1,0 +1,208 @@
+#!/bin/bash -e
+### @accetto, September 2022
+
+echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
+
+declare _mydir=$(dirname $0)
+
+source "${_mydir}"/env.rc
+
+use_wget() {
+    local section="${1?Expected section name}"
+    local file=${2?Expected file name}
+    local source=${3?Expected source path}
+    local target=${4?Expected target path}
+    local -i error_code=0
+
+    ### try-catch
+    (
+        ### this is a subshell block, so no changes to outside variables will persist
+        set -o pipefail
+        set -ex
+
+        ### Warning, do not enclose '${_quiet:+-q}' into quotes, otherwise it'll cause the message
+        ### 'http://: Invalid host name.' and the error code '1'.
+        ### However, the download would proceed.
+        wget --show-progress --progress=bar:force:noscroll ${_quiet:+-q} -O "${target}" "${source}"
+
+    ) ; {
+        
+        ### catch - this block is entered only by errors in the try-block
+        error_code=$?
+
+        if [[ ${error_code} -ne 0 ]] ; then
+
+            echo -e "${_mark} error '${error_code}' by downloading file '${file}' in section '${section}'" >&2
+
+            echo -e "${_mark} renaming file '${file}' to '${file}_failed' in section '${section}'" >&2
+
+            mv -f "${target}" "${target}_failed"
+        fi
+    }
+
+    ### This procedure reports the 'wget' errors, but it does not fail on them.
+    ### However, the created target file will be renamed with the suffix '_failed'.
+    return 0
+}
+
+refresh_file() {
+    local section="${1?Expected section name}"
+    local file=${2?Expected file name}
+    local source_url=${3?Expected source URL}
+    local target=${4?Expected target path}
+
+    local source="${_shared_cache_path}/${section}/${file}"
+
+    if [[ ! -s "${target}" ]] ; then
+
+        ### first try to copy the file from the shared cache
+        if [[ -s "${source}" ]] ; then
+
+            echo -e "${_mark} refreshing section '${section}' by copying shared file '${file}'\n"
+            cp "${source}" "${target}"
+
+        else
+            ### otherwise download the file from the Internet
+
+            echo -e "${_mark} refreshing section '${section}' by downloading file '${file}'\n"
+            use_wget "${section}" "${file}" "${source_url}" "${target}"
+
+            ### copy the downloaded file to the shared cache
+            if [[ -n "${_shared_cache_path}" && -s "${target}" ]] ; then
+
+                echo -e "${_mark} refreshing shared section '${section}' by copying downloaded file '${file}'\n"
+
+                mkdir -p "${_shared_cache_path}/${section}"
+                
+                cp "${target}" "${source}"
+            fi
+        fi
+    else
+        echo -e "${_mark} hit file '${file}' in section '${section}'"
+    fi
+}
+
+cache_tigervnc() {
+    local section="tigervnc"
+    local source_base_url="https://sourceforge.net/projects/tigervnc/files/stable"
+    local target_path="${_cache}/${section}"
+    local target=""
+    local file=""
+
+    mkdir -p "${target_path}"
+
+    file="tigervnc-${TIGERVNC_VERSION}.${TIGERVNC_DISTRO}.tar.gz"
+    source_url="${source_base_url}/${TIGERVNC_VERSION}/${file}"
+    target="${target_path}/${file}"
+
+    refresh_file "${section}" "${file}" "${source_url}" "${target}"
+}
+
+cache_novnc() {
+    local section="novnc"
+    local source_base_url="https://github.com/novnc/noVNC/archive/"
+    local target_path="${_cache}/${section}"
+    local target=""
+    local file=""
+
+    mkdir -p "${target_path}"
+
+    file="v${NOVNC_VERSION}.tar.gz"
+    source_url="${source_base_url}/${file}"
+    target="${target_path}/${file}"
+
+    refresh_file "${section}" "${file}" "${source_url}" "${target}"
+}
+
+cache_websockify() {
+    local section="websockify"
+    local source_base_url="https://github.com/novnc/websockify/archive"
+    local target_path="${_cache}/${section}"
+    local target=""
+    local file=""
+
+    mkdir -p "${target_path}"
+
+    file="v${WEBSOCKIFY_VERSION}.tar.gz"
+    source_url="${source_base_url}/${file}"
+    target="${target_path}/${file}"
+
+    refresh_file "${section}" "${file}" "${source_url}" "${target}"
+}
+
+cache_chromium() {
+    local section="chromium"
+    local source_base_url="http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser"
+    local target_path="${_cache}/${section}"
+    local file=""
+    local target=""
+
+    mkdir -p "${target_path}"
+
+    file="chromium-browser_${CHROMIUM_VERSION}_${CHROMIUM_DISTRO}.deb"
+    source_url="${source_base_url}/${file}"
+    target="${target_path}/${file}"
+
+    refresh_file "${section}" "${file}" "${source_url}" "${target}"
+
+    file="chromium-codecs-ffmpeg_${CHROMIUM_VERSION}_${CHROMIUM_DISTRO}.deb"
+    source_url="${source_base_url}/${file}"
+    target="${target_path}/${file}"
+
+    refresh_file "${section}" "${file}" "${source_url}" "${target}"
+
+    file="chromium-browser-l10n_${CHROMIUM_VERSION}_all.deb"
+    source_url="${source_base_url}/${file}"
+    target="${target_path}/${file}"
+
+    refresh_file "${section}" "${file}" "${source_url}" "${target}"
+}
+
+### ==========
+### cache_main
+### ==========
+
+### usage:
+### PWD=<project root>
+### ./docker/hooks/cache <branch> <blend> [-q|--quiet]
+
+main() {
+
+    if [[ "${FEATURES_VNC}" == "1" ]] ; then
+        cache_tigervnc
+    fi
+
+    if [[ "${FEATURES_NOVNC}" == "1" ]] ; then
+
+        cache_novnc
+        cache_websockify
+    fi
+
+    if [[ "${FEATURES_CHROMIUM}" == "1" ]] ; then
+        cache_chromium
+    fi
+
+    echo
+}
+
+declare _quiet=""
+declare _mark="\n==> G3-CACHE"
+declare _script_release_of="release_of"
+declare _cache="${_build_context}/.g3-cache"
+declare _shared_cache_path="${SHARED_G3_CACHE_PATH}"
+
+if [[ $# -gt 0 && "${1}" =~ -q|--quiet ]] ; then 
+
+    _quiet="q"
+    shift
+fi
+
+### main entry point
+declare -i __exit_code=0
+main $@
+
+__exit_code=$?
+
+echo -e "\n==> FINISHED  @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
+
+exit ${__exit_code}

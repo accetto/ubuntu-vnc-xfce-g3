@@ -14,11 +14,21 @@
 
 ***
 
-**Tip:** This is the **short README** version for Docker Hub. There is also the [full-length README][this-readme-full] on GitHub.
+- [Headless Ubuntu/Xfce container with VNC/noVNC](#headless-ubuntuxfce-container-with-vncnovnc)
+  - [accetto/ubuntu-vnc-xfce-g3](#accettoubuntu-vnc-xfce-g3)
+    - [Introduction](#introduction)
+    - [TL;DR](#tldr)
+    - [Description](#description)
+    - [Image tags](#image-tags)
+    - [More information](#more-information)
 
 ***
 
+### Introduction
+
 This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
+
+This is the **short README** version for the **Docker Hub**. There is also the [full-length README][this-readme-full] on the **GitHub**.
 
 ### TL;DR
 
@@ -33,14 +43,7 @@ sudo apt-get update
 sudo apt --fix-broken install
 ```
 
-### Table of contents
-
-- [Headless Ubuntu/Xfce container with VNC/noVNC](#headless-ubuntuxfce-container-with-vncnovnc)
-  - [accetto/ubuntu-vnc-xfce-g3](#accettoubuntu-vnc-xfce-g3)
-    - [TL;DR](#tldr)
-    - [Table of contents](#table-of-contents)
-    - [Image tags](#image-tags)
-    - [More information](#more-information)
+### Description
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 

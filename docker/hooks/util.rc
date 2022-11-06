@@ -92,17 +92,20 @@ get_gist_file() {
     gist_filename=$( make_gist_filename "${repo}" "${tag}" "${filename}" )
 
     ### assumption: 'output_file' is the full file name correctly composed by the caller
+    ### note that the dummy parameter '?$(date +%s)' is added to the URL to avoid caching
+    # set -x
     result=$(curl -s \
         -X GET \
         --write-out "%{http_code}" \
         -o "${output_file}" \
         -H "Accept: application/vnd.github.v3+json" \
-        "https://gist.githubusercontent.com/${_owner}/${gist}/raw/${gist_filename}")
+        "https://gist.githubusercontent.com/${_owner}/${gist}/raw/${gist_filename}/?$(date +%s)")
+    # set +x
 
-    if [ "${result}" == "200" ] ; then
+    if [[ "${result}" == "200" ]] ; then
         echo "Gist file '${gist_filename}' saved as '${output_file}'."
         return 0
-    elif [ "${result}" == "404" ] ; then
+    elif [[ "${result}" == "404" ]] ; then
         echo ; echo "Gist file '${gist_filename}' not found."
         return 0
     else
@@ -140,19 +143,25 @@ update_gist() {
     local gist_filename
     local result
 
-    if [ -z "${GIST_TOKEN}" ] ; then
+    if [[ -z "${GIST_TOKEN}" ]] ; then
+
         echo "Skipping gist update. Required variables not set."
         return 0
     fi
 
     case "${gist_key}" in
         "${_gist_key_created}" )
+
             envelope='{"subject":"created","status":"'${content}'","color":"blue"}'
             ;;
+
         "${_gist_key_version_sticker}" )
+
             envelope='{"subject":"version sticker","status":"'${content}'","color":"blue"}'
             ;;
+
         "${_gist_key_version_sticker_verbose}" )
+
             envelope="${content}"
             ;;
         * )
@@ -186,7 +195,8 @@ update_gist() {
         https://api.github.com/gists/${gist} \
         -d "${data}")
 
-    if [ "${result}" == "200" ] ; then
+    if [[ "${result}" == "200" ]] ; then
+    
         echo "Gist '${gist_filename}' updated successfully"
         echo
         return 0
@@ -194,64 +204,5 @@ update_gist() {
         echo "Gist '${gist_filename}' update failed: ${result}"
         echo 
         return 1
-    fi
-}
-
-# DEPRECATED This procedure is deprecated and it will be removed.
-trigger_post_push_workflow() {
-    ### Trigger the 'post_push' workflow on GitHub.
-    ### Secret 'POST_PUSH_WORKFLOW_TOKEN' with the scopes 'repo' and 'workflow' is needed.
-    ### The workflow generates the up-to-date README file and publishes it to the deployment repository on Docker Hub.
-
-    ### example of 'repo' on Docker Hub: 'index.docker.io/accetto/ubuntu-vnc-xfce-g3'
-    ### 'repo' should be including the owner as 'owner/repo'
-    local repo="${1?Need repo}"
-    local tag="${2?Need tag}"
-    local gist="${3?Need gist}"
-    local readme_context="${4?Need readme context}"
-    local branch="${5?Need source branch name}"
-    local created="${6:-'(not-provided)'}"
-    local version_sticker="${7:-'(not-provided)'}"
-    local version_sticker_verbose="${8:-'(not-provided)'}"
-    local retval_on_failure=${9:-0}
-
-    local data
-    local result
-
-    ### possibly from environment
-    local workflow="${POST_PUSH_WORKFLOW:-${_post_push_workflow_file}}"
-
-    if [ -z "${POST_PUSH_WORKFLOW_TOKEN}" ] ; then
-        echo "Skipping workflow '${workflow}'. Required variables not set."
-        return ${retval_on_failure}
-    fi
-
-    ### be careful with quotes!
-    version_sticker_verbose=$( encode_json_newlines "${version_sticker_verbose}" )
-
-    data='{ "ref": "'${branch}'", "inputs": { "repo": "'${repo}'", "tag": "'${tag}'", "gist": "'${gist}'", "readme_context": "'${readme_context}'" , "created": "'${created}'", "version_sticker": "'${version_sticker}'", "version_sticker_verbose": "'${version_sticker_verbose}'" } }'
-
-    # echo "About to trigger workflow '${workflow}' passing data:"
-    # echo "${data}"
-
-    ### required token scopes: repo, workflow
-    result=$(curl -s \
-        -X POST \
-        -o /dev/null \
-        --write-out "%{http_code}" \
-        https://api.github.com/repos/${_owner}/${POST_PUSH_WORKFLOW_REPO}/actions/workflows/"${workflow}"/dispatches \
-        -H "Accept: application/vnd.github.v3+json" \
-        -H "Authorization: token ${POST_PUSH_WORKFLOW_TOKEN}" \
-        -d "${data}")
-
-    if [ "${result}" == "204" ] ; then
-        echo "Workflow '${workflow}' triggered successfuly"
-        echo
-        return 0
-    else
-        echo "Workflow '${workflow}' trigger failed: ${result}"
-        if [ ${retval_on_failure} -eq 0 ] ; then echo "Ignoring the failure." ; fi
-        echo
-        return ${retval_on_failure}
     fi
 }
