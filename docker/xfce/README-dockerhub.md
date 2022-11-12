@@ -43,6 +43,29 @@ sudo apt-get update
 sudo apt --fix-broken install
 ```
 
+The fastest way to build the images locally:
+
+```shell
+### PWD = project root
+### prepare and source the 'secrets.rc' file first (see 'example-secrets.rc')
+
+### examples of building and publishing the individual images 
+./builder.sh latest all
+./builder.sh latest-fugo all
+
+### or skipping the publishing to the Docker Hub
+./builder.sh latest all-no-push
+./builder.sh latest-fugo all-no-push
+
+### examples of building and publishing the images as a group
+./ci-builder.sh all group latest latest-fugo
+
+### or even more efficient
+./ci-builder.sh all family latest -fugo
+```
+
+You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
+
 ### Description
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].

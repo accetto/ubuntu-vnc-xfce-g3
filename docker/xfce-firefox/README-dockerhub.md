@@ -49,6 +49,29 @@ sudo apt-get update
 sudo apt --fix-broken install
 ```
 
+The fastest way to build the images locally:
+
+```shell
+### PWD = project root
+### prepare and source the 'secrets.rc' file first (see 'example-secrets.rc')
+
+### examples of building and publishing the individual images 
+./builder.sh latest-firefox all
+./builder.sh latest-firefox-plus all
+
+### or skipping the publishing to the Docker Hub
+./builder.sh latest-firefox all-no-push
+./builder.sh latest-firefox-plus all-no-push
+
+### examples of building and publishing the images as a group
+./ci-builder.sh all group latest-firefox latest-firefox-plus
+
+### or even more efficient
+./ci-builder.sh all family latest-firefox -plus
+```
+
+You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
+
 ### Description
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repositories [accetto/ubuntu-vnc-xfce-firefox][accetto-github-ubuntu-vnc-xfce-firefox] and [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-github-ubuntu-vnc-xfce-firefox-plus].

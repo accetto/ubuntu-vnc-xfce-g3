@@ -43,6 +43,25 @@ sudo apt-get update
 sudo apt --fix-broken install
 ```
 
+The fastest way to build the images locally:
+
+```shell
+### PWD = project root
+### prepare and source the 'secrets.rc' file first (see 'example-secrets.rc')
+
+### examples of building and publishing the individual images 
+./builder.sh latest-chromium all
+
+### or skipping the publishing to the Docker Hub
+./builder.sh latest-chromium all-no-push
+
+### examples of building and publishing the images as a group
+./ci-builder.sh all group latest-chromium
+
+### or also
+./ci-builder.sh all family latest-chromium
+```
+
 Sharing the audio device for video with sound (only on Linux):
 
 ```shell
