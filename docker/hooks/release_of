@@ -9,7 +9,7 @@ main() {
             # result=$(wget -qO- \
             result=$(curl -sL \
                 http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/ \
-                | grep -Po -m1 '(?<=href=")[^_]*_([0-9.]+-0ubuntu0\.18\.04\.[^_"]*)_[^"]*' \
+                | grep -Po -m1 '(?<=href=")[^_]*_([0-9.]+-0ubuntu\d+\.18\.04\.[^_"]*)_[^"]*' \
                 | cut -d _ -f 2 \
             )
             ;;
@@ -21,7 +21,13 @@ main() {
 
     esac
 
-    echo "${result}"
+    if [[ -n "${result}" ]] ; then
+
+        echo "${result}"
+    else
+        echo "Exiting '${0}' with code '1' because not able to get version of '$1'"
+        return 1
+    fi
 }
 
 main $@

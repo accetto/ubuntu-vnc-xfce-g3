@@ -6,6 +6,10 @@
 
 ***
 
+### Release 22.11.1
+
+This is a quick fix release, because the `Chromium Browser` has changed its package naming pattern.
+
 ### Release 22.11
 
 This is a milestone release. It's the first release of the new building pipeline version `G3v2`. The previous version `G3v1` will still be available in this repository as the branch `archived-generation-g3v1`.
