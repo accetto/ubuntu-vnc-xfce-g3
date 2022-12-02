@@ -30,7 +30,7 @@ Make a copy of the secrets example file, modify it and then source it in the ter
 
 ```bash
 ### make a copy and then modify it
-cp docker/src/examples/example-secrets.rc secrets.rc
+cp examples/example-secrets.rc secrets.rc
 
 ### source the secrets
 source ./secrets.rc

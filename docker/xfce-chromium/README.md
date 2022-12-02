@@ -15,6 +15,11 @@
   - [accetto/ubuntu-vnc-xfce-chromium-g3](#accettoubuntu-vnc-xfce-chromium-g3)
     - [Introduction](#introduction)
     - [TL;DR](#tldr)
+      - [Installing packages](#installing-packages)
+      - [Shared memory size](#shared-memory-size)
+      - [Extending images](#extending-images)
+      - [Building images](#building-images)
+      - [Sharing audio device](#sharing-audio-device)
     - [Description](#description)
     - [Image tags](#image-tags)
     - [Ports](#ports)
@@ -40,6 +45,8 @@ This repository contains resources for building Docker images based on [Ubuntu 2
 
 ### TL;DR
 
+#### Installing packages
+
 I try to keep the images slim. Consequently you can encounter missing dependencies while adding more applications yourself. You can track the missing libraries on the [Ubuntu Packages Search][ubuntu-packages-search] page and install them subsequently.
 
 You can also try to fix it by executing the following (the default `sudo` password is **headless**):
@@ -50,6 +57,28 @@ sudo apt-get update
 
 sudo apt --fix-broken install
 ```
+
+#### Shared memory size
+
+Note that some applications require larger shared memory than the default 64MB. Using 256MB usually solves crashes or strange behavior.
+
+You can check the current shared memory size by executing the following command inside the container:
+
+```shell
+df -h /dev/shm
+```
+
+The Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
+
+#### Extending images
+
+The provided example file `Dockerfile.extend` shows how to use the images as the base for your own images.
+
+Your concrete `Dockerfile` may need more statements, but the concept should be clear.
+
+The compose file `example.yml` shows how to switch to another non-root user and how to set the VNC password and resolution.
+
+#### Building images
 
 The fastest way to build the images locally:
 
@@ -72,7 +101,9 @@ The fastest way to build the images locally:
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
 
-Sharing the audio device for video with sound (only on Linux):
+#### Sharing audio device
+
+Sharing the audio device for video with sound works only with `Chromium` and only on Linux:
 
 ```shell
 docker run -it -P --rm \
@@ -558,6 +589,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 [accetto-github-xubuntu-vnc]: https://github.com/accetto/xubuntu-vnc/
 [accetto-github-xubuntu-vnc-novnc]: https://github.com/accetto/xubuntu-vnc-novnc/
 [accetto-github-ubuntu-vnc-xfce-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-chromium
+[that-wiki-firefox-multiprocess]: https://github.com/accetto/xubuntu-vnc/wiki/Firefox-multiprocess
 
 <!-- External links -->
 

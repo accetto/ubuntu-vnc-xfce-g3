@@ -6,11 +6,20 @@
 
 ***
 
+### Release 22.12
+
+This is a maintenance release.
+
+- README files have been updated
+- Folder `examples/` has been moved up to the project's root folder
+  - New example `Dockerfile.extended` shows how to use the images as the base of new images
+  - New compose file `example.yml` shows how to switch to another non-root user and how to set the VNC password and resolution
+
 ### Release 22.11.1
 
-This is a quick fix release, because the `Chromium Browser` has changed its package naming pattern.
+This is a quick fix release, because `Chromium Browser` has changed its package naming pattern.
 
-### Release 22.11
+### Release 22.11 (Milestone)
 
 This is a milestone release. It's the first release of the new building pipeline version `G3v2`. The previous version `G3v1` will still be available in this repository as the branch `archived-generation-g3v1`.
 
@@ -46,7 +55,7 @@ Many other files have been updated, some of them significantly.
 
 Hoverer, the changes affect only the building pipeline, not the Docker images themselves. The `Dockerfile`, apart from using the new local `g3-cache`, stays conceptually unchanged.
 
-### Release 22.10
+### Release 22.10 (Milestone)
 
 This is the last release of the current building pipeline generation `G3v1`, which will still be available in the repository as the branch `archived-generation-g3v1`.
 
