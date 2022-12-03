@@ -79,7 +79,7 @@ The compose file `example.yml` shows how to switch to another non-root user and 
 
 #### Building images
 
-The fastest way to build the images locally:
+The fastest way to build the images:
 
 ```shell
 ### PWD = project root

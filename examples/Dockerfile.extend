@@ -5,8 +5,10 @@
 ### choose a base image and tag
 ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-g3"
 # ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-chromium-g3"
-# ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-g3-firefox"
+# ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-firefox-g3"
 ARG BASETAG="latest"
+# ARG BASETAG="latest-fugo"
+# ARG BASETAG="latest-plus"
 
 FROM ${BASEIMAGE}:${BASETAG}
 
