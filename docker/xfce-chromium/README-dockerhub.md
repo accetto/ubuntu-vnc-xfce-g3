@@ -22,7 +22,7 @@
       - [Shared memory size](#shared-memory-size)
       - [Extending images](#extending-images)
       - [Building images](#building-images)
-      - [Sharing audio device](#sharing-audio-device)
+      - [Sharing devices](#sharing-devices)
     - [Description](#description)
     - [Image tags](#image-tags)
     - [More information](#more-information)
@@ -91,7 +91,7 @@ The fastest way to build the images:
 ./ci-builder.sh all family latest-chromium
 ```
 
-#### Sharing audio device
+#### Sharing devices
 
 Sharing the audio device for video with sound works only with `Chromium` and only on Linux:
 
@@ -100,6 +100,33 @@ docker run -it -P --rm \
   --device /dev/snd:/dev/snd:rw \
   --group-add audio \
 accetto/ubuntu-vnc-xfce-chromium-g3:latest
+```
+
+Sharing the display with the host works only on Linux:
+
+```shell
+xhost +local:$(whoami)
+
+docker run -it -P --rm \
+    -e DISPLAY=${DISPLAY} \
+    --device /dev/dri/card0 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    accetto/ubuntu-vnc-xfce-chromium-g3:latest --skip-vnc
+
+xhost -local:$(whoami)
+```
+
+Sharing the X11 socket with the host works only on Linux:
+
+```shell
+xhost +local:$(whoami)
+
+docker run -it -P --rm \
+    --device /dev/dri/card0 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    accetto/ubuntu-vnc-xfce-chromium-g3:latest
+
+xhost -local:$(whoami)
 ```
 
 ### Description

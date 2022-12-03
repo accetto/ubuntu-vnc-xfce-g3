@@ -19,6 +19,7 @@
       - [Shared memory size](#shared-memory-size)
       - [Extending images](#extending-images)
       - [Building images](#building-images)
+      - [Sharing devices](#sharing-devices)
     - [Description](#description)
     - [Image tags](#image-tags)
     - [Ports](#ports)
@@ -110,6 +111,35 @@ The fastest way to build the images:
 ```
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
+
+#### Sharing devices
+
+Sharing the display with the host works only on Linux:
+
+```shell
+xhost +local:$(whoami)
+
+docker run -it -P --rm \
+    -e DISPLAY=${DISPLAY} \
+    --device /dev/dri/card0 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    accetto/ubuntu-vnc-xfce-firefox-g3:latest --skip-vnc
+
+xhost -local:$(whoami)
+```
+
+Sharing the X11 socket with the host works only on Linux:
+
+```shell
+xhost +local:$(whoami)
+
+docker run -it -P --rm \
+    --device /dev/dri/card0 \
+    -v /tmp/.X11-unix:/tmp/.X11-unix:rw \
+    accetto/ubuntu-vnc-xfce-firefox-g3:latest
+
+xhost -local:$(whoami)
+```
 
 ### Description
 
