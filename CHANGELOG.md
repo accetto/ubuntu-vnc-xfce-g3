@@ -6,6 +6,12 @@
 
 ***
 
+### Release 22.12.1
+
+- Updated components:
+
+  - **websockify** to version **0.11.0**
+
 ### Release 22.12
 
 This is a maintenance release.
