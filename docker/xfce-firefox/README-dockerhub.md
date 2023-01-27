@@ -9,9 +9,6 @@
 ![badge-github-release][badge-github-release]
 ![badge-github-release-date][badge-github-release-date]
 
-![badge_latest_created][badge_latest_created]
-[![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
-
 ***
 
 - [Headless Ubuntu/Xfce container with VNC/noVNC and Firefox browser](#headless-ubuntuxfce-container-with-vncnovnc-and-firefox-browser)
@@ -153,10 +150,15 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 The following image tags are regularly built and published on the **Docker Hub**:
 
-- `latest` implements VNC, noVNC and Firefox **plus** features
+- `latest` (also as `22.04`) based on `Ubuntu 22.04 LTS`
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
+
+- `20.04` based on `Ubuntu 20.04 LTS`
+
+    ![badge_20-04_created][badge_20-04_created]
+    [![badge_20-04_version-sticker][badge_20-04_version-sticker]][link_20-04_version-sticker-verbose]
 
 Clicking on the version sticker badge reveals more information about the actual configuration of the image.
 

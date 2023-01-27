@@ -167,7 +167,8 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 The following image tags are regularly built and published on the **Docker Hub**:
 
-- `latest` implements VNC/noVNC and Firefox **plus** features
+- `latest` (also as `22.04`) based on `Ubuntu 22.04 LTS`
+- `20.04` based on `Ubuntu 20.04 LTS`
 
 Clicking on the version sticker badge in the [README on Docker Hub][this-readme-dockerhub] reveals more information about the actual configuration of the image.
 
