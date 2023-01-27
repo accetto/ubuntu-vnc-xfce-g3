@@ -7,8 +7,6 @@ ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-g3"
 # ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-chromium-g3"
 # ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-firefox-g3"
 ARG BASETAG="latest"
-# ARG BASETAG="latest-fugo"
-# ARG BASETAG="latest-plus"
 
 FROM ${BASEIMAGE}:${BASETAG}
 
@@ -34,7 +32,7 @@ RUN \
 ### e.g. if a newly installed app added some files
 # RUN "${STARTUPDIR}"/set_user_permissions.sh "${HOME}"
 
-### usualy you want to swich back to a non-root user
+### usually you want to swich back to a non-root user
 ### alternatively you can do it in a compose file (see 'example.yml')
 USER 1001
 

@@ -2,7 +2,7 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
-Version: G3v2
+Version: G3v3
 
 ***
 
@@ -48,7 +48,7 @@ Version: G3v2
       - [Simple self-containing CI](#simple-self-containing-ci)
       - [Separated builder and deployment repositories](#separated-builder-and-deployment-repositories)
       - [Separate README files for Docker Hub](#separate-readme-files-for-docker-hub)
-      - [Based on `Ubuntu 20.04 LTS`](#based-on-ubuntu-2004-lts)
+      - [Based on `Ubuntu 22.04 LTS` and `Ubuntu 20.04 LTS`](#based-on-ubuntu-2204-lts-and-ubuntu-2004-lts)
       - [Using `TigerVNC 1.12`](#using-tigervnc-112)
       - [New startup script](#new-startup-script)
   - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
@@ -56,7 +56,7 @@ Version: G3v2
 
 ### Introduction
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
+This repository contains resources for building Docker images based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
 
 The resources for the individual images and their variations (tags) are stored in the subfolder of the **master** branch. Each image has its own README file describing its features and usage.
 
@@ -68,7 +68,7 @@ There are currently resources for the following Docker images:
 
 - [accetto/ubuntu-vnc-xfce-g3][accetto-docker-ubuntu-vnc-xfce-g3]
   - [full Readme][this-readme-image-base]
-  - [Dockerfile][this-dockerfile-base] (common for all images)
+  - Dockerfiles [22.04][this-dockerfile-22-04] and [20.04][this-dockerfile-20-04] (common for all images)
   - [Dockerfile stages diagram][this-diagram-dockerfile-stages] (common for all images)
 - [accetto/ubuntu-vnc-xfce-chromium-g3][accetto-docker-ubuntu-vnc-xfce-chromium-g3]
   - [full Readme][this-readme-image-chromium]
@@ -127,14 +127,9 @@ The fastest way to build the images:
 ./builder.sh latest-firefox all-no-push
 
 ### examples of building and publishing the groups of images
-./ci-builder.sh all group latest latest-fugo
+./ci-builder.sh all group latest
 ./ci-builder.sh all group latest-chromium
-./ci-builder.sh all group latest-firefox latest-firefox-plus
-
-### or even more efficient
-./ci-builder.sh all family latest -fugo
-./ci-builder.sh all family latest-chromium
-./ci-builder.sh all family latest-firefox -plus
+./ci-builder.sh all group latest-firefox
 
 ### or all the images at once
 ./ci-builder.sh all group complete
@@ -191,11 +186,17 @@ This is the **third generation** (G3) of my headless images. The **second genera
 
 ### Project versions
 
-This file describes the **second version** (G3v2) of the project.
+This file describes the **third version** (G3v3) of the project.
 
-The **first version** (G3v1, or simply G3) will still be available in this **GitHub** repository as the branch `archived-generation-g3v1`.
+The **first version** (G3v1, or simply G3) and the **second version** (G3v2, only 20.04 images) are still available in this **GitHub** repository as the branches `archived-generation-g3v1` and `archived-generation-g3v2`.
 
-The version `G3v2` brings the following major changes comparing to the previous version `G3v1`:
+The version `G3v3` brings the following major changes comparing to the previous version `G3v2`:
+
+- images based on `Ubuntu 22.04 LTS (jammy)` and `Ubuntu 20.04 LTS (focal)`
+- extended, but simplified `tag` set for publishing on the **Docker Hub**
+- improved builder scripts, including support for the `--target` building parameter
+
+The version `G3v2` has brought the following major changes comparing to the previous version `G3v1`:
 
 - Significantly improved building performance by introducing a local cache (`g3-cache`).
 - Auto-building on the **Docker Hub** and using of the **GitHub Actions** have been abandoned.
@@ -203,11 +204,11 @@ The version `G3v2` brings the following major changes comparing to the previous 
 - The **local stage** is the default building stage now. However, the new building pipeline has already been tested also with a local **GitLab** installation in a Docker container on a Linux machine.
 - Automatic publishing of README files to the **Docker Hub** has been removed, because it was not working properly any more. However, the README files for the **Docker Hub** can still be prepared with the provided utility `util-readme.sh` and then copy-and-pasted to the **Docker Hub** manually.
 
-The changes affect only the building pipeline, not the Docker images themselves. The `Dockerfile`, apart from using the new local `g3-cache`, stays conceptually unchanged.
+  The changes affect only the building pipeline, not the Docker images themselves. The `Dockerfile`, apart from using the new local `g3-cache`, stays conceptually unchanged.
 
 ### Project goals
 
-Unlike the first two generations, this one aims to support CI/CD.
+Unlike the first two generations, this `G3` generation aims to support CI/CD.
 
 The main project goal is to develop a **free, simple and self-containing CI/CD pipeline** for **building sets of configurable Docker images** with minimal dependencies outside the project itself.
 
@@ -298,9 +299,9 @@ The **second pipeline version** (G3v2) does not try to publish the `README` file
 
 The source `README` files for the **Docker Hub** are split into two parts. The part containing the badge links is separated into a **template file**. The final `README` files are then generated by the utility script. These files are usually shorter, because their length is limited by the **Docker Hub**. Therefore there are also the full-length versions, that are published only on the **GitHub**.
 
-#### Based on `Ubuntu 20.04 LTS`
+#### Based on `Ubuntu 22.04 LTS` and `Ubuntu 20.04 LTS`
 
-The current images are based on the official [Ubuntu 20.04 LTS][docker-ubuntu] image.
+The current images are based on the official [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] images.
 
 #### Using `TigerVNC 1.12`
 
@@ -330,13 +331,14 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
-[this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
+<!-- [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/ -->
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 
-[this-dockerfile-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+[this-dockerfile-22-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile-20-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.20-04
 
 [this-readme-image-base]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README.md
 [this-readme-image-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
@@ -384,10 +386,6 @@ Credit goes to all the countless people and companies, who contribute to open so
 [xfce]: http://www.xfce.org
 
 <!-- github badges -->
-
-[badge-github-workflow-dockerhub-autobuild]: https://github.com/accetto/ubuntu-vnc-xfce-g3/workflows/dockerhub-autobuild/badge.svg
-
-[badge-github-workflow-dockerhub-post-push]: https://github.com/accetto/ubuntu-vnc-xfce-g3/workflows/dockerhub-post-push/badge.svg
 
 [badge-github-release]: https://badgen.net/github/release/accetto/ubuntu-vnc-xfce-g3?icon=github&label=release
 

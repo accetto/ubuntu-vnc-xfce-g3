@@ -12,7 +12,9 @@
       - [Step 2: `build`](#step-2-build)
       - [Step 3: `push`](#step-3-push)
       - [Step 4: `post_push`](#step-4-post_push)
-    - [README files for Docker Hub](#readme-files-for-docker-hub)
+  - [Additional parameters](#additional-parameters)
+    - [Special handling of `--target` parameter](#special-handling-of---target-parameter)
+  - [README files for Docker Hub](#readme-files-for-docker-hub)
 
 ## Introduction
 
@@ -75,16 +77,13 @@ Building and publishing of sets of images is pretty easy. Let's say that we want
 
 ```shell
 ### PWD = project's root directory
-./ci-builder.sh all group latest-firefox latest-firefox-plus
+./ci-builder.sh all group latest-firefox
 
 ### or also
 ./ci-builder.sh all group complete-firefox
 
-### and this command will be even more efficient
-./ci-builder.sh all family latest-firefox -plus
-
 ### or skipping the publishing to the Docker Hub
-./ci-builder.sh all-no-push family latest-firefox -plus
+./ci-builder.sh all-no-push family latest-firefox
 ```
 
 The script `ci-builder.sh` is using the utility script `builder.sh` internally.
@@ -189,7 +188,53 @@ This step creates the deployment image tag and pushes it to the deployment repos
 
 This step updates the **GitHub Gists** belonging to the **builder repository** and the **deployment repository** and removes the temporary helper files created by the hook script `pre_build`.
 
-### README files for Docker Hub
+## Additional parameters
+
+Additional parameters, that come after the mandatory ones, could be passed to the hook scripts in the folder `docker/hooks`.
+
+The individual hook scripts can use the additional parameters or ignore them.
+
+Currently only the `build` and `pre_build` scripts actually process the additional parameters.
+
+Both scripts insert the additional parameters just after the `docker build` part of the Docker build command line.
+
+For example, if the additional parameters `--target stage_xfce --no-cache` are provided to the script `docker/hooks/build`, then the result Docker command line will begin like this:
+
+```shell
+docker build --target stage_xfce --no-cache -f ./docker/Dockerfile.xfce.22-04 ...
+```
+
+However, there is a special handling of the parameter `--target`.
+
+### Special handling of `--target` parameter
+
+The Docker `build` parameter `--target` allows processing multi-stage Dockerfiles only to a particular stage.
+
+Therefore this parameter makes sense only by the hook script `docker/hooks/build`.
+
+For example, this would build an image including only the stages `stage_essentials`, `stage_xserver` and `stage_xfce`:
+
+```shell
+docker build --target stage_xfce --no-cache -f ./docker/Dockerfile.xfce.22-04 ...
+```
+
+The result image tag will get the suffix `_stage_xfce`, e.g. `accetto/headless-ubuntu-g3:latest_stage_xfce`.
+
+This is generally useful only during development and debugging.
+
+On the other hand, the hook script `docker/hooks/pre_build` ignores and  removes the parameter `--target` with its value.
+
+Therefore `pre_build` always process all Dockerfile stages.
+
+For example, if the additional parameters `--target stage_xfce --no-cache` are provided to the script `docker/hooks/pre_build`, then the result Docker command line will begin like this:
+
+```shell
+docker build --no-cache -f ./docker/Dockerfile.xfce.22-04 ...
+```
+
+Note that both hook scripts always remove an orphaned `--target` parameter which comes with no value.
+
+## README files for Docker Hub
 
 Each **deployment repository** has its own `README` file for the **Docker Hub**.
 

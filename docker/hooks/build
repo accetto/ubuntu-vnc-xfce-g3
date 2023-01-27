@@ -7,10 +7,12 @@ source "${_mydir}"/env.rc
 source "${_mydir}"/util.rc
 
 main() {
+    local params=$@
     local now
     local version_sticker
     local cache_script="cache"
     local -i exit_code=0
+    local target_stage
 
     if [[ -f "${_build_context}/${_scrap_demand_stop_building}" ]] ; then
     
@@ -31,11 +33,38 @@ main() {
         version_sticker="null"
     fi
 
+    ### check for the '--target' parameter
+    if [[ $# -gt 0 ]] ; then
+
+        ### no quotes around 'params'
+        for i in ${params} ; do
+            if [[ "${i}" == "--target" ]] ; then
+
+                target_stage="${i}"
+
+            elif [[ -n "${target_stage}" ]] ; then
+
+                ### only if '--target' is followed by a value
+                if [[ ! "${i}" =~ ^- ]] ; then
+                    target_stage="${i}"
+                fi
+                break
+            fi
+        done
+
+        ### remove the orphaned '--target' (missing value)
+        if [[ "${target_stage}" == "--target" ]] ; then
+            params="${params/--target/}"
+            target_stage=""
+        fi
+    fi
+
     now="$(date --utc +%FT%TZ)"
     echo "Current timestamp: ${now}" ; echo
 
     set -x
-    docker build $@ \
+    ### no quotes around 'params'
+    docker build ${params} \
         -f "${DOCKERFILE_PATH}" \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
             --build-arg BASEIMAGE="${BASEIMAGE}" \
@@ -64,7 +93,7 @@ main() {
             ${FEATURES_FIREFOX:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox"} \
             ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox_plus"} \
             \
-        -t "${DOCKER_REPO}":"${DOCKER_TAG}" "${_build_context}"
+        -t "${DOCKER_REPO}:${DOCKER_TAG}${target_stage:+_${target_stage}}" "${_build_context}"
     set +x
 }
 

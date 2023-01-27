@@ -2,7 +2,7 @@
 
 ## accetto/ubuntu-vnc-xfce-chromium-g3
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Docker Readme][this-readme-dockerhub] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile-22-04] - [Docker Readme][this-readme-dockerhub] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ![badge-docker-pulls][badge-docker-pulls]
 ![badge-docker-stars][badge-docker-stars]
@@ -29,6 +29,7 @@
     - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
   - [Container user accounts](#container-user-accounts)
     - [Overriding container user parameters](#overriding-container-user-parameters)
+      - [Overriding user group](#overriding-user-group)
   - [Running containers in background (detached)](#running-containers-in-background-detached)
   - [Running containers in foreground (interactively)](#running-containers-in-foreground-interactively)
   - [Startup options and help](#startup-options-and-help)
@@ -41,7 +42,7 @@
 
 ### Introduction
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
+This repository contains resources for building Docker images based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
 
 ### TL;DR
 
@@ -94,9 +95,6 @@ The fastest way to build the images:
 
 ### examples of building and publishing the images as a group
 ./ci-builder.sh all group latest-chromium
-
-### or also
-./ci-builder.sh all family latest-chromium
 ```
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
@@ -145,9 +143,9 @@ This is the **third generation** (G3) of my headless images. The **second genera
 
 More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
 
-**Remark:** This image contains the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
+**Remark:** These images contain the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is not working correctly in Docker at this time.
 
-**Attention:** The [Chromium Browser][chromium] in this image runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
+**Attention:** The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
 
 The main features and components of the images in the default configuration are:
 
@@ -169,7 +167,7 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tag on Docker Hub is regularly rebuilt:
+The following image tags are regularly built and published on the **Docker Hub**:
 
 - `latest` implements VNC and noVNC
 
@@ -379,7 +377,9 @@ docker run --user 2019 ...
 
 Note that only numerical ID values are supported. Please check the Docker documentation for more information.
 
-This image allows you to override also the container user **group ID**. However, the image must be built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE` for such use case.
+#### Overriding user group
+
+This image generally allows you to override also the container user **group ID**. However, the image must be built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE` for such use case.
 
 Otherwise the following command would fail:
 
@@ -396,6 +396,8 @@ The images having the tag suffix `-fugo` (**f**eatures **u**ser **g**roup **o**v
 Note that only numerical `ID:GID` values are supported. Please check the Docker documentation for more information.
 
 **Remark**: The possibility to override the container user **group ID** is available also for this image, but the `fugo` tags are currently not published by default. You can set the variable `FEATURES_USER_GROUP_OVERRIDE` in the hook script `env.rc` and build them yourself.
+
+**Remark:** Since the version `G3v3` the previous image `accetto/ubuntu-vnc-xfce-g3:latest-fugo` is not published on the **Docker Hub** any more. However, it can still be built manually. Some minor adjustments in the script `docker/hooks/env.rc` would be required.
 
 ## Running containers in background (detached)
 
@@ -605,7 +607,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3/
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+[this-dockerfile-22-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+<!-- [this-dockerfile-20-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.20-04 -->
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 

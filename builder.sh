@@ -1,5 +1,6 @@
 #!/bin/bash -e
 ### @accetto, August 2021
+### updated: September 2022, January 2023
 
 ### depends on the hook scripts
 ### set the environment variables first, e.g. 'source .secrets'
@@ -43,7 +44,7 @@ This script can:
 
 Usage: $0 <blend> <command> [<docker-cli-options>]
 
-blend   := (latest|latest-fugo|latest-chromium|latest-firefox|latest-firefox-plus)
+blend   := (latest|jammy|focal)[-chromium|-firefox]
 command := (all|all-no-push)|(pre_build|build|push|post_push|cache)
 
 The <docker-cli-options> (e.g. '--no-cache') are passed to the Docker CLI commands used internally.
@@ -109,7 +110,7 @@ main() {
                     echo "==> ${c} '${blend}'"
                     echo
 
-                    "${_build_context}"/hooks/"${c}" dev "${blend}"
+                    "${_build_context}"/hooks/"${c}" dev "${blend}" $@
                     exit_code=$?
                     if [[ ${exit_code} -ne 0 ]] ; then die "Hook script '${c}' failed with code ${exit_code}." ${exit_code} ; fi
                 done

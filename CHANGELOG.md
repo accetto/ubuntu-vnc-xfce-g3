@@ -6,6 +6,40 @@
 
 ***
 
+### Release 23.01
+
+This is the first `G3v3` release, introducing the images based on `Ubuntu 22.04 LTS`. The previous version `G3v2` will still be available in this repository as the branch `archived-generation-g3v2`.
+
+Changes in deployment:
+
+- default base of the `latest` images is now `Ubuntu 22.04 LTS`
+  - there is no `snap` included
+  - `Firefox` is the latest non-snap version from the Mozilla Team PPA
+  - `Chromium` is the latest version from the `Ubuntu 18.04 LTS` distribution
+  - `latest` images will be doubled by the tags with the prefix `22.04`
+- images based on `Ubuntu 20.04 LTS` will still be published
+  - their tags will begin with the prefix `20.04`
+- image `accetto/ubuntu-vnc-xfce-g3:latest-fugo` will not be published any more (it can still be built manually)
+- image `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus`, containing the **Firefox Plus Features**, becomes the `latest` image now
+  - previous `latest` image without the **Firefox Plus Features** will not be published any more (it can still be built manually)
+
+Support of additional building parameters:
+
+- script `builder.sh` passes the additional building parameters, that come after the mandatory ones, to the hook scripts
+- script `hooks/build` can use the `--target <stage>` parameter for building particular Dockerfile stages
+- script hooks/pre_build removes the `--target <stage>` parameter and always processes all Dockerfile stages
+- see `readme-local-building-example.md` for more information
+
+Other changes and improvements:
+
+- `Dockerfiles.xfce` renamed to `Dockerfiles.xfce.20-04` and improved
+- `Dockerfiles.xfce.22-04` added
+- script `hooks/env.rc` updated
+  - `noVNC` is always included in all images
+  - Firefox **plus** features always included in Firefox images
+- scripts `builder.sh` and `ci-builder.sh` have been updated
+- most readme files have been updated
+
 ### Release 22.12.1
 
 - Updated components:

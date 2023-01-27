@@ -1,6 +1,7 @@
 #!/bin/bash
 ### do not use '-e'
 ### @accetto, September 2022
+### updated: January 2023
 
 ### depends on the script 'builder.sh'
 ### set the environment variables first, e.g. 'source .secrets'
@@ -92,20 +93,22 @@ This script can:
 
 Usage: <script> <mode> <argument> [<optional-argument>]...
 
-    ${0} [<options>] <command> family <parent-blend> [<child-suffix>]...
     ${0} [<options>] <command> group <blend> [<blend>]...
+    ${0} [<options>] <command> family <parent-blend> [<child-suffix>]...
     ${0} [--log-all] log get (digest|stickers|timing|errors)
 
 <options>      := (--log-all|--no-cache) 
 <command>      := (all|all-no-push)
-<mode>         := (family|group)
-<parent-blend> := (complete)|(latest[-chromium|-firefox])
-<child-suffix> := (-fugo|-plus) - depends on context
-<blend>        := (pivotal|complete[-chromium|-firefox])
-                  |(latest[-fugo|-chromium|-firefox[-plus]])
+<mode>         := (group|family)
+<blend>        := pivotal
+                  |(complete[-latest|-jammy|-focal|-chromium|-firefox])
+                  |(latest|jammy|focal[-chromium|-firefox])
+<parent-blend> := (complete)|(latest|jammy|focal[-chromium|-firefox])
+<child-suffix> := depends on context, e.g. '-ver1|-ver2' (currently none supported)
 
-Family mode: The children are skipped if a new parent image was not actually built.
 Group mode : All images are processed independently.
+Family mode: The children are skipped if a new parent image was not actually built.
+Remark: Currently are both modes equivalent, because there are no child suffixes supported.
 
 The command and the blend are passed to the builder script.
 The result "<parent-blend><child-suffix>" must be a blend supported by the builder script.
@@ -117,18 +120,18 @@ EOT
     # Examples of family mode:
     # Build and publish all blends, not using the Docker builder cache:
     #     ${0} --no-cache all family complete
-    # Build the 'latest' and 'latest-fugo' blends, but skip the publishing:
-    #     ${0} all-no-push family latest -fugo
-    # Build and publish only the 'latest-firefox' and 'latest-firefox-plus' blends:
-    #     ${0} all family latest-firefox -plus
-    # Build and publish only the 'latest' and 'latest-firefox-plus' blends:
-    #     ${0} all family latest -firefox-plus
+    # Build the 'latest' and 'latest-ver2' blends, but skip the publishing:
+    #     ${0} all-no-push family latest -ver2
+    # Build and publish only the 'latest-firefox' and 'latest-firefox-ver2' blends:
+    #     ${0} all family latest-firefox -ver2
+    # Build and publish only the 'latest' and 'latest-firefox-ver2' blends:
+    #     ${0} all family latest -firefox-ver2
 
     # Examples of group mode:
     # Build and publish all blends:
     #     ${0} all group complete
-    # Build the 'latest' and 'latest-fugo' blends, but skip the publishing:
-    #     ${0} all-no-push group latest latest-fugo
+    # Build the 'latest' and 'latest-ver2' blends, but skip the publishing:
+    #     ${0} all-no-push group latest latest-ver2
     # Build and publish the images containing Firefox:
     #     ${0} all group complete-firefox
 
@@ -279,59 +282,47 @@ main() {
         all-no-push | all )
             case "${mode}" in
 
-                family )
-                    case "${subject}" in
-
-                        complete )
-
-                            clear_log
-
-                            build_family "${command}" "latest" "-fugo"
-                            build_family "${command}" "latest-chromium"
-                            build_family "${command}" "latest-firefox" "-plus"
-                            ;;
-
-                        latest | latest-chromium | latest-firefox )
-
-                            clear_log
-                            build_family "${command}" "${subject}" $@
-                            ;;
-
-                        * )
-                            execute_smart show_error "Unknown parent blend '${subject}'"
-                            ;;
-
-                    esac
-                    ;;
-
                 group )
                     case "${subject}" in
 
-                        pivotal )
+                        complete | pivotal )
+
+                            clear_log
+                            build_group "${command}" "latest" "latest-chromium" "latest-firefox" "focal" "focal-chromium" "focal-firefox"
+                            ;;
+
+                        complete-latest )
 
                             clear_log
                             build_group "${command}" "latest" "latest-chromium" "latest-firefox"
                             ;;
 
+                        complete-jammy )
+
+                            clear_log
+                            build_group "${command}" "jammy" "jammy-chromium" "jammy-firefox"
+                            ;;
+
+                        complete-focal )
+
+                            clear_log
+                            build_group "${command}" "focal" "focal-chromium" "focal-firefox"
+                            ;;
+
                         complete-chromium )
 
                             clear_log
-                            build_group "${command}" "latest-chromium"
+                            build_group "${command}" "latest-chromium" "focal-chromium"
                             ;;
 
                         complete-firefox )
 
                             clear_log
-                            build_group "${command}" "latest-firefox" "latest-firefox-plus"
+                            build_group "${command}" "latest-firefox" "focal-firefox"
                             ;;
 
-                        complete )
-
-                            clear_log
-                            build_group "${command}" "latest" "latest-fugo" "latest-chromium" "latest-firefox" "latest-firefox-plus"
-                            ;;
-
-                        latest | latest-fugo | latest-chromium | latest-firefox | latest-firefox-plus )
+                        latest | latest-chromium | latest-firefox | jammy | jammy-chromium | jammy-firefox \
+                        | focal | focal-chromium | focal-firefox )
 
                             clear_log
                             build_group "${command}" "${subject}" $@
@@ -339,6 +330,36 @@ main() {
 
                         * )
                             execute_smart show_error "Unknown blend '${subject}'"
+                            ;;
+
+                    esac
+                    ;;
+
+                family )
+                    case "${subject}" in
+
+                        complete )
+
+                            clear_log
+
+                            build_family "${command}" "latest"
+                            build_family "${command}" "latest-chromium"
+                            build_family "${command}" "latest-firefox"
+                            build_family "${command}" "focal"
+                            build_family "${command}" "focal-chromium"
+                            build_family "${command}" "focal-firefox"
+                            ;;
+
+                        latest | latest-chromium | latest-firefox \
+                        | jammy | jammy-chromium | jammy-firefox \
+                        | focal | focal-chromium | focal-firefox )
+
+                            clear_log
+                            build_family "${command}" "${subject}" $@
+                            ;;
+
+                        * )
+                            execute_smart show_error "Unknown parent blend '${subject}'"
                             ;;
 
                     esac

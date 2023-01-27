@@ -2,7 +2,7 @@
 
 ## accetto/ubuntu-vnc-xfce-g3
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile-22-04] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ![badge-docker-pulls][badge-docker-pulls]
 ![badge-docker-stars][badge-docker-stars]
@@ -31,7 +31,7 @@
 
 ### Introduction
 
-This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
+This repository contains Docker images based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
 
 This is the **short README** version for the **Docker Hub**. There is also the [full-length README][this-readme-full] on the **GitHub**.
 
@@ -80,17 +80,12 @@ The fastest way to build the images:
 
 ### examples of building and publishing the individual images 
 ./builder.sh latest all
-./builder.sh latest-fugo all
 
 ### or skipping the publishing to the Docker Hub
 ./builder.sh latest all-no-push
-./builder.sh latest-fugo all-no-push
 
 ### examples of building and publishing the images as a group
-./ci-builder.sh all group latest latest-fugo
-
-### or even more efficient
-./ci-builder.sh all family latest -fugo
+./ci-builder.sh all group latest
 ```
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
@@ -149,17 +144,12 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags on Docker Hub are regularly rebuilt:
+The following image tags are regularly built and published on the **Docker Hub**:
 
 - `latest` implements VNC and noVNC
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
-
-- `latest-fugo` implements VNC/noVNC and supports user group overriding
-
-    ![badge_latest-fugo_created][badge_latest-fugo_created]
-    [![badge_latest-fugo_version-sticker][badge_latest-fugo_version-sticker]][link_latest-fugo_version-sticker-verbose]
 
 Clicking on the version sticker badge reveals more information about the actual configuration of the image.
 
@@ -174,7 +164,7 @@ More information about these images can be found in the [full-length README][thi
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
 [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
-[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
+<!-- [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues -->
 [this-readme-full]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README.md
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
@@ -182,7 +172,7 @@ More information about these images can be found in the [full-length README][thi
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3/
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+[this-dockerfile-22-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/ubuntu-vnc-xfce-g3.jpg
 
@@ -197,8 +187,8 @@ More information about these images can be found in the [full-length README][thi
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
 
-[docker-doc]: https://docs.docker.com/
-[docker-doc-managing-data]: https://docs.docker.com/storage/
+<!-- [docker-doc]: https://docs.docker.com/ -->
+<!-- [docker-doc-managing-data]: https://docs.docker.com/storage/ -->
 
 [ubuntu-packages-search]: https://packages.ubuntu.com/
 

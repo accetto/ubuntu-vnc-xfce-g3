@@ -2,7 +2,7 @@
 
 ## accetto/ubuntu-vnc-xfce-g3
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Docker Readme][this-readme-dockerhub] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile-22-04] - [Docker Readme][this-readme-dockerhub] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ![badge-docker-pulls][badge-docker-pulls]
 ![badge-docker-stars][badge-docker-stars]
@@ -29,6 +29,7 @@
     - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
   - [Container user accounts](#container-user-accounts)
     - [Overriding container user parameters](#overriding-container-user-parameters)
+      - [Overriding user group](#overriding-user-group)
   - [Running containers in background (detached)](#running-containers-in-background-detached)
   - [Running containers in foreground (interactively)](#running-containers-in-foreground-interactively)
   - [Startup options and help](#startup-options-and-help)
@@ -41,7 +42,7 @@
 
 ### Introduction
 
-This repository contains resources for building Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
+This repository contains resources for building Docker images based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
 
 ### TL;DR
 
@@ -88,17 +89,12 @@ The fastest way to build the images:
 
 ### examples of building and publishing the individual images 
 ./builder.sh latest all
-./builder.sh latest-fugo all
 
 ### or skipping the publishing to the Docker Hub
 ./builder.sh latest all-no-push
-./builder.sh latest-fugo all-no-push
 
-### examples of building and publishing the images as a group
-./ci-builder.sh all group latest latest-fugo
-
-### or even more efficient
-./ci-builder.sh all family latest -fugo
+### examples of building and publishing the images
+./ci-builder.sh all group latest
 ```
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
@@ -157,10 +153,9 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tags on Docker Hub are regularly rebuilt:
+The following image tags are regularly built and published on the **Docker Hub**:
 
 - `latest` implements VNC and noVNC
-- `latest-fugo` implements VNC/noVNC and supports user group overriding
 
 Clicking on the version sticker badge in the [README on Docker Hub][this-readme-dockerhub] reveals more information about the actual configuration of the image.
 
@@ -368,7 +363,9 @@ docker run --user 2019 ...
 
 Note that only numerical ID values are supported. Please check the Docker documentation for more information.
 
-This image allows you to override also the container user **group ID**. However, the image must be built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE` for such use case.
+#### Overriding user group
+
+This image generally allows you to override also the container user **group ID**. However, the image must be built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE` for such use case.
 
 Otherwise the following command would fail:
 
@@ -383,6 +380,8 @@ docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:latest-fugo
 The images having the tag suffix `-fugo` (**f**eatures **u**ser **g**roup **o**verride) are built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE`.
 
 Note that only numerical `ID:GID` values are supported. Please check the Docker documentation for more information.
+
+**Remark:** Since the version `G3v3` the previous image `accetto/ubuntu-vnc-xfce-g3:latest-fugo` is not published on the **Docker Hub** any more. However, it can still be built manually. Some minor adjustments in the script `docker/hooks/env.rc` would be required.
 
 ## Running containers in background (detached)
 
@@ -592,7 +591,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3/
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+[this-dockerfile-22-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+<!-- [this-dockerfile-20-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.20-04 -->
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 

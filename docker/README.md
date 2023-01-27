@@ -8,7 +8,7 @@ Useful links from **this project's** GitHub repository [accetto/ubuntu-vnc-xfce-
 - base images **Ubuntu/Xfce/VNC/noVNC**
   - [full Readme][this-readme-image-base] file on GitHub
   - [image repository][this-dockerhub-image-base] on Docker Hub
-  - [Dockerfile][this-dockerfile] (common for all images) on GitHub
+  - Dockerfiles [22.04][this-dockerfile-22-04] and [20.04][this-dockerfile-20-04] (common for all images) on GitHub
   - [Dockerfile stages diagram][this-diagram-dockerfile-stages] on GitHub (common for all images)
 - images with **Chromium**
   - [full Readme][this-readme-image-chromium] file on GitHub
@@ -21,7 +21,8 @@ Useful links from **this project's** GitHub repository [accetto/ubuntu-vnc-xfce-
 
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+[this-dockerfile-22-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile-20-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.20-04
 
 [this-home]: https://github.com/accetto/ubuntu-vnc-xfce-g3
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues

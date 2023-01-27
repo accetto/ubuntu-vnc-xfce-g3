@@ -3,10 +3,10 @@
 - [Utility `builder.sh`](#utility-buildersh)
   - [Introduction](#introduction)
   - [Prerequisites](#prerequisites)
-  - [Examples](#examples)
-    - [Executing complete pipeline](#executing-complete-pipeline)
-    - [Executing individual pipeline steps](#executing-individual-pipeline-steps)
-      - [What about the 'cache' helper script](#what-about-the-cache-helper-script)
+  - [Executing complete pipeline](#executing-complete-pipeline)
+  - [Executing individual pipeline steps](#executing-individual-pipeline-steps)
+    - [What about the 'cache' helper script](#what-about-the-cache-helper-script)
+  - [Additional building parameters](#additional-building-parameters)
 
 ## Introduction
 
@@ -28,7 +28,7 @@ This script can:
 
 Usage: ./builder.sh <blend> <command> [<docker-cli-options>]
 
-blend   := (latest|latest-fugo|latest-chromium|latest-firefox|latest-firefox-plus)
+blend   := (latest|jammy|focal)[-chromium|-firefox]
 command := (all|all-no-push)|(pre_build|build|push|post_push|cache)
 
 The <docker-cli-options> (e.g. '--no-cache') are passed to the Docker CLI commands used internally.
@@ -54,9 +54,7 @@ source secrets.rc
 . secrets.rc
 ```
 
-## Examples
-
-### Executing complete pipeline
+## Executing complete pipeline
 
 Building the individual images and publishing them to the **Docker Hub**:
 
@@ -65,14 +63,12 @@ Building the individual images and publishing them to the **Docker Hub**:
 
 ### ubuntu-vnc-xfce-g3
 ./builder.sh latest all
-./builder.sh latest-fugo all
 
 ### ubuntu-vnc-xfce-chromium-g3
 ./builder.sh latest-chromium all
 
 ### ubuntu-vnc-xfce-firefox-g3
 ./builder.sh latest-firefox all
-./builder.sh latest-firefox-plus all
 ```
 
 You can skip the publishing to the **Docker Hub** by replacing the command `all` by the command `all-no-push`:
@@ -92,7 +88,7 @@ You can also provide additional parameters for the internally used Docker `build
 
 The optional `<docker-cli-options>` are passed only to the `pre_build` hook script, which passes them to the internally used `docker build` command.
 
-### Executing individual pipeline steps
+## Executing individual pipeline steps
 
 The building pipeline consists of the following steps, that can be executed also individually:
 
@@ -119,7 +115,7 @@ The building pipeline consists of the following steps, that can be executed also
 
 The optional `<docker-cli-options>` are passed to the each individual hook script, which can pass them to the internally used Docker CLI command. The `cache` hook script, however, doesn't use any Docker CLI commands.
 
-#### What about the 'cache' helper script
+### What about the 'cache' helper script
 
 The `cache` hook script has been introduced in the **second version** (G3v2) of the building pipeline. It refreshes the local `g3-cache`, which must be always placed inside the Docker build context. The script is also used by the `pre_build` and `build` hook scripts.
 
@@ -142,3 +138,21 @@ The script will refresh only the packages that are required for the current buil
 ### this will refresh also 'Chromium Browser'
 ./builder.sh latest-chromium cache
 ```
+
+## Additional building parameters
+
+The script `builder.sh` passes the additional parameters, that come after the mandatory ones, to the hook scripts in the folder `docker/hooks`.
+
+For example:
+
+```shell
+./builder.sh latest build --target stage_xfce --no-cache
+```
+
+The additional parameters `--target stage_xfce --no-cache` will be passed to the script `docker/hooks/build`.
+
+See the file [readme-local-building-example][this-readme-local-building-example] for more information about handling of the additional building parameters.
+
+***
+
+[this-readme-local-building-example]: readme-local-building-example.md

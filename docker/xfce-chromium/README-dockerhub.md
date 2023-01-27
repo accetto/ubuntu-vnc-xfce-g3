@@ -2,7 +2,7 @@
 
 ## accetto/ubuntu-vnc-xfce-chromium-g3
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
+[Docker Hub][this-docker] - [Git Hub][this-github] - [Dockerfile][this-dockerfile-22-04] - [Full Readme][this-readme-full] - [Changelog][this-changelog] - [Project Readme][this-readme-project] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ![badge-docker-pulls][badge-docker-pulls]
 ![badge-docker-stars][badge-docker-stars]
@@ -131,9 +131,9 @@ xhost -local:$(whoami)
 
 ### Description
 
-**Remark:** This image contains the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the version for `Ubuntu 20.04 LTS` depends on `snap`, which is not working correctly in Docker at this time.
+**Remark:** These images contain the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is not working correctly in Docker at this time.
 
-**Attention:** The [Chromium Browser][chromium] in this image runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
+**Attention:** The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce-chromium][accetto-github-ubuntu-vnc-xfce-chromium].
 
@@ -179,7 +179,7 @@ More information about these images can be found in the [full-length README][thi
 [this-changelog]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/CHANGELOG.md
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
 [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
-[this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
+<!-- [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues -->
 [this-readme-full]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
@@ -187,7 +187,8 @@ More information about these images can be found in the [full-length README][thi
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3/
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce
+[this-dockerfile-22-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+<!-- [this-dockerfile-20-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.20-04 -->
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/ubuntu-vnc-xfce-chromium.jpg
 
@@ -202,8 +203,8 @@ More information about these images can be found in the [full-length README][thi
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
 
-[docker-doc]: https://docs.docker.com/
-[docker-doc-managing-data]: https://docs.docker.com/storage/
+<!-- [docker-doc]: https://docs.docker.com/ -->
+<!-- [docker-doc-managing-data]: https://docs.docker.com/storage/ -->
 
 [ubuntu-packages-search]: https://packages.ubuntu.com/
 
@@ -212,7 +213,7 @@ More information about these images can be found in the [full-length README][thi
 [nano]: https://www.nano-editor.org/
 [novnc]: https://github.com/kanaka/noVNC
 [tigervnc]: http://tigervnc.org
-[tightvnc]: http://www.tightvnc.com
+<!-- [tightvnc]: http://www.tightvnc.com -->
 [tini]: https://github.com/krallin/tini
 [xfce]: http://www.xfce.org
 
