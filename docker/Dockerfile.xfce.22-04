@@ -7,6 +7,8 @@ ARG ARG_MERGE_STAGE_VNC_BASE=stage_vnc
 ARG ARG_MERGE_STAGE_BROWSER_BASE=merge_stage_vnc
 ARG ARG_FINAL_STAGE_BASE=merge_stage_browser
 
+ARG ARG_HOME_OWNER=1001:0
+
 
 ###############
 ### stage_cache
@@ -218,10 +220,13 @@ EXPOSE "${NOVNC_PORT}"
 FROM ${ARG_MERGE_STAGE_VNC_BASE} as merge_stage_vnc
 ARG ARG_HEADLESS_USER_NAME
 ARG ARG_HOME
+ARG ARG_HOME_OWNER
 
 ENV HOME="${ARG_HOME:-/home/${ARG_HEADLESS_USER_NAME:-headless}}"
 
 WORKDIR "${HOME}"
+
+RUN chown -R "${ARG_HOME_OWNER:-1001:0}" "${HOME}"/
 
 
 ##################
@@ -232,6 +237,7 @@ FROM merge_stage_vnc as stage_chromium
 ARG ARG_APT_NO_RECOMMENDS
 ARG ARG_CHROMIUM_DISTRO
 ARG ARG_CHROMIUM_VERSION
+ARG ARG_HOME_OWNER
 
 ENV \
     FEATURES_BUILD_SLIM_CHROMIUM="${ARG_APT_NO_RECOMMENDS:+1}" \
@@ -264,15 +270,16 @@ RUN \
         /tmp/g3-cache/chromium/chromium-browser-l10n_"${CHROMIUM_VERSION}"_all.deb \
     &&  apt-mark hold chromium-browser
 
-COPY ./xfce-chromium/src/home/Desktop "${HOME}"/Desktop/
-COPY ./xfce-chromium/src/home/readme*.md "${HOME}"/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-chromium/src/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-chromium/src/home/readme*.md "${HOME}"/
 
 ### Chromium browser requires some presets
 ### Note that 'no-sandbox' flag is required, but intended for development only
 RUN \
     echo \
     "CHROMIUM_FLAGS='--no-sandbox --disable-gpu --user-data-dir --window-size=${VNC_RESOLUTION%x*},${VNC_RESOLUTION#*x} --window-position=0,0'" \
-    > "${HOME}"/.chromium-browser.init
+    > "${HOME}"/.chromium-browser.init \
+    && chown "${ARG_HOME_OWNER:-1001:0}" "${HOME}"/.chromium-browser.init
 
 
 #################
@@ -281,6 +288,7 @@ RUN \
 
 FROM merge_stage_vnc as stage_firefox
 ARG ARG_APT_NO_RECOMMENDS
+ARG ARG_HOME_OWNER
 
 ENV \
     FEATURES_BUILD_SLIM_FIREFOX="${ARG_APT_NO_RECOMMENDS:+1}" \
@@ -309,10 +317,12 @@ Pin-Priority: 501" \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         firefox \
+    && mkdir -p "${HOME}"/.mozilla/firefox \
+    && chown -R "${ARG_HOME_OWNER:-1001:0}" "${HOME}"/.mozilla/ \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/*
 
-COPY ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
 
 
 ### ##################
@@ -320,12 +330,13 @@ COPY ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
 ### ##################
 
 FROM stage_firefox as stage_firefox_plus
+ARG ARG_HOME_OWNER
 
 ENV FEATURES_FIREFOX_PLUS=1
 
-COPY ./xfce-firefox/src/firefox.plus/home/Desktop "${HOME}"/Desktop/
-COPY ./xfce-firefox/src/firefox.plus/resources "${HOME}"/firefox.plus/
-COPY ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/firefox.plus/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/firefox.plus/resources "${HOME}"/firefox.plus/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
 
 RUN \
     chmod +x "${HOME}"/firefox.plus/*.sh \
@@ -348,6 +359,7 @@ FROM ${ARG_FINAL_STAGE_BASE} as stage_final
 ARG ARG_FEATURES_USER_GROUP_OVERRIDE
 ARG ARG_HEADLESS_USER_NAME
 ARG ARG_SUDO_PW
+ARG ARG_HOME_OWNER
 
 ENV \
     FEATURES_USER_GROUP_OVERRIDE="${ARG_FEATURES_USER_GROUP_OVERRIDE:+1}" \
@@ -356,9 +368,9 @@ ENV \
 
 COPY ./src/xfce-startup "${STARTUPDIR}"/
 
-COPY ./xfce/src/home/config "${HOME}"/.config/
-COPY ./xfce/src/home/Desktop "${HOME}"/Desktop/
-COPY ./xfce/src/home/readme*.md "${HOME}"/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce/src/home/config "${HOME}"/.config/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce/src/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce/src/home/readme*.md "${HOME}"/
 
 ### Create the default application user (non-root, but member of the group zero)
 ### and allow the group zero to modify '/etc/passwd' and '/etc/group'.
