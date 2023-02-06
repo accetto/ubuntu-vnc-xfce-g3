@@ -7,7 +7,7 @@ ARG ARG_MERGE_STAGE_VNC_BASE=stage_vnc
 ARG ARG_MERGE_STAGE_BROWSER_BASE=merge_stage_vnc
 ARG ARG_FINAL_STAGE_BASE=merge_stage_browser
 
-ARG ARG_HOME_OWNER=1001:0
+ARG ARG_HEADLESS_USER_ID=1001
 
 
 ###############
@@ -220,13 +220,13 @@ EXPOSE "${NOVNC_PORT}"
 FROM ${ARG_MERGE_STAGE_VNC_BASE} as merge_stage_vnc
 ARG ARG_HEADLESS_USER_NAME
 ARG ARG_HOME
-ARG ARG_HOME_OWNER
+ARG ARG_HEADLESS_USER_ID
 
 ENV HOME="${ARG_HOME:-/home/${ARG_HEADLESS_USER_NAME:-headless}}"
 
 WORKDIR "${HOME}"
 
-RUN chown -R "${ARG_HOME_OWNER:-1001:0}" "${HOME}"/
+RUN chown -R "${ARG_HEADLESS_USER_ID}" "${HOME}"/
 
 
 ##################
@@ -237,7 +237,7 @@ FROM merge_stage_vnc as stage_chromium
 ARG ARG_APT_NO_RECOMMENDS
 ARG ARG_CHROMIUM_DISTRO
 ARG ARG_CHROMIUM_VERSION
-ARG ARG_HOME_OWNER
+ARG ARG_HEADLESS_USER_ID
 
 ENV \
     FEATURES_BUILD_SLIM_CHROMIUM="${ARG_APT_NO_RECOMMENDS:+1}" \
@@ -270,8 +270,8 @@ RUN \
         /tmp/g3-cache/chromium/chromium-browser-l10n_"${CHROMIUM_VERSION}"_all.deb \
     &&  apt-mark hold chromium-browser
 
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-chromium/src/home/Desktop "${HOME}"/Desktop/
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-chromium/src/home/readme*.md "${HOME}"/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-chromium/src/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-chromium/src/home/readme*.md "${HOME}"/
 
 ### Chromium browser requires some presets
 ### Note that 'no-sandbox' flag is required, but intended for development only
@@ -279,7 +279,7 @@ RUN \
     echo \
     "CHROMIUM_FLAGS='--no-sandbox --disable-gpu --user-data-dir --window-size=${VNC_RESOLUTION%x*},${VNC_RESOLUTION#*x} --window-position=0,0'" \
     > "${HOME}"/.chromium-browser.init \
-    && chown "${ARG_HOME_OWNER:-1001:0}" "${HOME}"/.chromium-browser.init
+    && chown "${ARG_HEADLESS_USER_ID}" "${HOME}"/.chromium-browser.init
 
 
 #################
@@ -288,7 +288,7 @@ RUN \
 
 FROM merge_stage_vnc as stage_firefox
 ARG ARG_APT_NO_RECOMMENDS
-ARG ARG_HOME_OWNER
+ARG ARG_HEADLESS_USER_ID
 
 ENV \
     FEATURES_BUILD_SLIM_FIREFOX="${ARG_APT_NO_RECOMMENDS:+1}" \
@@ -318,11 +318,11 @@ Pin-Priority: 501" \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         firefox \
     && mkdir -p "${HOME}"/.mozilla/firefox \
-    && chown -R "${ARG_HOME_OWNER:-1001:0}" "${HOME}"/.mozilla/ \
+    && chown -R "${ARG_HEADLESS_USER_ID}" "${HOME}"/.mozilla/ \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
 
 
 ### ##################
@@ -330,13 +330,13 @@ COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/home/Desktop "${HOME
 ### ##################
 
 FROM stage_firefox as stage_firefox_plus
-ARG ARG_HOME_OWNER
+ARG ARG_HEADLESS_USER_ID
 
 ENV FEATURES_FIREFOX_PLUS=1
 
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/firefox.plus/home/Desktop "${HOME}"/Desktop/
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/firefox.plus/resources "${HOME}"/firefox.plus/
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/firefox.plus/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/firefox.plus/resources "${HOME}"/firefox.plus/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
 
 RUN \
     chmod +x "${HOME}"/firefox.plus/*.sh \
@@ -359,7 +359,7 @@ FROM ${ARG_FINAL_STAGE_BASE} as stage_final
 ARG ARG_FEATURES_USER_GROUP_OVERRIDE
 ARG ARG_HEADLESS_USER_NAME
 ARG ARG_SUDO_PW
-ARG ARG_HOME_OWNER
+ARG ARG_HEADLESS_USER_ID
 
 ENV \
     FEATURES_USER_GROUP_OVERRIDE="${ARG_FEATURES_USER_GROUP_OVERRIDE:+1}" \
@@ -368,9 +368,9 @@ ENV \
 
 COPY ./src/xfce-startup "${STARTUPDIR}"/
 
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce/src/home/config "${HOME}"/.config/
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce/src/home/Desktop "${HOME}"/Desktop/
-COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce/src/home/readme*.md "${HOME}"/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce/src/home/config "${HOME}"/.config/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce/src/home/Desktop "${HOME}"/Desktop/
+COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce/src/home/readme*.md "${HOME}"/
 
 ### Create the default application user (non-root, but member of the group zero)
 ### and allow the group zero to modify '/etc/passwd' and '/etc/group'.
@@ -378,7 +378,7 @@ COPY --chown="${ARG_HOME_OWNER:-1001:0}" ./xfce/src/home/readme*.md "${HOME}"/
 ### to modify both files and makes user group overriding possible (like 'run --user x:y').
 RUN \
     chmod 664 /etc/passwd /etc/group \
-    && echo "${ARG_HEADLESS_USER_NAME:-headless}:x:1001:0:Default:${HOME}:/bin/bash" >> /etc/passwd \
+    && echo "${ARG_HEADLESS_USER_NAME:-headless}:x:${ARG_HEADLESS_USER_ID}:0:Default:${HOME}:/bin/bash" >> /etc/passwd \
     && adduser "${ARG_HEADLESS_USER_NAME:-headless}" sudo \
     && echo "${ARG_HEADLESS_USER_NAME:-headless}:${ARG_SUDO_PW:-${VNC_PW}}" | chpasswd \
     && if [ "${ARG_FEATURES_USER_GROUP_OVERRIDE}" = "1" ] ; then chmod a+w /etc/passwd /etc/group ; fi \
@@ -386,7 +386,7 @@ RUN \
     && chmod 755 -R "${STARTUPDIR}" \
     && "${STARTUPDIR}"/set_user_permissions.sh "${STARTUPDIR}" "${HOME}"
 
-USER 1001
+USER "${ARG_HEADLESS_USER_ID}"
 
 ENTRYPOINT [ "/usr/bin/tini", "--", "/dockerstartup/startup.sh" ]
 # ENTRYPOINT [ "/usr/bin/tini", "--", "tail", "-f", "/dev/null" ]
