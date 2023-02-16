@@ -6,6 +6,42 @@
 
 ***
 
+### Release 23.02
+
+This is the first `G3v4` release, introducing the updated startup scripts.  The previous version `G3v3` will still be available in this repository as the branch `archived-generation-g3v3`.
+
+- The updated startup scripts that support overriding the user ID (`id`) and group ID (`gid`) without needing the former build argument `ARG_FEATURES_USER_GROUP_OVERRIDE`, which has been removed.
+- The user ID and the group ID can be overridden during the build time (`docker build`) and the run time (`docker run`).
+- The `user name`, the `group name` and the `initial sudo password` can be overridden during the build time.
+- The permissions of the files `/etc/passwd` and `/etc/groups` are set to the standard `644` after creating the user.
+- The content of the home folder and the startup folder belongs to the created user.
+- The created user gets permissions to use `sudo`. The initial `sudo` password is configurable during the build time using the build argument `ARG_SUDO_INITIAL_PW`. The password can be changed inside the container.
+- The default `id:gid` has been changed from `1001:0` to `1000:1000`.
+
+Changes in build arguments:
+
+- removed `ARG_FEATURES_USER_GROUP_OVERRIDE` and `ARG_HOME_OWNER`
+- renamed `ARG_SUDO_PW` to `ARG_SUDO_INITIAL_PW`
+- added `ARG_HEADLESS_USER_ID`, `ARG_HEADLESS_USER_NAME`, `ARG_HEADLESS_USER_GROUP_ID` and `ARG_HEADLESS_USER_GROUP_NAME`
+
+Changes in environment variables:
+
+- removed `FEATURES_USER_GROUP_OVERRIDE`
+- added `HEADLESS_USER_ID`, `HEADLESS_USER_NAME`, `HEADLESS_USER_GROUP_ID` and `HEADLESS_USER_GROUP_NAME`
+
+Main changes in files:
+
+- updated `Dockerfile.xfce.22-04` and `Dockerfile.xfce.20-04`
+- updated `startup.sh`, `user_generator.rc` and `set_user_permissions.sh`
+- updated hook scripts `env.rc`, `build`, `pre_build` and `util.rc`
+- updated `ci-builder.sh`
+- added `tests/test-01.sh` allows to quickly check the current permissions
+
+Updated versions:
+
+- **TigerVNC** to version `1.13.0`
+- **noVNC** to version `1.4.0`
+
 ### Release 23.01
 
 This is the first `G3v3` release, introducing the images based on `Ubuntu 22.04 LTS`. The previous version `G3v2` will still be available in this repository as the branch `archived-generation-g3v2`.

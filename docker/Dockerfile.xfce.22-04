@@ -7,7 +7,11 @@ ARG ARG_MERGE_STAGE_VNC_BASE=stage_vnc
 ARG ARG_MERGE_STAGE_BROWSER_BASE=merge_stage_vnc
 ARG ARG_FINAL_STAGE_BASE=merge_stage_browser
 
-ARG ARG_HEADLESS_USER_ID=1001
+ARG ARG_HEADLESS_USER_ID=1000
+ARG ARG_HEADLESS_USER_NAME=headless
+ARG ARG_HEADLESS_USER_GROUP_ID=1000
+ARG ARG_HEADLESS_USER_GROUP_NAME=headless
+ARG ARG_SUDO_INITIAL_PW=headless
 
 
 ###############
@@ -193,7 +197,7 @@ RUN \
         fi \
     &&  tar xzf /tmp/g3-cache/novnc/v"${NOVNC_VERSION}".tar.gz --strip 1 -C "${NOVNC_HOME}" \
     &&  tar xzf /tmp/g3-cache/websockify/v"${WEBSOCKIFY_VERSION}".tar.gz --strip 1 -C "${NOVNC_HOME}"/utils/websockify \
-    &&  chmod +x -v "${NOVNC_HOME}"/utils/novnc_proxy
+    &&  chmod 755 -v "${NOVNC_HOME}"/utils/novnc_proxy
 
 ### add 'index.html' for choosing noVNC client
 RUN echo \
@@ -218,15 +222,19 @@ EXPOSE "${NOVNC_PORT}"
 ###################
 
 FROM ${ARG_MERGE_STAGE_VNC_BASE} as merge_stage_vnc
-ARG ARG_HEADLESS_USER_NAME
-ARG ARG_HOME
 ARG ARG_HEADLESS_USER_ID
+ARG ARG_HEADLESS_USER_NAME
+ARG ARG_HEADLESS_USER_GROUP_ID
+ARG ARG_HEADLESS_USER_GROUP_NAME
 
-ENV HOME="${ARG_HOME:-/home/${ARG_HEADLESS_USER_NAME:-headless}}"
+ENV \
+    HEADLESS_USER_ID="${ARG_HEADLESS_USER_ID}" \
+    HEADLESS_USER_NAME="${ARG_HEADLESS_USER_NAME}" \
+    HEADLESS_USER_GROUP_ID="${ARG_HEADLESS_USER_GROUP_ID}" \
+    HEADLESS_USER_GROUP_NAME="${ARG_HEADLESS_USER_GROUP_NAME}" \
+    HOME="${ARG_HOME:-/home/${ARG_HEADLESS_USER_NAME}}"
 
 WORKDIR "${HOME}"
-
-RUN chown -R "${ARG_HEADLESS_USER_ID}" "${HOME}"/
 
 
 ##################
@@ -237,7 +245,6 @@ FROM merge_stage_vnc as stage_chromium
 ARG ARG_APT_NO_RECOMMENDS
 ARG ARG_CHROMIUM_DISTRO
 ARG ARG_CHROMIUM_VERSION
-ARG ARG_HEADLESS_USER_ID
 
 ENV \
     FEATURES_BUILD_SLIM_CHROMIUM="${ARG_APT_NO_RECOMMENDS:+1}" \
@@ -270,16 +277,15 @@ RUN \
         /tmp/g3-cache/chromium/chromium-browser-l10n_"${CHROMIUM_VERSION}"_all.deb \
     &&  apt-mark hold chromium-browser
 
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-chromium/src/home/Desktop "${HOME}"/Desktop/
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-chromium/src/home/readme*.md "${HOME}"/
+COPY ./xfce-chromium/src/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce-chromium/src/home/readme*.md "${HOME}"/
 
 ### Chromium browser requires some presets
 ### Note that 'no-sandbox' flag is required, but intended for development only
 RUN \
     echo \
     "CHROMIUM_FLAGS='--no-sandbox --disable-gpu --user-data-dir --window-size=${VNC_RESOLUTION%x*},${VNC_RESOLUTION#*x} --window-position=0,0'" \
-    > "${HOME}"/.chromium-browser.init \
-    && chown "${ARG_HEADLESS_USER_ID}" "${HOME}"/.chromium-browser.init
+    > "${HOME}"/.chromium-browser.init
 
 
 #################
@@ -288,7 +294,6 @@ RUN \
 
 FROM merge_stage_vnc as stage_firefox
 ARG ARG_APT_NO_RECOMMENDS
-ARG ARG_HEADLESS_USER_ID
 
 ENV \
     FEATURES_BUILD_SLIM_FIREFOX="${ARG_APT_NO_RECOMMENDS:+1}" \
@@ -317,12 +322,10 @@ Pin-Priority: 501" \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         firefox \
-    && mkdir -p "${HOME}"/.mozilla/firefox \
-    && chown -R "${ARG_HEADLESS_USER_ID}" "${HOME}"/.mozilla/ \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/*
 
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
 
 
 ### ##################
@@ -330,16 +333,16 @@ COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/home/Desktop "${HOME}"
 ### ##################
 
 FROM stage_firefox as stage_firefox_plus
-ARG ARG_HEADLESS_USER_ID
 
 ENV FEATURES_FIREFOX_PLUS=1
 
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/firefox.plus/home/Desktop "${HOME}"/Desktop/
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/firefox.plus/resources "${HOME}"/firefox.plus/
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
+COPY ./xfce-firefox/src/firefox.plus/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce-firefox/src/firefox.plus/resources "${HOME}"/firefox.plus/
+COPY ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
 
 RUN \
-    chmod +x "${HOME}"/firefox.plus/*.sh \
+    chmod 744 "${HOME}"/firefox.plus/*.sh \
+    && echo "Exec=${HOME}/firefox.plus/copy_firefox_user_preferences.sh" >> "${HOME}/Desktop/Copy FF Preferences.desktop" \
     && install -o root -g root -m 644 "${HOME}"/firefox.plus/accetto.svg /usr/share/icons/hicolor/scalable/apps/ \
     && gtk-update-icon-cache -f /usr/share/icons/hicolor
 
@@ -356,39 +359,41 @@ FROM ${ARG_MERGE_STAGE_BROWSER_BASE} as merge_stage_browser
 ###############
 
 FROM ${ARG_FINAL_STAGE_BASE} as stage_final
-ARG ARG_FEATURES_USER_GROUP_OVERRIDE
-ARG ARG_HEADLESS_USER_NAME
-ARG ARG_SUDO_PW
-ARG ARG_HEADLESS_USER_ID
+ARG ARG_SUDO_INITIAL_PW
 
 ENV \
-    FEATURES_USER_GROUP_OVERRIDE="${ARG_FEATURES_USER_GROUP_OVERRIDE:+1}" \
     FEATURES_VERSION_STICKER=1 \
     STARTUPDIR="/dockerstartup"
 
 COPY ./src/xfce-startup "${STARTUPDIR}"/
+COPY ./src/tests "${HOME}"/tests/
 
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce/src/home/config "${HOME}"/.config/
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce/src/home/Desktop "${HOME}"/Desktop/
-COPY --chown="${ARG_HEADLESS_USER_ID}" ./xfce/src/home/readme*.md "${HOME}"/
+COPY ./xfce/src/home/config "${HOME}"/.config/
+COPY ./xfce/src/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce/src/home/readme*.md "${HOME}"/
 
-### Create the default application user (non-root, but member of the group zero)
-### and allow the group zero to modify '/etc/passwd' and '/etc/group'.
-### Providing the build argument ARG_SUPPORT_USER_GROUP_OVERRIDE (set to anything) allows any user
-### to modify both files and makes user group overriding possible (like 'run --user x:y').
+### Note that the line 'chmod 666 /etc/passwd /etc/group' sets the "softer" permissions only temporary.
+### It allows the user generator startup script to configure the user and the group correctly.
+### The script will set the permissions of both files back to the default '644'.
+### The script will aslo delete the file '.initial_sudo_password' after using it.
+### However, note that the initial sudo password will be persisted in the image history.
+### You have to change it inside the container, if you want to keep it really secret.
+### Note that all this will not be done, if the startup script will not be executed.
 RUN \
-    chmod 664 /etc/passwd /etc/group \
-    && echo "${ARG_HEADLESS_USER_NAME:-headless}:x:${ARG_HEADLESS_USER_ID}:0:Default:${HOME}:/bin/bash" >> /etc/passwd \
-    && adduser "${ARG_HEADLESS_USER_NAME:-headless}" sudo \
-    && echo "${ARG_HEADLESS_USER_NAME:-headless}:${ARG_SUDO_PW:-${VNC_PW}}" | chpasswd \
-    && if [ "${ARG_FEATURES_USER_GROUP_OVERRIDE}" = "1" ] ; then chmod a+w /etc/passwd /etc/group ; fi \
-    && ln -s "${HOME}"/readme.md "${HOME}"/Desktop/README \
-    && chmod 755 -R "${STARTUPDIR}" \
+    chmod 666 /etc/passwd /etc/group \
+    &&  echo "${HEADLESS_USER_NAME}:x:${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID}:Default:${HOME}:/bin/bash" >> /etc/passwd \
+    &&  echo "${HEADLESS_USER_NAME}  ALL=(ALL:ALL) ALL" | sudo tee /etc/sudoers.d/"${HEADLESS_USER_NAME}" \
+    &&  echo "${ARG_SUDO_INITIAL_PW:-headless}" > "${HOME}"/.initial_sudo_password \
+    &&  echo "${HEADLESS_USER_NAME}:$(cat "${HOME}"/.initial_sudo_password)" | chpasswd \
+    &&  ln -s "${HOME}"/readme.md "${HOME}"/Desktop/README \
     && "${STARTUPDIR}"/set_user_permissions.sh "${STARTUPDIR}" "${HOME}"
 
-USER "${ARG_HEADLESS_USER_ID}"
+
+USER "${HEADLESS_USER_ID}"
 
 ENTRYPOINT [ "/usr/bin/tini", "--", "/dockerstartup/startup.sh" ]
+
+# RUN chmod 644 /etc/passwd /etc/group
 # ENTRYPOINT [ "/usr/bin/tini", "--", "tail", "-f", "/dev/null" ]
 
 

@@ -27,9 +27,11 @@
     - [Version sticker](#version-sticker)
   - [Using headless containers](#using-headless-containers)
     - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
-  - [Container user accounts](#container-user-accounts)
     - [Overriding container user parameters](#overriding-container-user-parameters)
-      - [Overriding user group](#overriding-user-group)
+      - [Overriding user parameters in build-time](#overriding-user-parameters-in-build-time)
+      - [Overriding user parameters in run-time](#overriding-user-parameters-in-run-time)
+      - [User permissions and ownership](#user-permissions-and-ownership)
+      - [Other considerations](#other-considerations)
   - [Running containers in background (detached)](#running-containers-in-background-detached)
   - [Running containers in foreground (interactively)](#running-containers-in-foreground-interactively)
   - [Firefox multi-process](#firefox-multi-process)
@@ -99,8 +101,8 @@ The fastest way to build the images:
 ### examples of building and publishing the individual images 
 ./builder.sh latest-firefox all
 
-### or skipping the publishing to the Docker Hub
-./builder.sh latest-firefox all-no-push
+### just building the image, skipping the publishing and the version sticker update
+./builder.sh latest-firefox build
 
 ### examples of building and publishing the images as a group
 ./ci-builder.sh all group latest-firefox
@@ -141,7 +143,7 @@ xhost -local:$(whoami)
 
 ### Description
 
-This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repositories [accetto/ubuntu-vnc-xfce-firefox][accetto-github-ubuntu-vnc-xfce-firefox] and [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-github-ubuntu-vnc-xfce-firefox-plus].
+This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
 More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
 
@@ -155,9 +157,9 @@ The main features and components of the images in the default configuration are:
 - popular text editor [nano][nano] (Ubuntu distribution)
 - lite but advanced graphical editor [mousepad][mousepad] (Ubuntu distribution)
 - current version of [tini][tini] as the entry-point initial process (PID 1)
-- support for overriding both the container user account and its group
+- support for overriding both the container user and the group
 - support of **version sticker** (see below)
-- current version of [Firefox][firefox] web browser and some additional **plus** features described below
+- current version of [Firefox][firefox] web browser and some additional **Firefox plus features** described below
 
 The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
@@ -329,74 +331,53 @@ Be also aware, that there are differences between the Linux and Windows environm
 
 If your session disconnects, it might be related to a network equipment (load-balancer, reverse proxy, ...) dropping the websocket session for inactivity (more info [here](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout) and [here](https://nginx.org/en/docs/http/websocket.html) for nginx). In such case, try defining the **NOVNC_HEARTBEAT=XX** environment variable at startup-time, where **XX** is the number of seconds between [websocket ping/pong](https://github.com/websockets/ws/issues/977) packets.
 
-## Container user accounts
-
-Containers created from this image run under the **application user** (by default **headless**, **1001:0**), which is a **non-root** user account.
-
-The default application user password is **headless**, which is also the default **sudo** password.
-
-The application user name also defines the **home directory name**, which is by default `/home/headless`.
-
-The user password can be changed in run-time (inside the container) by using the command `passwd`.
-
-The `sudo` command allows user elevation, so the **application user** can install additional software in the container.
-
-The following example shows how to install **git**:
-
-```shell
-sudo apt-get update
-sudo apt-get install -y git
-```
-
-Note that the **application user account** is a member of the **root user group** (group zero), but it does not get the privileges of the **root** user automatically. Please check the Docker documentation for more information.
-
 ### Overriding container user parameters
 
-The container user parameters are controlled by related environment variables embedded into the images.
+The user ID, user name, user group ID, user group name and the initial `sudo` password can be overridden during the build time (`docker build`).
 
-**At image build-time** you can change the default values embedded into the image by using the following build arguments:
+The user ID and the group ID can be overridden also in run time (`docker run`).
 
-- The build argument `ARG_HEADLESS_USER_NAME` sets the **application user name** and the **home directory name**.
+#### Overriding user parameters in build-time
 
-- The build argument `ARG_SUDO_PW` sets the **application user password**, which is also the **sudo password**.
+The build parameters `ARG_HEADLESS_USER_ID`, `ARG_HEADLESS_USER_NAME`, `ARG_HEADLESS_USER_GROUP_ID` and `ARG_HEADLESS_USER_GROUP_NAME` are used during the build time (`docker build`) and they allow to override the related container parameters.
 
-For example:
+Their values are persisted in the corresponding environment variables `HEADLESS_USER_ID`, `HEADLESS_USER_NAME`, `HEADLESS_USER_GROUP_ID` and `HEADLESS_USER_GROUP_NAME`.
 
-```shell
-docker build --build-arg ARG_HEADLESS_USER_NAME=joe --build-arg ARG_SUDO_PW=secret ...
-```
+The build argument `ARG_SUDO_INITIAL_PW` allows overriding the initial application user's and `sudo` password (which is `headless`). This initial password is not stored into any environment variable, but into a temporary file, which is removed on the first container start. The password can be changed inside the container.
 
-Please do not confuse the application user password with the VNC password, because they both have the same value by default (**headless**).
-
-**At container startup-time** you can override the container user ID by using the `docker run --user` option:
+For example, building an image with the application user name `hairless`, with the primary user group `hairygroup`, the IDs `2002:3003` and the initial password `docker`:
 
 ```shell
-docker run --user 2019 ...
+docker build --build-arg ARG_HEADLESS_USER_NAME=hairless --build-arg ARG_HEADLESS_USER_GROUP_NAME=hairygroup --build-arg ARG_HEADLESS_USER_ID=2002 --build-arg ARG_HEADLESS_USER_GROUP_ID=3003 --build-arg ARG_SUDO_INITIAL_PW=docker ... -t my/image:overriden
 ```
 
-Note that only numerical ID values are supported. Please check the Docker documentation for more information.
+#### Overriding user parameters in run-time
 
-#### Overriding user group
+Both the user ID and group ID can be overridden also in the run time (`docker run`). It does not apply to the application user name, the group name and the initial password.
 
-This image generally allows you to override also the container user **group ID**. However, the image must be built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE` for such use case.
-
-Otherwise the following command would fail:
+For example, this would override the `user:group` by `2000:3000`:
 
 ```shell
-### This will fail (Permission denied)
-docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:latest
-
-### This will work (image has been built with ARG_SUPPORT_USER_GROUP_OVERRIDE)
-docker run -it -P --rm --user 2019:2000 accetto/ubuntu-vnc-xfce-g3:latest-fugo
+docker run --user 2000:3000 ... my/image:overriden
 ```
 
-The images having the tag suffix `-fugo` (**f**eatures **u**ser **g**roup **o**verride) are built with the build argument `ARG_SUPPORT_USER_GROUP_OVERRIDE`.
+#### User permissions and ownership
 
-Note that only numerical `ID:GID` values are supported. Please check the Docker documentation for more information.
+The actual application user account and the user group are created by the startup script on the first container start.
 
-**Remark**: The possibility to override the container user **group ID** is available also for this image, but the `fugo` tags are currently not published by default. You can set the variable `FEATURES_USER_GROUP_OVERRIDE` in the hook script `env.rc` and build them yourself.
+During this one-time task the startup script needs to modify the container files `/etc/passwd` and `/etc/group`. That is why there is the line `chmod 666 /etc/passwd /etc/group` in the Dockerfile (see the `stage_final`). However, the permissions of these two files will be set to the standard value `644` just after creating the user.
 
-**Remark:** Since the version `G3v3` the previous image `accetto/ubuntu-vnc-xfce-g3:latest-fugo` is not published on the **Docker Hub** any more. However, it can still be built manually. Some minor adjustments in the script `docker/hooks/env.rc` would be required.
+The created user gets permissions for `sudo` and the ownership to the content of the home and startup folders.
+
+The temporary file `~/.initial_sudo_password` is also deleted after creating the user.
+
+There is the script `~/tests/test-01.sh` that allows quick check of the current permissions.
+
+#### Other considerations
+
+Please note that the described configuration will not be done if the startup script `startup.sh` will not be executed.
+
+Also do not confuse the application user's password with the **VNC password**, because they both have the same default value (`headless`).
 
 ## Running containers in background (detached)
 
@@ -665,6 +646,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3/
 [this-dockerfile-22-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+
 <!-- [this-dockerfile-20-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.20-04 -->
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
@@ -675,10 +657,9 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [that-wiki-firefox-multiprocess]: https://github.com/accetto/xubuntu-vnc/wiki/Firefox-multiprocess
 
-[accetto-github-xubuntu-vnc]: https://github.com/accetto/xubuntu-vnc/
 [accetto-github-xubuntu-vnc-novnc]: https://github.com/accetto/xubuntu-vnc-novnc/
-[accetto-github-ubuntu-vnc-xfce-firefox]: https://github.com/accetto/ubuntu-vnc-xfce-firefox
-[accetto-github-ubuntu-vnc-xfce-firefox-plus]: https://github.com/accetto/ubuntu-vnc-xfce-firefox-plus
+[accetto-github-ubuntu-vnc-xfce]: https://github.com/accetto/ubuntu-vnc-xfce
+
 <!-- [that-wiki-firefox-multiprocess]: https://github.com/accetto/xubuntu-vnc/wiki/Firefox-multiprocess -->
 
 <!-- External links -->

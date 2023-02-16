@@ -34,7 +34,7 @@ RUN \
 
 ### usually you want to swich back to a non-root user
 ### alternatively you can do it in a compose file (see 'example.yml')
-USER 1001
+USER 1000
 
 ### note that some applications refuse to be installed under the root user
 ### those you have to install after switching the user

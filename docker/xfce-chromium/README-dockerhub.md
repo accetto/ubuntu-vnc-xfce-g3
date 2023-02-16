@@ -78,8 +78,8 @@ The fastest way to build the images:
 ### examples of building and publishing the individual images 
 ./builder.sh latest-chromium all
 
-### or skipping the publishing to the Docker Hub
-./builder.sh latest-chromium all-no-push
+### just building an image, skipping the publishing and the version sticker update
+./builder.sh latest-chromium build
 
 ### examples of building and publishing the images as a group
 ./ci-builder.sh all group latest-chromium
@@ -132,7 +132,7 @@ xhost -local:$(whoami)
 
 **Attention:** The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode. You should be aware of the implications. The image is intended for testing and development.
 
-This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce-chromium][accetto-github-ubuntu-vnc-xfce-chromium].
+This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
 More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
 
@@ -146,7 +146,7 @@ The main features and components of the images in the default configuration are:
 - popular text editor [nano][nano] (Ubuntu distribution)
 - lite but advanced graphical editor [mousepad][mousepad] (Ubuntu distribution)
 - current version of [tini][tini] as the entry-point initial process (PID 1)
-- support for overriding both the container user account and its group
+- support for overriding both the container user and the group
 - support of **version sticker** (see below)
 - current version of [Chromium Browser][chromium] open-source web browser (from the `Ubuntu 18.04 LTS` distribution)
 
@@ -172,7 +172,7 @@ Clicking on the version sticker badge reveals more information about the actual 
 
 ### More information
 
-More information about these images can be found in the [full-length README][this-readme-full] file on GitHub.
+More information about these images can be found in the [full-length README][this-readme-full] file on the GitHub.
 
 ***
 
@@ -196,9 +196,8 @@ More information about these images can be found in the [full-length README][thi
 
 <!-- Previous generations -->
 
-[accetto-github-xubuntu-vnc]: https://github.com/accetto/xubuntu-vnc/
 [accetto-github-xubuntu-vnc-novnc]: https://github.com/accetto/xubuntu-vnc-novnc/
-[accetto-github-ubuntu-vnc-xfce-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-chromium
+[accetto-github-ubuntu-vnc-xfce]: https://github.com/accetto/ubuntu-vnc-xfce
 [that-wiki-firefox-multiprocess]: https://github.com/accetto/xubuntu-vnc/wiki/Firefox-multiprocess
 
 <!-- External links -->

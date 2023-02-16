@@ -284,8 +284,14 @@ main() {
 
                 group )
                     case "${subject}" in
+                        
+                        pivotal )
 
-                        complete | pivotal )
+                            clear_log
+                            build_group "${command}" "latest" "latest-chromium" "latest-firefox" "focal" "focal-chromium" "focal-firefox"
+                            ;;
+                        
+                        complete )
 
                             clear_log
                             build_group "${command}" "latest" "latest-chromium" "latest-firefox" "focal" "focal-chromium" "focal-firefox"

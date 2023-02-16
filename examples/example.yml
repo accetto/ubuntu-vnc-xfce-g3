@@ -1,5 +1,5 @@
-# docker-compose -f example.yml -p example up -d
-# docker-compose -f example.yml -p example down --volumes
+# docker compose -f example.yml -p example up -d
+# docker compose -f example.yml -p example down --volumes
 
 ### This example shows how to switch to another non-root user
 ### and how to set the VNC password (to an empty one) and VNC resolution.
@@ -15,4 +15,4 @@ services:
     ports:
       - ":5901"
       - ":6901"
-    user: "1000"
+    user: "2000:3000"

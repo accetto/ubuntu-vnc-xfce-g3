@@ -92,12 +92,7 @@ main() {
 
     if [[ "$?" != "0" ]] ; then
 
-        echo "ERROR: Unable to generate the container user '$(id -u):$(id -g)'."
-
-        if [[ $(id -g) -ne 0 ]] ; then
-
-            echo -e "HINT: You have overriden also the user's group ID. Be sure to use an image \nthat has been built with the build argument ARG_FEATURES_USER_GROUP_OVERRIDE."
-        fi
+        echo "ERROR: Unable to generate user '$(id -u):$(id -g)'."
         cleanup
     fi
 

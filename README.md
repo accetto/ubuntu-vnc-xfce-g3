@@ -2,7 +2,7 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
-Version: G3v3
+Version: G3v4
 
 ***
 
@@ -48,8 +48,6 @@ Version: G3v3
       - [Simple self-containing CI](#simple-self-containing-ci)
       - [Separated builder and deployment repositories](#separated-builder-and-deployment-repositories)
       - [Separate README files for Docker Hub](#separate-readme-files-for-docker-hub)
-      - [Based on `Ubuntu 22.04 LTS` and `Ubuntu 20.04 LTS`](#based-on-ubuntu-2204-lts-and-ubuntu-2004-lts)
-      - [Using `TigerVNC 1.12`](#using-tigervnc-112)
       - [New startup script](#new-startup-script)
   - [Issues, Wiki and Discussions](#issues-wiki-and-discussions)
   - [Credits](#credits)
@@ -58,7 +56,7 @@ Version: G3v3
 
 This repository contains resources for building Docker images based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment and [VNC][tigervnc]/[noVNC][novnc] servers for headless use.
 
-The resources for the individual images and their variations (tags) are stored in the subfolder of the **master** branch. Each image has its own README file describing its features and usage.
+The resources for the individual images and their variations (tags) are stored in the subfolders of the **master** branch. Each image has its own README file describing its features and usage.
 
 There are also sibling projects containing images for headless programming ([accetto/headless-coding-g3][accetto-github-headless-coding-g3]) or headless diagramming, vector drawing and bitmap image editing ([accetto/headless-drawing-g3][accetto-github-headless-drawing-g3]).
 
@@ -121,10 +119,10 @@ The fastest way to build the images:
 ./builder.sh latest-chromium all
 ./builder.sh latest-firefox all
 
-### or skipping the publishing to the Docker Hub
-./builder.sh latest all-no-push
-./builder.sh latest-chromium all-no-push
-./builder.sh latest-firefox all-no-push
+### just building the images, skipping the publishing and the version sticker update
+./builder.sh latest build
+./builder.sh latest-chromium build
+./builder.sh latest-firefox build
 
 ### examples of building and publishing the groups of images
 ./ci-builder.sh all group latest
@@ -182,19 +180,29 @@ xhost -local:$(whoami)
 
 ### Image generations
 
-This is the **third generation** (G3) of my headless images. The **second generation** (G2) contains the GitHub repositories [accetto/xubuntu-vnc][accetto-github-xubuntu-vnc] and [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) contains the GitHub repositories [accetto/ubuntu-vnc-xfce][accetto-docker-ubuntu-vnc-xfce], [accetto/ubuntu-vnc-xfce-firefox][accetto-docker-ubuntu-vnc-xfce-firefox], [accetto/ubuntu-vnc-xfce-firefox-plus][accetto-docker-ubuntu-vnc-xfce-firefox-plus] and [accetto/ubuntu-vnc-xfce-chromium][accetto-docker-ubuntu-vnc-xfce-chromium].
+This is the **third generation** (G3) of my headless images. The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-docker-ubuntu-vnc-xfce].
 
 ### Project versions
 
-This file describes the **third version** (G3v3) of the project.
+This file describes the **fourth version** (G3v4) of the project.
 
-The **first version** (G3v1, or simply G3) and the **second version** (G3v2, only 20.04 images) are still available in this **GitHub** repository as the branches `archived-generation-g3v1` and `archived-generation-g3v2`.
+The **first version** (G3v1, or simply G3), the **second version** (G3v2, only 20.04 images) and the **third version** (G3v3, 22.04 and 20.04 images) are still available in this **GitHub** repository as the branches `archived-generation-g3v1`, `archived-generation-g3v2` and `archived-generation-g3v3`.
 
 The version `G3v3` brings the following major changes comparing to the previous version `G3v2`:
 
-- images based on `Ubuntu 22.04 LTS (jammy)` and `Ubuntu 20.04 LTS (focal)`
-- extended, but simplified `tag` set for publishing on the **Docker Hub**
-- improved builder scripts, including support for the `--target` building parameter
+- The updated startup scripts that support overriding the user ID (`id`) and group ID (`gid`) without needing the former build argument `ARG_FEATURES_USER_GROUP_OVERRIDE`, which has been removed.
+- The user ID and the group ID can be overridden during the build time (`docker build`) and the run time (`docker run`).
+- The `user name`, the `group name` and the `initial sudo password` can be overridden during the build time.
+- The permissions of the files `/etc/passwd` and `/etc/groups` are set to the standard `644` after creating the user.
+- The content of the home folder and the startup folder belongs to the created user.
+- The created user gets permissions to use `sudo`. The initial `sudo` password is configurable during the build time using the build argument `ARG_SUDO_INITIAL_PW`. The password can be changed inside the container.
+- The default `id:gid` has been changed from `1001:0` to `1000:1000`.
+
+The version `G3v3` has brought the following major changes comparing to the previous version `G3v2`:
+
+- The images based on `Ubuntu 22.04 LTS (jammy)` and `Ubuntu 20.04 LTS (focal)`.
+- An extended, but simplified `tag` set for publishing on the **Docker Hub**.
+- The improved builder scripts, including support for the `--target` building parameter
 
 The version `G3v2` has brought the following major changes comparing to the previous version `G3v1`:
 
@@ -242,7 +250,7 @@ Image variations are build from fewer Dockerfiles. This is allowed by using *mul
 
 #### Concept of features
 
-Flexibility in Dockerfiles is supported by introducing the concept of **features**. These are variables that control the building process. For example, the variable **FEATURES_BUILD_SLIM** controls the `--no-install-recommends` switch, the variable **FEATURES_NOVNC** controls the inclusion of `noVNC` and so on. Some other available features include, for example, the **FEATURES_SCREENSHOOTING**, **FEATURES_THUMBNAILING** and **FEATURES_USER_GROUP_OVERRIDE** variables. Also the web browsers [Chromium][chromium] and [Firefox][firefox] are defined as features controlled by the variables **FEATURES_CHROMIUM**, **FEATURES_FIREFOX** and **FEATURES_FIREFOX_PLUS**.
+Flexibility in Dockerfiles is supported by introducing the concept of **features**. These are variables that control the building process. For example, the variable **FEATURES_BUILD_SLIM** controls the `--no-install-recommends` switch, the variable **FEATURES_NOVNC** controls the inclusion of `noVNC` and so on. Some other available features include, for example, the **FEATURES_SCREENSHOOTING** and **FEATURES_THUMBNAILING** variables. Also the web browsers [Chromium][chromium] and [Firefox][firefox] are defined as features controlled by the variables **FEATURES_CHROMIUM**, **FEATURES_FIREFOX** and **FEATURES_FIREFOX_PLUS**.
 
 #### Faster building with `g3-cache`
 
@@ -250,9 +258,7 @@ Building performance has been significantly improved by introducing a local cach
 
 #### Overriding of container user parameters
 
-Several ways of overriding the container user parameters are supported. The application user name, home directory and password can be overridden at the image build-time. The user ID can be overridden at the container startup-time.
-
-Support for overriding the user group by `docker run` has been introduced in the second generation. This feature is now controlled by the variable **FEATURES_USER_GROUP_OVERRIDE**.
+The user ID, user name, user group ID, user group name and the initial `sudo` password can be overridden during the build time (`docker build`). The user ID and the group ID can be overridden also in run time (`docker run`). The overridden user gets permissions for `sudo`. The `sudo` password can be changed inside the container.
 
 #### Overriding of VNC/noVNC parameters
 
@@ -299,14 +305,6 @@ The **second pipeline version** (G3v2) does not try to publish the `README` file
 
 The source `README` files for the **Docker Hub** are split into two parts. The part containing the badge links is separated into a **template file**. The final `README` files are then generated by the utility script. These files are usually shorter, because their length is limited by the **Docker Hub**. Therefore there are also the full-length versions, that are published only on the **GitHub**.
 
-#### Based on `Ubuntu 22.04 LTS` and `Ubuntu 20.04 LTS`
-
-The current images are based on the official [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] images.
-
-#### Using `TigerVNC 1.12`
-
-The images use the latest [TigerVNC 1.12.0][tigervnc] server, which has introduced some significant changes in its startup process.
-
 #### New startup script
 
 The startup script has been completely redesigned with the help of the [argbash][argbash-doc] tool and the image [accetto/argbash-docker][accetto-docker-argbash-docker]. Several new startup switches has been added. For example, there are startup switches `--wait`, `--skip-startup`, `--tail-null`, `--tail-vnc`, `--version-sticker` and `--version-sticker-verbose`. There are also startup modifiers `--skip-vnc`, `--skip-novnc`, `--debug` and `--verbose`. Also the utility switches `--help-usage`, `--help` and `--version` are available.
@@ -347,14 +345,10 @@ Credit goes to all the countless people and companies, who contribute to open so
 [accetto-docker-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [accetto-docker-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
 
-[accetto-github-xubuntu-vnc]: https://github.com/accetto/xubuntu-vnc/
 [accetto-github-xubuntu-vnc-novnc]: https://github.com/accetto/xubuntu-vnc-novnc/
 [accetto-docker-ubuntu-vnc-xfce-firefox-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3
 
 [accetto-docker-ubuntu-vnc-xfce]: https://github.com/accetto/ubuntu-vnc-xfce
-[accetto-docker-ubuntu-vnc-xfce-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-chromium
-[accetto-docker-ubuntu-vnc-xfce-firefox]: https://github.com/accetto/ubuntu-vnc-xfce-firefox
-[accetto-docker-ubuntu-vnc-xfce-firefox-plus]: https://github.com/accetto/ubuntu-vnc-xfce-firefox-plus
 
 [accetto-docker-argbash-docker]: https://hub.docker.com/r/accetto/argbash-docker
 
