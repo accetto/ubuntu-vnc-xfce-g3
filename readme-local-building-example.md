@@ -14,6 +14,9 @@
       - [Step 4: `post_push`](#step-4-post_push)
   - [Additional parameters](#additional-parameters)
     - [Special handling of `--target` parameter](#special-handling-of---target-parameter)
+  - [Disabling default features](#disabling-default-features)
+    - [Disabling `noVNC`](#disabling-novnc)
+    - [Disabling `Firefox Plus`](#disabling-firefox-plus)
   - [README files for Docker Hub](#readme-files-for-docker-hub)
 
 ## Introduction
@@ -190,7 +193,7 @@ This step updates the **GitHub Gists** belonging to the **builder repository** a
 
 ## Additional parameters
 
-Additional parameters, that come after the mandatory ones, could be passed to the hook scripts in the folder `docker/hooks`.
+Additional parameters, that come after the mandatory ones, can be passed to the hook scripts in the folder `docker/hooks`.
 
 The individual hook scripts can use the additional parameters or ignore them.
 
@@ -233,6 +236,26 @@ docker build --no-cache -f ./docker/Dockerfile.xfce.22-04 ...
 ```
 
 Note that both hook scripts always remove an orphaned `--target` parameter which comes with no value.
+
+## Disabling default features
+
+Some features, that are enabled by default, can be disabled via environment variables.
+
+It allows to build even smaller images by excluding `noVNC` or `Firefox Plus features`.
+
+### Disabling `noVNC`
+
+If the environment variable `FEATURES_NOVNC` is explicitly set to zero (by `export FEATURES_NOVNC="0"`), then
+
+- image will not include `noVNC`
+- image tag will get the `-vnc` suffix (e.g. `latest-vnc`, `20.04-firefox-vnc` etc.)
+
+### Disabling `Firefox Plus`
+
+If the environment variable `FEATURES_FIREFOX_PLUS` is explicitly set to zero (by `export FEATURES_FIREFOX_PLUS="0"`) and the variable `FEATURES_FIREFOX="1"`, then
+
+- image with Firefox will not include the *Firefox Plus features*
+- image tag will get the `-default` suffix (e.g. `latest-firefox-default` or also `latest-firefox-default-vnc` etc.)
 
 ## README files for Docker Hub
 

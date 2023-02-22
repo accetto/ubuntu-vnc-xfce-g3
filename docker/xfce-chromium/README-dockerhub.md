@@ -30,6 +30,8 @@
 
 This repository contains Docker images based on [Ubuntu 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
 
+There is also a similar sibling image [accetto/debian-vnc-xfce-chromium-g3][accetto-dockerhub-debian-vnc-xfce-chromium-g3] based on [Debian][docker-debian].
+
 This is the **short README** version for the **Docker Hub**. There is also the [full-length README][this-readme-full] on the **GitHub**.
 
 ### TL;DR
@@ -57,7 +59,7 @@ You can check the current shared memory size by executing the following command 
 df -h /dev/shm
 ```
 
-The Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
+The older sibling Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
 
 #### Extending images
 
@@ -87,6 +89,10 @@ The fastest way to build the images:
 ### or also
 ./ci-builder.sh all family latest-chromium
 ```
+
+You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
+
+Note that selected features that are enabled by default can be explicitly disabled via environment variables. This allows to build even smaller images by excluding, for example, `noVNC`. See [readme-local-building-example.md][this-readme-local-building-example] for more information.
 
 #### Sharing devices
 
@@ -134,8 +140,6 @@ xhost -local:$(whoami)
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
-More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
-
 The main features and components of the images in the default configuration are:
 
 - utilities **ping**, **wget**, **sudo** (Ubuntu distribution)
@@ -147,7 +151,7 @@ The main features and components of the images in the default configuration are:
 - lite but advanced graphical editor [mousepad][mousepad] (Ubuntu distribution)
 - current version of [tini][tini] as the entry-point initial process (PID 1)
 - support for overriding both the container user and the group
-- support of **version sticker** (see below)
+- support of **version sticker** (see the [full-length README][this-readme-full] on the **GitHub**)
 - current version of [Chromium Browser][chromium] open-source web browser (from the `Ubuntu 18.04 LTS` distribution)
 
 The history of notable changes is documented in the [CHANGELOG][this-changelog].
@@ -156,7 +160,7 @@ The history of notable changes is documented in the [CHANGELOG][this-changelog].
 
 ### Image tags
 
-The following image tag on Docker Hub is regularly rebuilt:
+The following image tags are regularly built and published on the **Docker Hub**:
 
 - `latest` (also as `22.04`) based on `Ubuntu 22.04 LTS`
 
@@ -186,6 +190,8 @@ More information about these images can be found in the [full-length README][thi
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
+[this-readme-local-building-example]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-local-building-example.md
+
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3/
@@ -193,6 +199,10 @@ More information about these images can be found in the [full-length README][thi
 <!-- [this-dockerfile-20-04]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.20-04 -->
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/ubuntu-vnc-xfce-chromium.jpg
+
+<!-- Sibling projects -->
+
+[accetto-dockerhub-debian-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/debian-vnc-xfce-chromium-g3
 
 <!-- Previous generations -->
 
@@ -203,6 +213,7 @@ More information about these images can be found in the [full-length README][thi
 <!-- External links -->
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
+[docker-debian]: https://hub.docker.com/_/debian/
 
 <!-- [docker-doc]: https://docs.docker.com/ -->
 <!-- [docker-doc-managing-data]: https://docs.docker.com/storage/ -->

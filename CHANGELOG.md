@@ -6,6 +6,17 @@
 
 ***
 
+### Release 23.02.1
+
+Features `NOVNC` and `FIREFOX_PLUS`, that are enabled by default, can be disabled via environment variables:
+
+- If `FEATURES_NOVNC="0"`, then
+  - image will not include `noVNC`
+  - image tag will get the `-vnc` suffix (e.g. `latest-vnc`, `20.04-firefox-vnc` etc.)
+- If `FEATURES_FIREFOX_PLUS="0"` and `FEATURES_FIREFOX="1"`, then
+  - image with Firefox will not include the *Firefox Plus features*
+  - image tag will get the `-default` suffix (e.g. `latest-firefox-default` or also `latest-firefox-default-vnc` etc.)
+
 ### Release 23.02
 
 This is the first `G3v4` release, introducing the updated startup scripts.  The previous version `G3v3` will still be available in this repository as the branch `archived-generation-g3v3`.

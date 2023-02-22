@@ -27,6 +27,7 @@
     - [Version sticker](#version-sticker)
   - [Using headless containers](#using-headless-containers)
     - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
+  - [Container user account](#container-user-account)
     - [Overriding container user parameters](#overriding-container-user-parameters)
       - [Overriding user parameters in build-time](#overriding-user-parameters-in-build-time)
       - [Overriding user parameters in run-time](#overriding-user-parameters-in-run-time)
@@ -47,13 +48,15 @@
 
 **Warning** about the images with Firefox
 
-There is no single-process Firefox image in this repository any more and the **multi-process mode** is always enabled. Be aware, that the multi-process mode requires larger shared memory (`/dev/shm`). At least 256MB is recommended. Please check the **Firefox multi-process** page in [this Wiki][that-wiki-firefox-multiprocess] for more information and the instructions, how to set the shared memory size in different scenarios.
+There is no single-process Firefox image in this repository any more and the **multi-process mode** is always enabled. Be aware, that the multi-process mode requires larger shared memory (`/dev/shm`). At least 256MB is recommended. Please check the **Firefox multi-process** page in this older sibling [Wiki][that-wiki-firefox-multiprocess] for more information and the instructions, how to set the shared memory size in different scenarios.
 
 ***
 
 ### Introduction
 
 This repository contains resources for building Docker images based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Firefox][firefox] web browser.
+
+There is also a sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
 
 ### TL;DR
 
@@ -80,7 +83,7 @@ You can check the current shared memory size by executing the following command 
 df -h /dev/shm
 ```
 
-The Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
+The older sibling Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
 
 #### Extending images
 
@@ -110,7 +113,9 @@ The fastest way to build the images:
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
 
-**Remark:** Since the version G3v3 the previous image `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` has been renamed to `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
+Note that selected features that are enabled by default can be explicitly disabled via environment variables. This allows to build even smaller images by excluding, for example, `noVNC` or `Firefox Plus features`. See [readme-local-building-example.md][this-readme-local-building-example] for more information.
+
+**Remark:** Since the version `G3v3` the previous image `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` has been renamed to `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
 
 #### Sharing devices
 
@@ -144,8 +149,6 @@ xhost -local:$(whoami)
 ### Description
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
-
-More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
 
 The main features and components of the images in the default configuration are:
 
@@ -331,6 +334,32 @@ Be also aware, that there are differences between the Linux and Windows environm
 
 If your session disconnects, it might be related to a network equipment (load-balancer, reverse proxy, ...) dropping the websocket session for inactivity (more info [here](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout) and [here](https://nginx.org/en/docs/http/websocket.html) for nginx). In such case, try defining the **NOVNC_HEARTBEAT=XX** environment variable at startup-time, where **XX** is the number of seconds between [websocket ping/pong](https://github.com/websockets/ws/issues/977) packets.
 
+## Container user account
+
+Containers created from this image run under the **application user** (by default `headless:headless`, `1000:1000`), which is a **non-root** user account. However, the application user gets permissions for `sudo`.
+
+The **application user name** also defines the **home directory name**, which is by default `/home/headless`.
+
+The default application user's password is `headless`, which is also the default `sudo` password.
+
+The user's (and `sudo`) password can be changed inside the container by using the `passwd` command. For example, changing the password to `docker`:
+
+```shell
+echo 'headless:docker' | sudo chpasswd
+
+### or also
+sudo chpasswd <<<"headless:docker"
+```
+
+The `sudo` command allows user elevation, so the **application user** can install additional software inside the container.
+
+The following example shows how to install **vim**:
+
+```shell
+sudo apt-get update
+sudo apt-get install -y vim
+```
+
 ### Overriding container user parameters
 
 The user ID, user name, user group ID, user group name and the initial `sudo` password can be overridden during the build time (`docker build`).
@@ -384,7 +413,7 @@ Also do not confuse the application user's password with the **VNC password**, b
 The following container will keep running in the background and it will listen on an automatically selected TCP port on the host computer:
 
 ```shell
-docker run -dP accetto/ubuntu-vnc-xfce-firefox-g3:latest
+docker run -d -P accetto/ubuntu-vnc-xfce-firefox-g3:latest
 ```
 
 The following container will listen on the host's TCP port **25901**:
@@ -436,13 +465,13 @@ In Firefox versions till **76.0.1** it has been possible to disable multi-proces
 
 Mozilla has fixed the problem in the next release, but they warned about not supporting the switch in the future. That is why I've decided, that all images with Firefox will use multi-process by default, even if it requires larger shared memory. On the positive side, performance should be higher and Internet browsing should be sand-boxed.
 
-Please check the Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] for more information and the instructions, how the shared memory size can be set in different scenarios.
+Please check the older sibling Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] for more information and the instructions, how the shared memory size can be set in different scenarios.
 
 ### Setting shared memory size
 
 Instability of multi-process Firefox is caused by setting the shared memory size too low. Docker assigns only **64MB** by default. Testing on my computers has shown, that using at least **256MB** completely eliminates the problem. However, it could be different on your system.
 
-The Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size. It's really simple, if you need it for a single container started from the command line.
+The older sibling Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size. It's really simple, if you need it for a single container started from the command line.
 
 For example, the following container will have its shared memory size set to 256MB:
 
@@ -642,6 +671,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
+[this-readme-local-building-example]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-local-building-example.md
+
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3/
@@ -652,6 +683,10 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/ubuntu-vnc-xfce-firefox-plus.jpg
+
+<!-- Sibling projects -->
+
+[accetto-github-debian-vnc-xfce-g3]: https://github.com/accetto/debian-vnc-xfce-g3
 
 <!-- Previous generations -->
 
@@ -665,6 +700,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 <!-- External links -->
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
+[docker-debian]: https://hub.docker.com/_/debian/
 
 [docker-doc]: https://docs.docker.com/
 [docker-doc-managing-data]: https://docs.docker.com/storage/

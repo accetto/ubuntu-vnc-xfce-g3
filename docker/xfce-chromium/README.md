@@ -27,6 +27,7 @@
     - [Version sticker](#version-sticker)
   - [Using headless containers](#using-headless-containers)
     - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
+  - [Container user account](#container-user-account)
     - [Overriding container user parameters](#overriding-container-user-parameters)
       - [Overriding user parameters in build-time](#overriding-user-parameters-in-build-time)
       - [Overriding user parameters in run-time](#overriding-user-parameters-in-run-time)
@@ -45,6 +46,8 @@
 ### Introduction
 
 This repository contains resources for building Docker images based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] with [Xfce][xfce] desktop environment, [VNC][tigervnc]/[noVNC][novnc] servers for headless use and the current [Chromium][chromium] web browser.
+
+There is also a sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
 
 ### TL;DR
 
@@ -71,7 +74,7 @@ You can check the current shared memory size by executing the following command 
 df -h /dev/shm
 ```
 
-The Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
+The older sibling Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
 
 #### Extending images
 
@@ -100,6 +103,8 @@ The fastest way to build the images:
 ```
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
+
+Note that selected features that are enabled by default can be explicitly disabled via environment variables. This allows to build even smaller images by excluding, for example, `noVNC`. See [readme-local-building-example.md][this-readme-local-building-example] for more information.
 
 #### Sharing devices
 
@@ -142,8 +147,6 @@ xhost -local:$(whoami)
 ### Description
 
 This is the **third generation** (G3) of my headless images. The **second generation** (G2) of similar images is contained in the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc]. The **first generation** (G1) of similar images is contained in the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
-
-More information about the image generations can be found in the [project README][this-readme-project] file and in [Wiki][this-wiki].
 
 **Remark:** These images contain the current `Chromium Browser` version from the `Ubuntu 18.04 LTS` distribution. This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is not working correctly in Docker at this time.
 
@@ -332,6 +335,32 @@ You may decide not to follow the conventions. This image allows you to set the p
 Be also aware, that there are differences between the Linux and Windows environments.
 
 If your session disconnects, it might be related to a network equipment (load-balancer, reverse proxy, ...) dropping the websocket session for inactivity (more info [here](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_read_timeout) and [here](https://nginx.org/en/docs/http/websocket.html) for nginx). In such case, try defining the **NOVNC_HEARTBEAT=XX** environment variable at startup-time, where **XX** is the number of seconds between [websocket ping/pong](https://github.com/websockets/ws/issues/977) packets.
+
+## Container user account
+
+Containers created from this image run under the **application user** (by default `headless:headless`, `1000:1000`), which is a **non-root** user account. However, the application user gets permissions for `sudo`.
+
+The **application user name** also defines the **home directory name**, which is by default `/home/headless`.
+
+The default application user's password is `headless`, which is also the default `sudo` password.
+
+The user's (and `sudo`) password can be changed inside the container by using the `passwd` command. For example, changing the password to `docker`:
+
+```shell
+echo 'headless:docker' | sudo chpasswd
+
+### or also
+sudo chpasswd <<<"headless:docker"
+```
+
+The `sudo` command allows user elevation, so the **application user** can install additional software inside the container.
+
+The following example shows how to install **vim**:
+
+```shell
+sudo apt-get update
+sudo apt-get install -y vim
+```
 
 ### Overriding container user parameters
 
@@ -586,6 +615,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
+[this-readme-local-building-example]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-local-building-example.md
+
 <!-- Docker image specific -->
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3/
@@ -596,6 +627,10 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/ubuntu-vnc-xfce-chromium.jpg
 
+<!-- Sibling projects -->
+
+[accetto-github-debian-vnc-xfce-g3]: https://github.com/accetto/debian-vnc-xfce-g3
+
 <!-- Previous generations -->
 
 [accetto-github-xubuntu-vnc-novnc]: https://github.com/accetto/xubuntu-vnc-novnc/
@@ -605,6 +640,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 <!-- External links -->
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
+[docker-debian]: https://hub.docker.com/_/debian/
 
 [docker-doc]: https://docs.docker.com/
 [docker-doc-managing-data]: https://docs.docker.com/storage/

@@ -125,17 +125,17 @@ You can also use one of the **named groups**:
 
 The **family mode** is intended for efficient building of sets of dependent images.
 
-**Remark:** Since the version `G3v3` is this mode for advanced use only. The previous images `accetto/ubuntu-vnc-xfce-g3:latest-fugo` and `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` are not published any more. The image `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` has been renamed to `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
+**Remark:** Since the version `G3v3` is this mode for advanced use only. The previous images `accetto/ubuntu-vnc-xfce-g3:latest-fugo` and `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` that used it are not published any more. The image `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` has been renamed to `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
 
 The dependency in this context is meant more technically than conceptually.
 
 The following example will help to understand the concept.
 
-The image `accetto/ubuntu-vnc-xfce-g3:latest-fugo` adds some additional features to the image `accetto/ubuntu-vnc-xfce-g3:latest`, but otherwise are both images identical.
+The image `accetto/ubuntu-vnc-xfce-g3:latest-fugo` added some additional features to the image `accetto/ubuntu-vnc-xfce-g3:latest`, but otherwise were both images identical.
 
 In such case a conclusion can be made, that if the `latest` tag does not need a refresh, then also the `latest-fugo` tag doesn't need it and it can be skipped.
 
-There has been a similar dependency between the images `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` and `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
+There had been a similar dependency between the images `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` and `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
 
 This kind of family-like relation allows to refresh the images more efficiently by skipping the "children" if the "parent" doesn't need a re-build.
 
@@ -267,4 +267,4 @@ There is no way to build the images only from particular Dockerfile stages using
 
 ***
 
-[readme-builder]: readme-builder.md
+[readme-builder]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-builder.md

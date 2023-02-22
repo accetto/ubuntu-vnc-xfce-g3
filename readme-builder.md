@@ -155,4 +155,4 @@ See the file [readme-local-building-example][this-readme-local-building-example]
 
 ***
 
-[this-readme-local-building-example]: readme-local-building-example.md
+[this-readme-local-building-example]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-local-building-example.md

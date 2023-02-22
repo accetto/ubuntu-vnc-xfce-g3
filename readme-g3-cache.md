@@ -12,7 +12,7 @@ The custom `g3-cache` has been introduced in the **second version** (G3v2) of th
 
 The local `g3-cache` is an additional cache used by the building pipeline and it should not be confused with the **Docker builder cache** maintained by the [Docker Build][docker-doc-docker-build] itself.
 
-The `g3-cache `stores the selected pre-downloaded packages used by the Dockerfiles, that would be otherwise repeatedly downloaded from the external sources by each build.
+The `g3-cache`stores the selected pre-downloaded packages used by the Dockerfiles, that would be otherwise repeatedly downloaded from the external sources by each build.
 
 It results in a significantly higher performance by building sets of images or by repeated builds.
 

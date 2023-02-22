@@ -60,6 +60,8 @@ The resources for the individual images and their variations (tags) are stored i
 
 There are also sibling projects containing images for headless programming ([accetto/headless-coding-g3][accetto-github-headless-coding-g3]) or headless diagramming, vector drawing and bitmap image editing ([accetto/headless-drawing-g3][accetto-github-headless-drawing-g3]).
 
+There is also another sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
+
 ### TL;DR
 
 There are currently resources for the following Docker images:
@@ -96,7 +98,7 @@ You can check the current shared memory size by executing the following command 
 df -h /dev/shm
 ```
 
-The Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
+The older sibling Wiki page [Firefox multi-process][that-wiki-firefox-multiprocess] describes several ways, how to increase the shared memory size.
 
 #### Extending images
 
@@ -252,6 +254,8 @@ Image variations are build from fewer Dockerfiles. This is allowed by using *mul
 
 Flexibility in Dockerfiles is supported by introducing the concept of **features**. These are variables that control the building process. For example, the variable **FEATURES_BUILD_SLIM** controls the `--no-install-recommends` switch, the variable **FEATURES_NOVNC** controls the inclusion of `noVNC` and so on. Some other available features include, for example, the **FEATURES_SCREENSHOOTING** and **FEATURES_THUMBNAILING** variables. Also the web browsers [Chromium][chromium] and [Firefox][firefox] are defined as features controlled by the variables **FEATURES_CHROMIUM**, **FEATURES_FIREFOX** and **FEATURES_FIREFOX_PLUS**.
 
+Selected features that are enabled by default can be explicitly disabled via environment variables. See [readme-local-building-example.md][this-readme-local-building-example] for more information.
+
 #### Faster building with `g3-cache`
 
 Building performance has been significantly improved by introducing a local cache (`g3-cache`), which contains the external packages that would be otherwise downloaded by each build. Refreshing the cache is part of the building pipeline. The Dockerfiles fall back to the ad-hoc downloading if the local cache is not available.
@@ -342,6 +346,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-readme-image-chromium]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
 [this-readme-image-firefox]: https://github.com/accetto/ubuntu-vnc-xfce-g3/tree/master/docker/xfce-firefox
 
+[this-readme-local-building-example]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-local-building-example.md
+
 [accetto-docker-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [accetto-docker-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
 
@@ -356,6 +362,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [accetto-github-headless-coding-g3]: https://github.com/accetto/headless-coding-g3
 [accetto-github-headless-drawing-g3]: https://github.com/accetto/headless-drawing-g3
+[accetto-github-debian-vnc-xfce-g3]: https://github.com/accetto/debian-vnc-xfce-g3
 
 <!-- Previous generations -->
 
@@ -364,6 +371,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 <!-- external links -->
 
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
+[docker-debian]: https://hub.docker.com/_/debian/
 
 [docker-doc-build-with-buildkit]: https://docs.docker.com/develop/develop-images/build_enhancements/
 
