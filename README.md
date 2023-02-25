@@ -199,6 +199,13 @@ The version `G3v3` brings the following major changes comparing to the previous 
 - The content of the home folder and the startup folder belongs to the created user.
 - The created user gets permissions to use `sudo`. The initial `sudo` password is configurable during the build time using the build argument `ARG_SUDO_INITIAL_PW`. The password can be changed inside the container.
 - The default `id:gid` has been changed from `1001:0` to `1000:1000`.
+- Features `NOVNC` and `FIREFOX_PLUS`, that are enabled by default, can be disabled via environment variables.
+- If `FEATURES_NOVNC="0"`, then
+  - image will not include `noVNC`
+  - image tag will get the `-vnc` suffix (e.g. `latest-vnc`, `20.04-firefox-vnc` etc.)
+- If `FEATURES_FIREFOX_PLUS="0"` and `FEATURES_FIREFOX="1"`, then
+  - image with Firefox will not include the *Firefox Plus features*
+  - image tag will get the `-default` suffix (e.g. `latest-firefox-default` or also `latest-firefox-default-vnc` etc.)
 
 The version `G3v3` has brought the following major changes comparing to the previous version `G3v2`:
 
