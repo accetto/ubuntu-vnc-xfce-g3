@@ -182,7 +182,7 @@ Both **named volumes** and **bind mounts** can be used. More about volumes can b
 
 ### Version sticker
 
-Version sticker serves multiple purposes that are closer described in [Wiki][this-wiki]. Note that the usage of the version sticker has changed between the generations of images.
+Version sticker serves multiple purposes that are closer described in [Wiki][this-wiki-version-stickers]. Note that the usage of the version sticker has changed between the generations of images.
 
 The **short version sticker value** describes the version of the image and it is persisted in its **label** during the build-time. It is also shown as its **badge** in the README file.
 
@@ -600,6 +600,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-readme-dockerhub]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
 [this-readme-project]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/README.md
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+[this-wiki-version-stickers]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki/Concepts-of-dockerfiles
 
 [this-readme-local-building-example]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-local-building-example.md
 
