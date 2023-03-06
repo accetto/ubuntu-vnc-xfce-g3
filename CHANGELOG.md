@@ -6,6 +6,11 @@
 
 ***
 
+### Release 23.03
+
+- updated with `TigerVNC 1.13.1` bugfix release
+- also some updates in readme files
+
 ### Release 23.02.1
 
 Features `NOVNC` and `FIREFOX_PLUS`, that are enabled by default, can be disabled via environment variables:
