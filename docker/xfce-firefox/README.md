@@ -111,7 +111,7 @@ The fastest way to build the images:
 ./ci-builder.sh all group latest-firefox
 ```
 
-You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the files `local-builder-readme.md`, `local-building-example.md` and [Wiki][this-wiki] for more information.
+You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the [builder-utility-readme][this-builder-readme], [local-building-example][this-readme-local-building-example] and [Wiki][this-wiki] for more information.
 
 Note that selected features that are enabled by default can be explicitly disabled via environment variables. This allows to build even smaller images by excluding, for example, `noVNC` or `Firefox Plus features`. See [readme-local-building-example.md][this-readme-local-building-example] for more information.
 
@@ -672,6 +672,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 [this-wiki-version-stickers]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki/Concepts-of-dockerfiles
 
+[this-builder-readme]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-builder.md
 [this-readme-local-building-example]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/readme-local-building-example.md
 
 <!-- Docker image specific -->

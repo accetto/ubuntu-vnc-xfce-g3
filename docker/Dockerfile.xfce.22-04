@@ -92,7 +92,8 @@ RUN \
         xfce4 \
         xfce4-terminal \
         elementary-xfce-icon-theme
-        
+
+
 ###############
 ### stage_tools
 ###############
@@ -387,7 +388,6 @@ RUN \
     &&  echo "${HEADLESS_USER_NAME}:$(cat "${HOME}"/.initial_sudo_password)" | chpasswd \
     &&  ln -s "${HOME}"/readme.md "${HOME}"/Desktop/README \
     && "${STARTUPDIR}"/set_user_permissions.sh "${STARTUPDIR}" "${HOME}"
-
 
 USER "${HEADLESS_USER_ID}"
 
