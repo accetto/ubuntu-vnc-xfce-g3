@@ -95,7 +95,7 @@ The fastest way to build the images:
 
 You can still execute the individual hook scripts as before (see the folder `/docker/hooks/`). However, the provided utilities `builder.sh` and `ci-builder.sh` are more convenient. Before pushing the images to the **Docker Hub** you have to prepare and source the file `secrets.rc` (see `example-secrets.rc`). The script `builder.sh` builds the individual images. The script `ci-builder.sh` can build various groups of images or all of them at once. Check the [builder-utility-readme][this-builder-readme], [local-building-example][this-readme-local-building-example] and [Wiki][this-wiki] for more information.
 
-Note that selected features that are enabled by default can be explicitly disabled via environment variables. This allows to build even smaller images by excluding, for example, `noVNC` or `Firefox Plus features`. See [readme-local-building-example.md][this-readme-local-building-example] for more information.
+Note that selected features that are enabled by default can be explicitly disabled via environment variables. This allows to build even smaller images by excluding, for example, `noVNC` or `Firefox Plus features`. See the [local-building-example][this-readme-local-building-example] for more information.
 
 #### Sharing devices
 
