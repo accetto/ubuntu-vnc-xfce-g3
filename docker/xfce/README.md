@@ -92,7 +92,7 @@ The fastest way to build the images:
 ### PWD = project root
 ### prepare and source the 'secrets.rc' file first (see 'example-secrets.rc')
 
-### examples of building and publishing the individual images 
+### examples of building and publishing the individual images
 ./builder.sh latest all
 
 ### just building the image, skipping the publishing and the version sticker update

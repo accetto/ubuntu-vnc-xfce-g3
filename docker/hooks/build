@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
 
@@ -66,7 +66,6 @@ main() {
     ### no quotes around 'params'
     docker build ${params} \
         -f "${DOCKERFILE_PATH}" \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
             --build-arg BASEIMAGE="${BASEIMAGE}" \
             --build-arg BASETAG="${BASETAG}" \
             --build-arg ARG_CREATED="${now}" \

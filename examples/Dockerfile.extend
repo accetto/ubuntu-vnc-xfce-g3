@@ -14,12 +14,11 @@ FROM ${BASEIMAGE}:${BASETAG}
 USER 0
 
 ### update the apt cache and install your new packages
-### e.g. vim editor, gimp etc.
+### e.g. vim editor
 RUN \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         vim \
-        # gimp \
     && apt-get -y autoremove \
     && rm -rf /var/lib/apt/lists/*
 
@@ -27,10 +26,6 @@ RUN \
 ### e.g. some preconfigured files
 # COPY ./bashrc "${HOME}"/.bashrc
 # COPY ./firefox.plus/user.js "${HOME}"/firefox.plus/
-
-### sometimes you need to set the file permisions again
-### e.g. if a newly installed app added some files
-# RUN "${STARTUPDIR}"/set_user_permissions.sh "${HOME}"
 
 ### usually you want to swich back to a non-root user
 ### alternatively you can do it in a compose file (see 'example.yml')

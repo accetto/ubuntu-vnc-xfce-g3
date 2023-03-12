@@ -2,7 +2,10 @@
 
 - [Utility `builder.sh`](#utility-buildersh)
   - [Introduction](#introduction)
-  - [Prerequisites](#prerequisites)
+  - [Preparation](#preparation)
+    - [Ensure file attributes after cloning](#ensure-file-attributes-after-cloning)
+    - [Set environment variables before building](#set-environment-variables-before-building)
+    - [Ensure `wget` utility](#ensure-wget-utility)
   - [Executing complete pipeline](#executing-complete-pipeline)
   - [Executing individual pipeline steps](#executing-individual-pipeline-steps)
     - [What about the 'cache' helper script](#what-about-the-cache-helper-script)
@@ -38,21 +41,84 @@ The script creates a complete execution log.
 
 The `<docker-cli-options>` are passed to the Docker CLI commands used internally depending on the usage mode (see below).
 
-## Prerequisites
+## Preparation
 
-Before building and publishing the images prepare and source a file containing the necessary environment variables. You can use the provided file `example-secrets.rc` as a template.
+### Ensure file attributes after cloning
 
-If you name your file `secrets.rc` and you store it into the folder `docker/hooks/`, then it will sourced automatically by the hook script `env.rc`.
+It may be necessary to repair the executable files attributes after cloning the repository (by `git clone`).
 
-Otherwise you can source it in the terminal manually, for example:
+You can do that by executing the following commands from the project's root directory:
 
 ```shell
-source secrets.rc
+find . -type f -name "*.sh" -exec chmod +x '{}' \;
+chmod +x docker/hooks/*
+```
+
+For example, if the files in the folder `docker/hooks` would not be executable, then you would get errors similar to this:
+
+```shell
+$ ./builder.sh latest build
+
+==> EXECUTING @2023-03-05_16-42-57: ./builder.sh 
+
+./builder.sh: line 84: ./docker/hooks/build: Permission denied
+```
+
+### Set environment variables before building
+
+Open a terminal windows and change the current directory to the root of the project (where the license file is).
+
+Make a copy of the secrets example file, modify it and then source it in the terminal:
+
+```shell
+### make a copy and then modify it
+cp examples/example-secrets.rc secrets.rc
+
+### source the secrets
+source ./secrets.rc
 
 ### or also
 
-. secrets.rc
+. ./secrets.rc
 ```
+
+**TIP**: If you copy a file named `secrets.rc` into the folder `docker/hooks/`, then it will be automatically sourced by the hook script `env.rc`.
+
+Be aware that the following environment variables are mandatory and must be always set:
+
+- `REPO_OWNER_NAME`
+- `BUILDER_REPO`
+
+Ensure that your `secrets.rc` file contains at least the lines similar to these:
+
+```shell
+export REPO_OWNER_NAME="accetto"
+export BUILDER_REPO="headless-ubuntu-g3"
+```
+
+You can use your own names if you wish.
+
+Alternatively you can modify the hook script file env.rc like this:
+
+```shell
+### original lines
+declare _owner="${REPO_OWNER_NAME:?Need repo owner name}"
+DOCKER_REPO="${_owner}/${BUILDER_REPO:?Need builder repo name}"
+
+### modified lines
+declare _owner="${REPO_OWNER_NAME:-accetto}"
+DOCKER_REPO="${_owner}/${BUILDER_REPO:-headless-ubuntu-g3}"
+```
+
+Again, you can use your own names if you wish.
+
+You can also use other ways to set the variables.
+
+### Ensure `wget` utility
+
+If you are on Windows, you can encounter the problem of missing `wget` utility. It is used by refreshing the `g3-cache` and it's available on Linux by default.
+
+On Windows you have generally two choices. You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows. Make sure to update also the `PATH` environment variable appropriately.
 
 ## Executing complete pipeline
 
@@ -86,7 +152,7 @@ You can also provide additional parameters for the internally used Docker `build
 ### docker build --no-cache ...
 ```
 
-The optional `<docker-cli-options>` are passed only to the `pre_build` hook script, which passes them to the internally used `docker build` command.
+The optional `<docker-cli-options>` are passed only to the `pre_build` hook script, which passes them to the internally used `docker build` command. The `cache` hook script, however, doesn't use any Docker CLI commands.
 
 ## Executing individual pipeline steps
 

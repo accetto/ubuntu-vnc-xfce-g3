@@ -6,6 +6,10 @@
 
 ***
 
+### Release 23.03.1
+
+This is a maintenance release aiming to improve the scripts and documentation.
+
 ### Release 23.03
 
 - updated with `TigerVNC 1.13.1` bugfix release

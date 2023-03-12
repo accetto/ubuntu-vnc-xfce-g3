@@ -26,9 +26,11 @@
 
 ***
 
-**Warning** about the images with Firefox
+**Remarks** about the images with Firefox
 
 There is no single-process Firefox image in this repository any more and the **multi-process mode** is always enabled. Be aware, that the multi-process mode requires larger shared memory (`/dev/shm`). At least 256MB is recommended. Please check the **Firefox multi-process** page in this older sibling [Wiki][that-wiki-firefox-multiprocess] for more information and the instructions, how to set the shared memory size in different scenarios.
+
+The [Firefox][firefox] installed in the images based on `Ubuntu 22.04 LTS` is the current non-snap version from the Mozilla Team PPA. It's because the `Ubuntu 22.04 LTS` distribution contains only the `snap` version and the `snap` is currently not working correctly in Docker containers.
 
 ***
 
@@ -142,7 +144,10 @@ The main features and components of the images in the default configuration are:
 - current version of [tini][tini] as the entry-point initial process (PID 1)
 - support for overriding both the container user and the group
 - support of **version sticker** (see the [full-length README][this-readme-full] on the **GitHub**)
-- current version of [Firefox][firefox] web browser and some additional **Firefox plus features** described in the [full-length README][this-readme-full] on the GitHub
+- [Firefox][firefox] web browser
+  - images based on `Ubuntu 20.04 LTS` - current version from the `Ubuntu 20.04 LTS` distribution
+  - images based on `Ubuntu 22.04 LTS` - current non-snap version from the Mozilla Team PPA
+- additional **Firefox plus features** described in the [full-length README][this-readme-full] on the **GitHub**
 
 The history of notable changes is documented in the [CHANGELOG][this-changelog].
 

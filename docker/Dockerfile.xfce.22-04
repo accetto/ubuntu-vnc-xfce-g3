@@ -322,9 +322,7 @@ Pin-Priority: 501" \
     > /etc/apt/preferences.d/mozilla-firefox \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
-        firefox \
-    && apt-get -y autoremove \
-    && rm -rf /var/lib/apt/lists/*
+        firefox
 
 COPY ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
 

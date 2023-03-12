@@ -5,6 +5,7 @@
   - [Preparation](#preparation)
     - [Ensure file attributes after cloning](#ensure-file-attributes-after-cloning)
     - [Set environment variables before building](#set-environment-variables-before-building)
+    - [Ensure `wget` utility](#ensure-wget-utility)
   - [Building pipeline](#building-pipeline)
   - [Three ways of building images](#three-ways-of-building-images)
     - [Building and publishing sets of images](#building-and-publishing-sets-of-images)
@@ -71,6 +72,42 @@ source ./secrets.rc
 ```
 
 **TIP**: If you copy a file named `secrets.rc` into the folder `docker/hooks/`, then it will be automatically sourced by the hook script `env.rc`.
+
+Be aware that the following environment variables are mandatory and must be always set:
+
+- `REPO_OWNER_NAME`
+- `BUILDER_REPO`
+
+Ensure that your `secrets.rc` file contains at least the lines similar to these:
+
+```shell
+export REPO_OWNER_NAME="accetto"
+export BUILDER_REPO="headless-ubuntu-g3"
+```
+
+You can use your own names if you wish.
+
+Alternatively you can modify the hook script file env.rc like this:
+
+```shell
+### original lines
+declare _owner="${REPO_OWNER_NAME:?Need repo owner name}"
+DOCKER_REPO="${_owner}/${BUILDER_REPO:?Need builder repo name}"
+
+### modified lines
+declare _owner="${REPO_OWNER_NAME:-accetto}"
+DOCKER_REPO="${_owner}/${BUILDER_REPO:-headless-ubuntu-g3}"
+```
+
+Again, you can use your own names if you wish.
+
+You can also use other ways to set the variables.
+
+### Ensure `wget` utility
+
+If you are on Windows, you can encounter the problem of missing `wget` utility. It is used by refreshing the `g3-cache` and it's available on Linux by default.
+
+On Windows you have generally two choices. You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows. Make sure to update also the `PATH` environment variable appropriately.
 
 ## Building pipeline
 

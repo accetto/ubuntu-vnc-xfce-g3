@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 
 ### 2022-09-11 Warning
 ### It seems like the README publishing is currently not always working. 

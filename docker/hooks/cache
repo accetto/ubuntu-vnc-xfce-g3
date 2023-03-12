@@ -1,4 +1,5 @@
-#!/bin/bash -e
+#!/bin/bash
+
 ### @accetto, September 2022
 
 echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
@@ -187,7 +188,6 @@ main() {
 
 declare _quiet=""
 declare _mark="\n==> G3-CACHE"
-declare _script_release_of="release_of"
 declare _cache="${_build_context}/.g3-cache"
 declare _shared_cache_path="${SHARED_G3_CACHE_PATH}"
 
