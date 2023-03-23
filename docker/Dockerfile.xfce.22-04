@@ -382,8 +382,8 @@ RUN \
     chmod 666 /etc/passwd /etc/group \
     &&  echo "${HEADLESS_USER_NAME}:x:${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID}:Default:${HOME}:/bin/bash" >> /etc/passwd \
     &&  echo "${HEADLESS_USER_NAME}  ALL=(ALL:ALL) ALL" | sudo tee /etc/sudoers.d/"${HEADLESS_USER_NAME}" \
-    &&  echo "${ARG_SUDO_INITIAL_PW:-headless}" > "${HOME}"/.initial_sudo_password \
-    &&  echo "${HEADLESS_USER_NAME}:$(cat "${HOME}"/.initial_sudo_password)" | chpasswd \
+    &&  echo "${ARG_SUDO_INITIAL_PW:-headless}" > "${STARTUPDIR}"/.initial_sudo_password \
+    &&  echo "${HEADLESS_USER_NAME}:$(cat "${STARTUPDIR}"/.initial_sudo_password)" | chpasswd \
     &&  ln -s "${HOME}"/readme.md "${HOME}"/Desktop/README \
     && "${STARTUPDIR}"/set_user_permissions.sh "${STARTUPDIR}" "${HOME}"
 
