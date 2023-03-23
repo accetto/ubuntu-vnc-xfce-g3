@@ -88,7 +88,10 @@ main() {
     fi
 
     ### create container user
-    generate_container_user
+    if [[ -s "${STARTUPDIR}"/.initial_sudo_password ]] ; then
+    
+        generate_container_user
+    fi
 
     if [[ "$?" != "0" ]] ; then
 

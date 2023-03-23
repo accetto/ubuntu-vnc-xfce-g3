@@ -69,16 +69,19 @@ generate_container_user() {
             fi
         fi
 
-        ### make the newly created user the owner of the following folders including their content
-        cat "${HOME}"/.initial_sudo_password | sudo -S chown -R "${user_id}:${group_id}" "${STARTUPDIR}" "${HOME}" 2>/dev/null
+        if [[ -s "${STARTUPDIR}"/.initial_sudo_password ]] ; then
 
-        ### set the file permissions of the following  to the system default and 
-        ### note that this will also disable this user generator for the future runs (see the outer if-condition above)
-        cat "${HOME}"/.initial_sudo_password | sudo -S chmod 644 /etc/passwd /etc/group 2>/dev/null
+            ### make the newly created user the owner of the following folders including their content
+            cat "${STARTUPDIR}"/.initial_sudo_password | sudo -S chown -R "${user_id}:${group_id}" "${STARTUPDIR}" "${HOME}" 2>/dev/null
 
-        ### remove the file containing the initial sudo password
-        ### be aware that the initial sudo password is still part of the Docker image (see the image history and ARG_SUDO_PW)
-        ### however, you can change it afterwards inside the container
-        cat "${HOME}"/.initial_sudo_password | sudo -S rm -f "${HOME}"/.initial_sudo_password 2>/dev/null
+            ### set the file permissions of the following  to the system default and 
+            ### note that this will also disable this user generator for the future runs (see the outer if-condition above)
+            cat "${STARTUPDIR}"/.initial_sudo_password | sudo -S chmod 644 /etc/passwd /etc/group 2>/dev/null
+
+            ### remove the file containing the initial sudo password
+            ### be aware that the initial sudo password is still part of the Docker image (see the image history and ARG_SUDO_PW)
+            ### however, you can change it afterwards inside the container
+            cat "${STARTUPDIR}"/.initial_sudo_password | sudo -S echo -n "" > "${STARTUPDIR}"/.initial_sudo_password
+        fi
     fi
 }
