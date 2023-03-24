@@ -374,8 +374,8 @@ COPY ./xfce/src/home/readme*.md "${HOME}"/
 ### Note that the line 'chmod 666 /etc/passwd /etc/group' sets the "softer" permissions only temporary.
 ### It allows the user generator startup script to configure the user and the group correctly.
 ### The script will set the permissions of both files back to the default '644'.
-### The script will aslo delete the file '.initial_sudo_password' after using it.
-### However, note that the initial sudo password will be persisted in the image history.
+### The script will also clear the file '.initial_sudo_password' after using it.
+### However, note that the initial sudo password will still be persisted in the image history.
 ### You have to change it inside the container, if you want to keep it really secret.
 ### Note that all this will not be done, if the startup script will not be executed.
 RUN \
