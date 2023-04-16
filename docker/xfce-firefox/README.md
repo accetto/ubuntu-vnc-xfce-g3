@@ -407,8 +407,6 @@ The temporary file `${STARTUPDIR}/.initial_sudo_password` is cleared after creat
 
 However, note that the initial `sudo` password will still be persisted in the image history. You have to change it inside the container, if you want to keep it really secret.
 
-Note that all this will not be done, if the script `startup.sh` will not be executed.
-
 There is the test script `~/tests/test-01.sh` that allows quick check of the current permissions.
 
 #### Other considerations
