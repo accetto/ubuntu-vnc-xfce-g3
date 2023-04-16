@@ -2,6 +2,17 @@
 
 ### This is an example of extending the images.
 
+### HINTS
+### Sometimes you can get building errors related to cache handling.
+### One of the following usually helps:
+### (1) Use the '--no-cache' option
+###     > docker build ... --no-cache
+### (2) Purge the builder cache before and/or between builds
+###     > docker builder prune
+### (3) Re-open the terminal and/or Visual Studio Code
+### (4) Remove the line containing 'rm -rf /var/lib/apt/lists/*'
+###     from your extending Dockerfile (like this one)
+
 ### choose a base image and tag
 ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-g3"
 # ARG BASEIMAGE="accetto/ubuntu-vnc-xfce-chromium-g3"
