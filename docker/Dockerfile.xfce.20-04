@@ -44,6 +44,7 @@ RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        gettext-base \
         jq \
         nano \
         psmisc \
@@ -321,7 +322,7 @@ COPY ./xfce-firefox/src/firefox.plus/home/readme*.md "${HOME}"/
 
 RUN \
     chmod 744 "${HOME}"/firefox.plus/*.sh \
-    && echo "Exec=${HOME}/firefox.plus/copy_firefox_user_preferences.sh" >> "${HOME}/Desktop/Copy FF Preferences.desktop" \
+    && envsubst <"${HOME}/Desktop/Copy FF Preferences.desktop" >/tmp/esub.tmp && mv -f /tmp/esub.tmp "${HOME}/Desktop/Copy FF Preferences.desktop" \
     && install -o root -g root -m 644 "${HOME}"/firefox.plus/accetto.svg /usr/share/icons/hicolor/scalable/apps/ \
     && gtk-update-icon-cache -f /usr/share/icons/hicolor
 
@@ -365,6 +366,7 @@ RUN \
     &&  echo "${ARG_SUDO_INITIAL_PW:-headless}" > "${STARTUPDIR}"/.initial_sudo_password \
     &&  echo "${HEADLESS_USER_NAME}:$(cat "${STARTUPDIR}"/.initial_sudo_password)" | chpasswd \
     &&  ln -s "${HOME}"/readme.md "${HOME}"/Desktop/README \
+    &&  envsubst <"${HOME}"/Desktop/versionsticker.desktop >/tmp/esub.tmp && mv -f /tmp/esub.tmp "${HOME}"/Desktop/versionsticker.desktop \
     && "${STARTUPDIR}"/set_user_permissions.sh "${STARTUPDIR}" "${HOME}"
 
 
