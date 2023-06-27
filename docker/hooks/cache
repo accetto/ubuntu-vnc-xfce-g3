@@ -170,17 +170,24 @@ cache_chromium() {
 main() {
 
     if [[ "${FEATURES_VNC}" == "1" ]] ; then
+
         cache_tigervnc
+        if [[ $? -ne 0 ]] ; then return 1; fi
     fi
 
     if [[ "${FEATURES_NOVNC}" == "1" ]] ; then
 
         cache_novnc
+        if [[ $? -ne 0 ]] ; then return 1; fi
+
         cache_websockify
+        if [[ $? -ne 0 ]] ; then return 1; fi
     fi
 
     if [[ "${FEATURES_CHROMIUM}" == "1" ]] ; then
+
         cache_chromium
+        if [[ $? -ne 0 ]] ; then return 1; fi
     fi
 
     echo
