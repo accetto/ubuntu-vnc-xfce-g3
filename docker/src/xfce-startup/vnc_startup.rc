@@ -1,18 +1,3 @@
-declare _tmp
-declare _vnc_override_file
-
-_vnc_override_file="${HOME}"/.vnc_override.rc
-
-### if the vnc-override file exists, then import and source
-### only the lines beginning with 'export ' (at position 1)
-if [[ -f "${_vnc_override_file}" ]] ; then
-
-    _tmp=$( mktemp )
-    ( grep -E '^export\s+' "${_vnc_override_file}" 2>/dev/null 1>"${_tmp}" )
-    source "${_tmp}"
-    rm -f "${_tmp}"
-fi
-
 start_vnc () {
     local vnc_ip
     local passwd_path
@@ -69,7 +54,7 @@ start_vnc () {
         echo $(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 20) | vncpasswd -f > "${passwd_path}"
     fi
 
-    echo "${VNC_PW}" | vncpasswd -f >> "${passwd_path}"
+    echo "${VNC_PW}" | vncpasswd -f > "${passwd_path}"
     chmod 600 "${passwd_path}"
 
     ### create VNC configuration file

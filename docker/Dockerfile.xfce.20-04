@@ -312,7 +312,6 @@ COPY ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
 ### ##################
 
 FROM stage_firefox as stage_firefox_plus
-ARG ARG_HEADLESS_USER_ID
 
 ENV FEATURES_FIREFOX_PLUS=1
 
@@ -339,9 +338,11 @@ FROM ${ARG_MERGE_STAGE_BROWSER_BASE} as merge_stage_browser
 ###############
 
 FROM ${ARG_FINAL_STAGE_BASE} as stage_final
+ARG ARG_FEATURES_OVERRIDING_ENVV
 ARG ARG_SUDO_INITIAL_PW
 
 ENV \
+    FEATURES_OVERRIDING_ENVV="${ARG_FEATURES_OVERRIDING_ENVV:+1}" \
     FEATURES_VERSION_STICKER=1 \
     STARTUPDIR="/dockerstartup"
 

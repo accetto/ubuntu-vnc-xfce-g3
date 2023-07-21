@@ -1,0 +1,5 @@
+### only the lines beginning with 'export ' at the first position and containing '=' will be sourced
+export VNC_RESOLUTION=1024x768
+export VNC_PW=secret
+#export DISPLAY=:2
+#export VNC_COL_DEPTH=32

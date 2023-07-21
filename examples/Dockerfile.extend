@@ -38,9 +38,13 @@ RUN \
 # COPY ./bashrc "${HOME}"/.bashrc
 # COPY ./firefox.plus/user.js "${HOME}"/firefox.plus/
 
+### avoid the pitfall of failing startup under some circumstances
+### permissions will be set to the system defaults on the first container start
+RUN chmod 666 /etc/passwd /etc/group
+
 ### usually you want to swich back to a non-root user
 ### alternatively you can do it in a compose file (see 'example.yml')
-USER 1000
+USER "${HEADLESS_USER_ID}"
 
 ### note that some applications refuse to be installed under the root user
 ### those you have to install after switching the user

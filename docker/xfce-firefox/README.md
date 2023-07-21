@@ -26,6 +26,7 @@
     - [Volumes](#volumes)
     - [Version sticker](#version-sticker)
   - [Using headless containers](#using-headless-containers)
+    - [Overriding environment variables](#overriding-environment-variables)
     - [Overriding VNC/noVNC parameters](#overriding-vncnovnc-parameters)
   - [Container user account](#container-user-account)
     - [Overriding container user parameters](#overriding-container-user-parameters)
@@ -243,6 +244,21 @@ It is also possible to provide the password through the links:
 - `http://mynas:26901/vnc_lite.html?password=headless`
 - `http://mynas:26901/vnc.html?password=headless`
 
+### Overriding environment variables
+
+If the environment variable `FEATURES_OVERRIDING_ENVV=1`, which is the case by default, then the container startup script will look for the file `$HOME/.override/.override_envv.rc` and source all the lines that begin with the string 'export ' at the first position and contain the '=' character.
+
+You can provide the overriding file from outside the container using *bind mounts* or *volumes*.
+
+This feature allows overriding or adding environment variables at the **container startup-time**.
+It means, even after the container has already been created.
+
+You can disable this behavior by setting the variable `FEATURES_OVERRIDING_ENVV` to zero when the container is created or the image is built.
+
+The lines that have been actually sourced can be reported into the container's log if the startup parameter `--verbose` or `--debug` is provided.
+
+Look below for the example how to override the VNC/noVNC parameters at the container startup-time.
+
 ### Overriding VNC/noVNC parameters
 
 The VNC/noVNC parameters are controlled by related environment variables embedded into the image.
@@ -277,7 +293,7 @@ For example:
 docker build --build-arg DISPLAY=:2 --build-arg ARG_VNC_PORT=6902  ...
 ```
 
-**At container startup-time** you can override the environment variable values by using the `docker run -e` option. Please note that in this case you have to use the actual environment variable names, not the build argument names (e.g. `VNC_PORT` instead of `ARG_VNC_PORT`).
+**At container creation-time** you can override the environment variable values by using the `docker run -e` option. Please note that in this case you have to use the actual environment variable names, not the build argument names (e.g. `VNC_PORT` instead of `ARG_VNC_PORT`).
 
 For example:
 
@@ -285,29 +301,25 @@ For example:
 docker run -e VNC_PORT=6902 ...
 ```
 
-**At VNC/noVNC startup-time** you can override the environment variable values by binding an external file exporting the variables to the dedicated mounting point `${HOME}/.vnc_override.rc` (a single file, not a directory).
+**At container startup-time** you can override the VNC/noVNC variables using the feature `FEATURES_OVERRIDING_ENVV' described above.
 
 For example, the following command would bind the file `my_own_vnc_parameters.rc` from the directory `/home/joe` to the container:
 
 ```shell
-docker run -v /home/joe/my_own_vnc_parameters.rc:/home/headless/.vnc_override.rc
+docker run -v /home/joe/my_own_vnc_parameters.rc:/home/headless/.override/.override_envv.rc
 ```
 
-The content of the file should be similar to the provided example file `example-vnc-override.rc`:
+The content of the file should be similar to the provided example file `example-override-envv.rc`:
 
 ```shell
-### only lines beginning with 'export ' (at position 1) will be imported and sourced
-;export VNC_COL_DEPTH=32
-;export VNC_VIEW_ONLY=true
-;export VNC_PW=secret
+### only the lines beginning with 'export ' at the first position and containing '=' will be sourced
 export VNC_RESOLUTION=1024x768
-export DISPLAY=:2
-export VNC_PORT=5902
-export NOVNC_PORT=6902
-;export NOVNC_HEARTBEAT=25
+export VNC_PW=secret
+#export DISPLAY=:2
+#export VNC_COL_DEPTH=32
 ```
 
-Please note that only the lines beginning with `export` at the first position will be imported.
+Please note that only the lines beginning with the string 'export ' at the first position and containing the '=' character will be imported.
 
 By providing the variable values the following rules apply:
 

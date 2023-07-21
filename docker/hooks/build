@@ -74,6 +74,7 @@ main() {
             --build-arg ARG_VCS_REF="$(git rev-parse --short HEAD)" \
             \
             ${FEATURES_BUILD_SLIM:+--build-arg ARG_APT_NO_RECOMMENDS=1} \
+            ${FEATURES_OVERRIDING_ENVV:+--build-arg ARG_FEATURES_OVERRIDING_ENVV=1} \
             ${FEATURES_SCREENSHOOTING:+--build-arg ARG_FEATURES_SCREENSHOOTING=1} \
             ${FEATURES_THUMBNAILING:+--build-arg ARG_FEATURES_THUMBNAILING=1} \
             \

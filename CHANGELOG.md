@@ -6,6 +6,26 @@
 
 ***
 
+### Release 23.07
+
+This release introduces a new feature `FEATURES_OVERRIDING_ENVV`, which controls the overriding or adding of environment variables at the container startup-time.
+Meaning, after the container has already been created.
+
+The feature is enabled by default.
+It can be disabled by setting the variable `FEATURES_OVERRIDING_ENVV` to zero when the container is created or the image is built.
+Be aware that any other value than zero, even if unset or empty, enables the feature.
+
+If `FEATURES_OVERRIDING_ENVV=1`, then the container startup script will look for the file `$HOME/.override/.override_envv.rc` and source all the lines that begin with the string 'export ' at the first position and contain the '=' character.
+
+The overriding file can be provided from outside the container using *bind mounts* or *volumes*.
+
+The lines that have been actually sourced can be reported into the container's log if the startup parameter `--verbose` or `--debug` is provided.
+
+This feature is an enhanced implementation of the previously available functionality known as **Overriding VNC/noVNC parameters at the container startup-time**.
+
+Therefore this is a **breaking change** for the users that already use the VNC/noVNC overriding.
+They need to move the content from the previous file `$HOME"/.vnc_override.rc` into the new file `$HOME/.override/.override_envv.rc`.
+
 ### Release 23.03.2
 
 This release mitigates the problems with the edge use case, when users bind the whole `$HOME` directory to an external folder on the host computer.
