@@ -6,6 +6,10 @@
 
 ***
 
+### Release 23.07.1
+
+This release brings some enhancements in the Dockerfiles and the script `user_generator.rc` with the aim to better support extending the images.
+
 ### Release 23.07
 
 This release introduces a new feature `FEATURES_OVERRIDING_ENVV`, which controls the overriding or adding of environment variables at the container startup-time.

@@ -5,67 +5,81 @@ generate_container_user() {
 
     local user_id
     local group_id
-    local application_user_name
-    local group_name
+    local headless_user_name
+    local headless_group_name
 
-    ### note that this block will be exuceted only once (see the end of the if-block)
+    ### note that this block will be executed only once (see the end of the if-block)
     if [[ -w /etc/passwd ]] ; then
 
         user_id="$(id -u)"
         group_id="$(id -g)"
-        application_user_name="${HEADLESS_USER_NAME}"
-        group_name="${HEADLESS_USER_GROUP_NAME}"
-
-        ### user 'root (0)' is always created by default
-        ### user 'application_user_name' is created by Dockerfile
-        if [[ "${user_id}" != "0" && "${user_id}" != "${HEADLESS_USER_ID}" ]] ; then
-
-            ### rename the existing 'application_user_name' to 'builder'
-            if [[ $( grep -c "${application_user_name}:x:${HEADLESS_USER_ID}:" /etc/passwd ) -ne 0 ]]; then
-
-                cat /etc/passwd | sed -e "s/^${application_user_name}:x:${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID}:Default:/builder:x:${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID}:Builder:/" > /tmp/passwd
-
-                cp /tmp/passwd /etc/
-                rm /tmp/passwd
-
-                if [[ -n "${_verbose}" ]] ; then
-                    echo "User '${application_user_name} (${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID})' renamed to 'builder (${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID})' in '/etc/passwd'"
-                fi
-            fi
-
-            ### add the current application user ID as a new 'application_user_name' if it does not exist yet
-            if [[ $( grep -c "${application_user_name}:x:${user_id}:" /etc/passwd ) -eq 0 ]] ; then
-
-                cat /etc/passwd > /tmp/passwd
-                echo "${application_user_name}:x:${user_id}:${group_id}:Default:${HOME}:/bin/bash" >> /tmp/passwd
-
-                cp /tmp/passwd /etc/
-                rm /tmp/passwd
-
-                if [[ -n "${_verbose}" ]] ; then
-                    echo "User '${application_user_name} (${user_id}:${group_id})' added into '/etc/passwd'"
-                fi
-
-                ### update the environment variables
-                export HEADLESS_USER_ID=${user_id}
-                export HEADLESS_USER_GROUP_ID=${group_id}
-            fi
-        fi
+        headless_user_name="${HEADLESS_USER_NAME}"
+        headless_group_name="${HEADLESS_USER_GROUP_NAME}"
 
         ### add the new group if the same GID does not exist yet
-        if [[ "${group_id}" != "0" ]] ; then
+        if [[ "${group_id}" != "0" && "${group_id}" != "${HEADLESS_USER_GROUP_ID}" ]] ; then
 
-            if [[ $( grep -c -E ":x:${group_id}:$" /etc/group ) -eq 0 ]] ; then
+            ### rename the existing 'headless_group_name' into 'g3builder'
+            if [[ $( grep -c "${headless_group_name}:x:${HEADLESS_USER_GROUP_ID}:" /etc/group ) -ne 0 ]]; then
 
-                cat /etc/group > /tmp/group
-                echo "${group_name}:x:${group_id}:" >> /tmp/group
+                cat /etc/group | sed -e "s/^${headless_group_name}:x:${HEADLESS_USER_GROUP_ID}:/g3builder:x:${HEADLESS_USER_GROUP_ID}:/" > /tmp/group
 
                 cp /tmp/group /etc/
                 rm /tmp/group
 
                 if [[ -n "${_verbose}" ]] ; then
-                    echo "Group '${group_name} (${group_id})' added into '/etc/group'"
+                    echo "Default user group '${headless_group_name}(${HEADLESS_USER_GROUP_ID})' renamed into 'g3builder(${HEADLESS_USER_GROUP_ID})' in '/etc/group'"
                 fi
+            fi
+
+            ### add the current default user group ID as a new 'headless_group_name' if it does not exist yet
+            if [[ $( grep -c -E ":x:${group_id}:$" /etc/group ) -eq 0 ]] ; then
+
+                cat /etc/group > /tmp/group
+                echo "${headless_group_name}:x:${group_id}:" >> /tmp/group
+
+                cp /tmp/group /etc/
+                rm /tmp/group
+
+                if [[ -n "${_verbose}" ]] ; then
+                    echo "Default user group '${headless_group_name}(${group_id})' added into '/etc/group'"
+                fi
+            fi
+        fi
+
+        ### user 'root (0)' is always created by default
+        ### user 'headless_user_name' is created by Dockerfile
+        if [[ "${user_id}" != "0" && "${user_id}" != "${HEADLESS_USER_ID}" ]] ; then
+
+            ### rename the existing 'headless_user_name' into 'g3builder'
+            if [[ $( grep -c "${headless_user_name}:x:${HEADLESS_USER_ID}:" /etc/passwd ) -ne 0 ]]; then
+
+                cat /etc/passwd | sed -e "s/^${headless_user_name}:x:${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID}:Default:/g3builder:x:${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID}:G3Builder:/" > /tmp/passwd
+
+                cp /tmp/passwd /etc/
+                rm /tmp/passwd
+
+                if [[ -n "${_verbose}" ]] ; then
+                    echo "Default user '${headless_user_name}(${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID})' renamed into 'g3builder(${HEADLESS_USER_ID}:${HEADLESS_USER_GROUP_ID})' in '/etc/passwd'"
+                fi
+            fi
+
+            ### add the current default user ID as a new 'headless_user_name' if it does not exist yet
+            if [[ $( grep -c "${headless_user_name}:x:${user_id}:" /etc/passwd ) -eq 0 ]] ; then
+
+                cat /etc/passwd > /tmp/passwd
+                echo "${headless_user_name}:x:${user_id}:${group_id}:Default:${HOME}:/bin/bash" >> /tmp/passwd
+
+                cp /tmp/passwd /etc/
+                rm /tmp/passwd
+
+                if [[ -n "${_verbose}" ]] ; then
+                    echo "Default user '${headless_user_name}(${user_id}:${group_id})' added into '/etc/passwd'"
+                fi
+
+                ### update the environment variables
+                export HEADLESS_USER_ID=${user_id}
+                export HEADLESS_USER_GROUP_ID=${group_id}
             fi
         fi
 
