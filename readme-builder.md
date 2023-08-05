@@ -13,7 +13,8 @@
 
 ## Introduction
 
-This utility script can build and publish individual images. It can also execute the individual hook scripts of the building pipeline (`docker/hooks` folder).
+This utility script can build and publish individual images.
+It can also execute the individual hook scripts of the building pipeline (`docker/hooks` folder).
 
 Common usage pattern:
 
@@ -116,9 +117,12 @@ You can also use other ways to set the variables.
 
 ### Ensure `wget` utility
 
-If you are on Windows, you can encounter the problem of missing `wget` utility. It is used by refreshing the `g3-cache` and it's available on Linux by default.
+If you are on Windows, you can encounter the problem of missing `wget` utility.
+It is used by refreshing the `g3-cache` and it's available on Linux by default.
 
-On Windows you have generally two choices. You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows. Make sure to update also the `PATH` environment variable appropriately.
+On Windows you have generally two choices.
+You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows.
+Make sure to update also the `PATH` environment variable appropriately.
 
 ## Executing complete pipeline
 
@@ -143,7 +147,8 @@ You can skip the publishing to the **Docker Hub** by replacing the command `all`
 ./builder.sh latest all-no-push
 ```
 
-You can also provide additional parameters for the internally used Docker `build` command. For example:
+You can also provide additional parameters for the internally used Docker `build` command.
+For example:
 
 ```shell
 ./builder.sh latest all-no-push --no-cache
@@ -152,7 +157,8 @@ You can also provide additional parameters for the internally used Docker `build
 ### docker build --no-cache ...
 ```
 
-The optional `<docker-cli-options>` are passed only to the `pre_build` hook script, which passes them to the internally used `docker build` command. The `cache` hook script, however, doesn't use any Docker CLI commands.
+The optional `<docker-cli-options>` are passed only to the `pre_build` hook script, which passes them to the internally used `docker build` command.
+The `cache` hook script, however, doesn't use any Docker CLI commands.
 
 ## Executing individual pipeline steps
 
@@ -179,11 +185,14 @@ The building pipeline consists of the following steps, that can be executed also
 ./builder.sh latest post_push
 ```
 
-The optional `<docker-cli-options>` are passed to the each individual hook script, which can pass them to the internally used Docker CLI command. The `cache` hook script, however, doesn't use any Docker CLI commands.
+The optional `<docker-cli-options>` are passed to the each individual hook script, which can pass them to the internally used Docker CLI command.
+The `cache` hook script, however, doesn't use any Docker CLI commands.
 
 ### What about the 'cache' helper script
 
-The `cache` hook script has been introduced in the **second version** (G3v2) of the building pipeline. It refreshes the local `g3-cache`, which must be always placed inside the Docker build context. The script is also used by the `pre_build` and `build` hook scripts.
+The `cache` hook script has been introduced in the **second version** (G3v2) of the building pipeline.
+It refreshes the local `g3-cache`, which must be always placed inside the Docker build context.
+The script is also used by the `pre_build` and `build` hook scripts.
 
 The `g3-cache` and the rules for its refreshing are described separately.
 

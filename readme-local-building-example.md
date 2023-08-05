@@ -105,9 +105,12 @@ You can also use other ways to set the variables.
 
 ### Ensure `wget` utility
 
-If you are on Windows, you can encounter the problem of missing `wget` utility. It is used by refreshing the `g3-cache` and it's available on Linux by default.
+If you are on Windows, you can encounter the problem of missing `wget` utility.
+It is used by refreshing the `g3-cache` and it's available on Linux by default.
 
-On Windows you have generally two choices. You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows. Make sure to update also the `PATH` environment variable appropriately.
+On Windows you have generally two choices.
+You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows.
+Make sure to update also the `PATH` environment variable appropriately.
 
 ## Building pipeline
 
@@ -120,11 +123,14 @@ The actual building pipeline consists of the following hook scripts stored in th
 
 The hook scripts are executed exactly in that order.
 
-The **second version** (G3v2) of the pipeline has added also the helper script `cache`, which ist stored in the same folder. It is used by the hook scripts `pre_build` and `build` and it refreshes the local `g3-cache`. It can be also executed  stand-alone.
+The **second version** (G3v2) of the pipeline has added also the helper script `cache`, which ist stored in the same folder.
+It is used by the hook scripts `pre_build` and `build` and it refreshes the local `g3-cache`.
+It can be also executed  stand-alone.
 
 Utilizing the local `g3-cache` brings a significant boost in the building performance and much shorter building times.
 
-There is also the helper script `util-readme.sh`, stored in the folder `utils/`. This script can be used for preparing the `README` file for the **Docker Hub**.
+There is also the helper script `util-readme.sh`, stored in the folder `utils/`.
+This script can be used for preparing the `README` file for the **Docker Hub**.
 
 ## Three ways of building images
 
@@ -138,7 +144,9 @@ Since the **second version** (G3v2) of the building pipeline there are the follo
 
 ### Building and publishing sets of images
 
-Building and publishing of sets of images is pretty easy. Let's say that we want to refresh the images that feature the Firefox browser. We can do that by executing the following command:
+Building and publishing of sets of images is pretty easy.
+Let's say that we want to refresh the images that feature the Firefox browser.
+We can do that by executing the following command:
 
 ```shell
 ### PWD = project's root directory
@@ -159,7 +167,9 @@ You can find more information and examples in the separate `readme` file, descri
 
 ### Building and publishing individual images
 
-Building and publishing of individual images is also very easy. Let's say we wan to refresh the image `accetto/ubuntu-vnc-xfce-g3:latest`. We could execute the following command:
+Building and publishing of individual images is also very easy.
+Let's say we wan to refresh the image `accetto/ubuntu-vnc-xfce-g3:latest`.
+We could execute the following command:
 
 ```shell
 ### PWD = project's root directory
@@ -178,7 +188,8 @@ You can find more information and examples in the separate `readme` file, descri
 
 ### Step-by-step building and publishing
 
-The building pipeline can executed also step-by-step. The hook scripts in the folder `docker/hooks/` can be executed directly or also by using the utility script `builder.sh`.
+The building pipeline can executed also step-by-step.
+The hook scripts in the folder `docker/hooks/` can be executed directly or also by using the utility script `builder.sh`.
 
 The script `builder.sh` is using the individual hook scripts internally.
 
@@ -204,7 +215,9 @@ This step builds the temporary helper image and creates the following temporary 
 - `scrap-version_sticker-verbose_previous.tmp`
 - `scrap-demand-stop-building`
 
-The file `scrap-demand-stop-building` is created only if the verbose version sticker hasn't changed since the last time it has been published on the builder repository's **GitHub Gist** and if the environment variable `FORCE_BUILDING` is not set to `1`. **Its presence will block** the next hook script `build` from building a new persistent image. If you want to force the image building, you can delete this file manually.
+The file `scrap-demand-stop-building` is created only if the verbose version sticker hasn't changed since the last time it has been published on the builder repository's **GitHub Gist** and if the environment variable `FORCE_BUILDING` is not set to `1`.
+**Its presence will block** the next hook script `build` from building a new persistent image.
+If you want to force the image building, you can delete this file manually.
 
 The other option is to set the environment variable `FORCE_BUILDING=1` **before** executing the `pre_build` script.
 

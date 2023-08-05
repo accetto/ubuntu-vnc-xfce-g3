@@ -21,9 +21,12 @@ You can learn more about the concept on the Wiki page ["Concepts of `g3-cache`"]
 
 ### Ensure `wget` utility
 
-If you are on Windows, you can encounter the problem of missing `wget` utility. It is used by refreshing the `g3-cache` and it's available on Linux by default.
+If you are on Windows, you can encounter the problem of missing `wget` utility.
+It is used by refreshing the `g3-cache` and it's available on Linux by default.
 
-On Windows you have generally two choices. You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows. Make sure to update also the `PATH` environment variable appropriately.
+On Windows you have generally two choices.
+You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows.
+Make sure to update also the `PATH` environment variable appropriately.
 
 ## Local `g3-cache`
 
@@ -46,9 +49,11 @@ The same shared `g3-cache` is usually used also by the sibling projects [accetto
 
 ## Helper script `cache`
 
-Both `g3-caches` are refreshed by the helper script `cache`, which is stored in the folder `docker/hooks/`. Therefore it's sometimes referenced as a hook script.
+Both `g3-caches` are refreshed by the helper script `cache`, which is stored in the folder `docker/hooks/`.
+Therefore it's sometimes referenced as a hook script.
 
-The script is used by the hook scripts `pre_build` and `build`. However, it can be executed also stand-alone.
+The script is used by the hook scripts `pre_build` and `build`.
+However, it can be executed also stand-alone.
 
 **Remark**: The current implementation of the cache refreshing code is not thread safe and it is not intended for parallel building of multiple images.
 

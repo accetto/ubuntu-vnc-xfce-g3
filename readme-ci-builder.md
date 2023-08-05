@@ -20,7 +20,8 @@
 
 ## Introduction
 
-This utility script can build and publish sets of images. It can also extract selected information from the building log.
+This utility script can build and publish sets of images.
+It can also extract selected information from the building log.
 
 The common usage pattern
 
@@ -70,7 +71,8 @@ The script creates a complete execution log.
 
 The optional parameter `--no-cache` will be passed to the internally used script `builder.sh`.
 
-The optional parameter `--log-all` will cause that the script's output will be written into the log file in all cases. Normally the command line errors or the **log processing mode** commands are not logged. 
+The optional parameter `--log-all` will cause that the script's output will be written into the log file in all cases.
+Normally the command line errors or the **log processing mode** commands are not logged.
 
 ## Preparation
 
@@ -147,9 +149,12 @@ You can also use other ways to set the variables.
 
 ### Ensure `wget` utility
 
-If you are on Windows, you can encounter the problem of missing `wget` utility. It is used by refreshing the `g3-cache` and it's available on Linux by default.
+If you are on Windows, you can encounter the problem of missing `wget` utility.
+It is used by refreshing the `g3-cache` and it's available on Linux by default.
 
-On Windows you have generally two choices. You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows. Make sure to update also the `PATH` environment variable appropriately.
+On Windows you have generally two choices.
+You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows.
+Make sure to update also the `PATH` environment variable appropriately.
 
 ## Usage modes
 
@@ -165,7 +170,8 @@ The **group mode** usage pattern:
 
 #### Group mode examples
 
-The image tags can be listed in the command line. For example, all these images will be built independently of each other.
+The image tags can be listed in the command line.
+For example, all these images will be built independently of each other.
 
 ```shell
 ./ci-builder.sh all group latest latest-firefox latest-chromium
@@ -191,7 +197,9 @@ You can also use one of the **named groups**:
 
 The **family mode** is intended for efficient building of sets of dependent images.
 
-**Remark:** Since the version `G3v3` is this mode for advanced use only. The previous images `accetto/ubuntu-vnc-xfce-g3:latest-fugo` and `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` that used it are not published any more. The image `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` has been renamed to `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
+**Remark:** Since the version `G3v3` is this mode for advanced use only.
+The previous images `accetto/ubuntu-vnc-xfce-g3:latest-fugo` and `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` that used it are not published any more.
+The image `accetto/ubuntu-vnc-xfce-firefox-g3:latest-plus` has been renamed to `accetto/ubuntu-vnc-xfce-firefox-g3:latest`.
 
 The dependency in this context is meant more technically than conceptually.
 
@@ -231,7 +239,8 @@ The following command could also be used, but there would be no benefit comparin
 ./ci-builder.sh all family latest-chromium
 ```
 
-You can also skip the publishing to the **Docker Hub** by replacing the `all` command by the `all-no-push` one. For example:
+You can also skip the publishing to the **Docker Hub** by replacing the `all` command by the `all-no-push` one.
+For example:
 
 ```shell
 ### image 'latest-fugo' will be skipped if the 'latest' image doesn't need a re-build
@@ -240,7 +249,8 @@ You can also skip the publishing to the **Docker Hub** by replacing the `all` co
 
 ### Log processing
 
-The **log processing** mode is intended for evaluating the outcome of the latest image building session. The result are extracted from the **ci-builder log** by `grep` utility.
+The **log processing** mode is intended for evaluating the outcome of the latest image building session.
+The result are extracted from the **ci-builder log** by `grep` utility.
 
 The **log processing mode** usage pattern:
 
@@ -271,7 +281,8 @@ No build needed for 'headless-ubuntu-g3:latest-firefox'.
 
 #### Stickers command
 
-The `stickers` command extracts the information about the **version stickers** of the ephemeral helper images that have been built by the `pre_build` hook script. That does not mean that the final persistent images have also been built (and optionally also published).
+The `stickers` command extracts the information about the **version stickers** of the ephemeral helper images that have been built by the `pre_build` hook script.
+That does not mean that the final persistent images have also been built (and optionally also published).
 
 ```shell
 ./ci-builder.sh log get stickers

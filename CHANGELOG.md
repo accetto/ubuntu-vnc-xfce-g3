@@ -2,9 +2,13 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
-[Docker Hub][this-docker] - [Git Hub][this-github] - [Wiki][this-wiki] - [Discussions][this-discussions]
+[User Guide][this-user-guide] - [Docker Hub][this-docker] - [Git Hub][this-github] - [Wiki][this-wiki] - [Discussions][this-discussions]
 
 ***
+
+### Release 23.08
+
+This release brings updated and significantly shortened README files, because most of the content has been moved into the new [User guide][this-user-guide].
 
 ### Release 23.07.1
 
@@ -395,16 +399,22 @@ This is just a maintenance release.
 
 ***
 
+[this-user-guide]: https://accetto.github.io/user-guide-g3/
+
 [this-docker]: https://hub.docker.com/u/accetto/
 
 [this-github]: https://github.com/accetto/ubuntu-vnc-xfce-g3/
+
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 
 [accetto-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
+
 [accetto-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
+
 [accetto-ubuntu-vnc-xfce-firefox-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3
 
 [accetto-tigervnc-release-mirror]: https://github.com/accetto/tigervnc/releases
