@@ -8,20 +8,7 @@
 
 This GitHub project folder contains resources used by building Ubuntu images available on Docker Hub in the repository [accetto/ubuntu-vnc-xfce-chromium-g3][this-docker].
 
-The images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
-This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
-
-The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode.
-You should be aware of the implications.
-The images are intended for testing and development.
-
-There is also a sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
-
 This [User guide][this-user-guide] describes the images and how to use them.
-
-This is the **third generation** (G3) of my headless images.
-The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
-The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
 ### Building images
 
@@ -40,6 +27,21 @@ The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc
 ```
 
 Refer to the main [README][this-readme] file for more information about the building subject.
+
+### Remarks
+
+There is also a sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
+
+This is the **third generation** (G3) of my headless images.
+The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
+The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
+
+The images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
+This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
+
+The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode.
+You should be aware of the implications.
+The images are intended for testing and development.
 
 ### Getting help
 

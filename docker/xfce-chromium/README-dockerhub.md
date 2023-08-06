@@ -13,12 +13,13 @@
 This Docker Hub repository contains Docker images for headless working.
 
 The images are based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
-
 The popular web browser [Chromium][chromium] is also included.
 
-There is also a similar sibling image [accetto/debian-vnc-xfce-chromium-g3][accetto-dockerhub-debian-vnc-xfce-chromium-g3] based on [Debian][docker-debian].
-
 This [User guide][this-user-guide] describes the images and how to use them.
+
+The related [GitHub project][this-github] contains image generators that image users generally don’t need, unless they want to build the images themselves.
+
+### Tags
 
 The following image tags are regularly built and published on Docker Hub:
 
@@ -38,6 +39,8 @@ The following image tags are regularly built and published on Docker Hub:
 
 **Hint:** Clicking the version sticker badge reveals more information about the particular build.
 
+### Features
+
 The main features and components of the images in the default configuration are:
 
 - light-weight [Xfce][xfce] desktop environment (Ubuntu distribution)
@@ -52,13 +55,6 @@ The main features and components of the images in the default configuration are:
 - support of **version sticker** (see [User guide][this-user-guide-version-sticker])
 - current version of [Chromium Browser][chromium] open-source web browser (from `Ubuntu 18.04 LTS` distribution)
 
-These images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
-This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
-
-The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode.
-You should be aware of the implications.
-The images are intended for testing and development.
-
 The following **TCP** ports are exposed by default:
 
 - **5901** for access over **VNC** (using VNC viewer)
@@ -66,9 +62,22 @@ The following **TCP** ports are exposed by default:
 
 ![container-screenshot][this-screenshot-container]
 
+### Remarks
+
+There is also a similar sibling image [accetto/debian-vnc-xfce-chromium-g3][accetto-dockerhub-debian-vnc-xfce-chromium-g3] based on [Debian][docker-debian].
+
 This is the **third generation** (G3) of my headless images.
 The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
 The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
+
+These images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
+This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
+
+The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode.
+You should be aware of the implications.
+The images are intended for testing and development.
+
+### Getting help
 
 If you've found a problem or you just have a question, please check the [User guide][this-user-guide], [Issues][this-issues] and [Wiki][this-wiki] first.
 Please do not overlook the closed issues.
@@ -77,8 +86,6 @@ If you do not find a solution, you can file a new issue.
 The better you describe the problem, the bigger the chance it'll be solved soon.
 
 If you have a question or an idea and you don't want to open an issue, you can also use the [Discussions][this-discussions].
-
-**Remark:** The [GitHub project][this-github] contains image generators that image users generally don’t need, unless they want to build the images themselves.
 
 ***
 
@@ -113,6 +120,7 @@ If you have a question or an idea and you don't want to open an issue, you can a
 [docker-ubuntu]: https://hub.docker.com/_/ubuntu/
 [docker-debian]: https://hub.docker.com/_/debian/
 
+[chromium]: https://www.chromium.org/Home
 [jq]: https://stedolan.github.io/jq/
 [mousepad]: https://github.com/codebrainz/mousepad
 [nano]: https://www.nano-editor.org/
@@ -121,8 +129,6 @@ If you have a question or an idea and you don't want to open an issue, you can a
 [tigervnc]: http://tigervnc.org
 [tini]: https://github.com/krallin/tini
 [xfce]: http://www.xfce.org
-
-[chromium]: https://www.chromium.org/Home
 
 [badge-github-release]: https://badgen.net/github/release/accetto/ubuntu-vnc-xfce-g3?icon=github&label=release
 

@@ -8,16 +8,7 @@
 
 This GitHub project folder contains resources used by building Ubuntu images available on Docker Hub in the repository [accetto/ubuntu-vnc-xfce-firefox-g3][this-docker].
 
-The [Firefox][firefox] installed in the images based on `Ubuntu 22.04 LTS` is the current non-snap version from the Mozilla Team PPA.
-It's because the `Ubuntu 22.04 LTS` distribution contains only the `snap` version and the `snap` is currently not supported in Docker containers.
-
-There is also a sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
-
 This [User guide][this-user-guide] describes the images and how to use them.
-
-This is the **third generation** (G3) of my headless images.
-The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
-The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
 ### Building images
 
@@ -36,6 +27,17 @@ The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc
 ```
 
 Refer to the main [README][this-readme] file for more information about the building subject.
+
+### Remarks
+
+There is also a sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
+
+This is the **third generation** (G3) of my headless images.
+The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
+The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
+
+The [Firefox][firefox] installed in the images based on `Ubuntu 22.04 LTS` is the current non-snap version from the Mozilla Team PPA.
+It's because the `Ubuntu 22.04 LTS` distribution contains only the `snap` version and the `snap` is currently not supported in Docker containers.
 
 ### Getting help
 

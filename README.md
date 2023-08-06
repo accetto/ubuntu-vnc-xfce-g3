@@ -51,6 +51,8 @@ This GitHub repository contains resources and tools for building Docker images f
 The images are based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
 The popular web browsers [Chromium][chromium] and [Firefox][firefox] are also included.
 
+This [User guide][this-user-guide] describes the images and how to use them.
+
 The content of this GitHub project is intended for developers and image builders.
 
 Ordinary users can simply use the images available in the following repositories on Docker Hub:
@@ -58,8 +60,6 @@ Ordinary users can simply use the images available in the following repositories
 - [accetto/ubuntu-vnc-xfce-g3][accetto-docker-ubuntu-vnc-xfce-g3]
 - [accetto/ubuntu-vnc-xfce-chromium-g3][accetto-docker-ubuntu-vnc-xfce-chromium-g3]
 - [accetto/ubuntu-vnc-xfce-firefox-g3][accetto-docker-ubuntu-vnc-xfce-firefox-g3]
-
-This [User guide][this-user-guide] describes the images and how to use them.
 
 There is also a sibling project [accetto/debian-vnc-xfce-g3][accetto-github-debian-vnc-xfce-g3] containing similar images based on [Debian][docker-debian].
 
