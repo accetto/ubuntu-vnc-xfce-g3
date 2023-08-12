@@ -70,7 +70,7 @@ This is the **third generation** (G3) of my headless images.
 The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
 The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
-These images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
+The images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
 This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
 
 The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode.
