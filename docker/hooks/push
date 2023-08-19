@@ -11,6 +11,7 @@ source "${_mydir}"/util.rc
 deployment_push() {
     local target
     local repo="${_deploy_repo##*/}"
+    local keeper_repo_tag="${_deploy_builder_tags[0]}"
 
     if [[ -n "${repo}" && "${repo}" != "${_prohibited_repo_name}" ]] ; then
 
@@ -19,24 +20,26 @@ deployment_push() {
 
             ### note that the builder and deployment repositories could be identical
             ### in that case skip the tag which has been already published above
-            if [[ "${DOCKER_REPO}" != "${_deploy_repo}" || "${DOCKER_TAG}" != "${t}" ]] ; then
+            if [[ "${DOCKER_REPO}" != "${_deploy_repo}" || "${keeper_repo_tag}" != "${t}" ]] ; then
 
                 target="${_deploy_repo}:${t}"
 
                 echo ; echo "Deploying image '${target}'"
-                docker tag "${DOCKER_REPO}:${DOCKER_TAG}" "${target}"
+                docker tag "${DOCKER_REPO}:${keeper_repo_tag}" "${target}"
                 docker push "${target}"
+                docker rmi "${target}"
             fi
         done
 
     else
-        echo "Skipping push because of null or prohibited deployment repository '${repo}'."
+        echo "Skipping deployment repo push because of null or prohibited deployment repository '${repo}'."
     fi
 }
 
 main() {
     local target
     local repo="${DOCKER_REPO##*/}"
+    local keeper_repo_tag="${_deploy_builder_tags[0]}"
 
     if [[ -f "${_build_context}/${_scrap_demand_stop_building}" ]] ; then
         echo "Skipping push on demand."
@@ -66,11 +69,27 @@ main() {
 
         if [[ -n "${repo}" && "${repo}" != "${_prohibited_repo_name}" ]] ; then
 
-            echo ; echo "Pushing builder image ${DOCKER_REPO}:${DOCKER_TAG}"
-            docker push ${DOCKER_REPO}:${DOCKER_TAG}
+            ### push all target tags into the builder repository
+            for t in "${_deploy_builder_tags[@]}" ; do
+
+                echo ; echo "Pushing builder image ${DOCKER_REPO}:${t}"
+
+                if [[ "${t}" == "${keeper_repo_tag}" ]] ; then
+
+                    # first element is the master repo (a keeper)
+                    docker push "${DOCKER_REPO}:${t}"
+
+                else
+                    target="${DOCKER_REPO}:${t}"
+
+                    docker tag "${DOCKER_REPO}:${keeper_repo_tag}" "${target}"
+                    docker push "${target}"
+                    docker rmi "${target}"
+                fi
+            done
 
         else
-            echo "Skipping forced push because of null or prohibited builder repository '${repo}'."
+            echo "Skipping forced builder repo push because of null or prohibited builder repository '${repo}'."
         fi
     fi
 

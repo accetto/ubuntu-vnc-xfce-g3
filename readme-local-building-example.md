@@ -21,6 +21,8 @@
     - [Disabling `noVNC`](#disabling-novnc)
     - [Disabling `Firefox Plus`](#disabling-firefox-plus)
   - [README files for Docker Hub](#readme-files-for-docker-hub)
+  - [Tips and examples](#tips-and-examples)
+    - [How to deploy all images into one repository](#how-to-deploy-all-images-into-one-repository)
 
 ## Introduction
 
@@ -358,4 +360,38 @@ For example, the `README` file for the repository `accetto/ubuntu-vnc-xfce-g3` c
 
 ### or if the environment variable 'DEPLOY_GIST_ID' has been set
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-g3 --context=../docker/xfce -- preview
+```
+
+## Tips and examples
+
+### How to deploy all images into one repository
+
+There are three deployment repositories by default.
+
+Their names are defined by the following environment variables:
+
+- `DEPLOYMENT_REPO` for generic images
+- `DEPLOYMENT_REPO_CHROMIUM` for images with Chromium
+- `DEPLOYMENT_REPO_FIREFOX` for images with Firefox
+
+The forth variable `BUILDER_REPO` defines the name of the *builder repository*, which is not used for deployment by default.
+
+However, the images can be optionally published also into the *builder repository* by setting the environment variable `FORCE_PUBLISHING_BUILDER_REPO=1`.
+
+The images in the builder repository are distinguished by their tags.
+
+On the other hand, if the repository environment variables are unset or set to the reserved value `void`, then the deployment into the related repository will be skipped.
+
+This behaviour can be used, if you want to publish all the images into a single repository.
+
+Simply set all repositories except the builder one to `void` and force the publishing into the builder repository.
+
+For example, for publishing all the images into a single repository `headless-ubuntu-g3` set the variables like this:
+
+```shell
+DEPLOYMENT_REPO="void"
+DEPLOYMENT_REPO_CHROMIUM="void"
+DEPLOYMENT_REPO_FIREFOX="void"
+BUILDER_REPO="headless-ubuntu-g3"
+FORCE_PUBLISHING_BUILDER_REPO=1
 ```

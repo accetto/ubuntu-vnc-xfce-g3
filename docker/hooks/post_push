@@ -23,6 +23,7 @@ main() {
     local version_sticker_verbose
     local repo_building="${DOCKER_REPO##*/}"
     local repo_deploy="${_deploy_repo##*/}"
+    local keeper_repo_tag="${_deploy_builder_tags[0]}"
 
     ### debugging support
     # dump_environment
@@ -37,14 +38,17 @@ main() {
             then
 
                 ### get values for badges from the image metadata (labels)
-                created=$( get_label "${DOCKER_REPO}:${DOCKER_TAG}" "org.opencontainers.image.created" )
-                version_sticker=$( get_label "${DOCKER_REPO}:${DOCKER_TAG}" "any.accetto.version-sticker" )
+                created=$( get_label "${DOCKER_REPO}:${keeper_repo_tag}" "org.opencontainers.image.created" )
+                version_sticker=$( get_label "${DOCKER_REPO}:${keeper_repo_tag}" "any.accetto.version-sticker" )
                 version_sticker_verbose=$( cat "${_build_context}/${_scrap_version_sticker_verbose_current}" )
 
                 ### update badge endpoints in the builder repository gist
-                update_gist "${GIST_ID}" "${_gist_key_created}" "${DOCKER_REPO}" "${DOCKER_TAG}" "${created}"
-                update_gist "${GIST_ID}" "${_gist_key_version_sticker}" "${DOCKER_REPO}" "${DOCKER_TAG}" "${version_sticker}"
-                update_gist "${GIST_ID}" "${_gist_key_version_sticker_verbose}" "${DOCKER_REPO}" "${DOCKER_TAG}" "${version_sticker_verbose}"
+                for t in "${_deploy_builder_tags[@]}" ; do
+
+                    update_gist "${GIST_ID}" "${_gist_key_created}" "${DOCKER_REPO}" "${t}" "${created}"
+                    update_gist "${GIST_ID}" "${_gist_key_version_sticker}" "${DOCKER_REPO}" "${t}" "${version_sticker}"
+                    update_gist "${GIST_ID}" "${_gist_key_version_sticker_verbose}" "${DOCKER_REPO}" "${t}" "${version_sticker_verbose}"
+                done
 
             else
                 echo "Skipping builder gist update because of null or prohibited target repositories."
@@ -57,7 +61,7 @@ main() {
 
                     ### note that the builder and deployment repositories could be identical
                     ### in that case skip the tag which has been already published above
-                    if [[ "${DOCKER_REPO}" != "${_deploy_repo}" || "${DOCKER_TAG}" != "${t}" ]] ; then
+                    if [[ "${DOCKER_REPO}" != "${_deploy_repo}" || "${keeper_repo_tag}" != "${t}" ]] ; then
 
                         update_gist "${DEPLOY_GIST_ID}" "${_gist_key_created}" "${_deploy_repo}" "${t}" "${created}"
                         update_gist "${DEPLOY_GIST_ID}" "${_gist_key_version_sticker}" "${_deploy_repo}" "${t}" "${version_sticker}"
