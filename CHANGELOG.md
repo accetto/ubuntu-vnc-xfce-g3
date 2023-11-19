@@ -6,6 +6,17 @@
 
 ***
 
+### Release 23.11
+
+- Added file `$HOME/.bashrc` to all images.
+It contains examples of custom aliases
+  - `ll` - just `ls -l`
+  - `cls` - clears the terminal window
+  - `ps1` - sets the command prompt text
+
+- Added more 'die-fast' error handling into the building and publishing scripts.
+They exit immediately if the image building or pushing commands fail.
+
 ### Release 23.08.1
 
 Main changes:
