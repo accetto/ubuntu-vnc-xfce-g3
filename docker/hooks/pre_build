@@ -57,8 +57,9 @@ main() {
     fi
 
     ### build a temporary helper image for getting the current version sticker values
+
+    ### no quotes around ${params}!
     set -x
-    ### no quotes around 'params'
     docker build ${params} \
         -f "${DOCKERFILE_PATH}" \
             --build-arg BASEIMAGE="${BASEIMAGE}" \
@@ -84,7 +85,11 @@ main() {
             ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox_plus"} \
             \
         -t "${DOCKER_REPO}":"${DOCKER_TAG}${helper_suffix}" "${_build_context}"
+
+    exit_code=$?
     set +x
+
+    if [[ ${exit_code} -ne 0 ]] ; then set +x; die "Failed to build image '${DOCKER_REPO}:${DOCKER_TAG}${helper_suffix}'" ${exit_code} ; fi
 
     ### get the actual verbose version sticker value from the helper image and store it as the current one
     ### note that some apps require display to report their versions correctly (e.g. Ristretto or Screenshooter)

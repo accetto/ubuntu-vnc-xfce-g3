@@ -62,8 +62,8 @@ main() {
     now="$(date --utc +%FT%TZ)"
     echo "Current timestamp: ${now}" ; echo
 
+    ### no quotes around ${params}!
     set -x
-    ### no quotes around 'params'
     docker build ${params} \
         -f "${DOCKERFILE_PATH}" \
             --build-arg BASEIMAGE="${BASEIMAGE}" \
@@ -93,7 +93,11 @@ main() {
             ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox_plus"} \
             \
         -t "${DOCKER_REPO}:${DOCKER_TAG}${target_stage:+_${target_stage}}" "${_build_context}"
+
+    exit_code=$?
     set +x
+    
+    if [[ ${exit_code} -ne 0 ]] ; then die "Failed to build image '${DOCKER_REPO}:${DOCKER_TAG}'" ${exit_code} ; fi
 }
 
 main $@

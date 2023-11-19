@@ -12,6 +12,7 @@ deployment_push() {
     local target
     local repo="${_deploy_repo##*/}"
     local keeper_repo_tag="${_deploy_builder_tags[0]}"
+    local -i exit_code=0
 
     if [[ -n "${repo}" && "${repo}" != "${_prohibited_repo_name}" ]] ; then
 
@@ -27,7 +28,13 @@ deployment_push() {
                 echo ; echo "Deploying image '${target}'"
                 docker tag "${DOCKER_REPO}:${keeper_repo_tag}" "${target}"
                 docker push "${target}"
+                exit_code=$?
                 docker rmi "${target}"
+
+                if [[ ${exit_code} -ne 0 ]] ; then
+                    docker logout
+                    die "Unable to push image '${target}'" ${exit_code}
+                fi
             fi
         done
 
@@ -40,6 +47,7 @@ main() {
     local target
     local repo="${DOCKER_REPO##*/}"
     local keeper_repo_tag="${_deploy_builder_tags[0]}"
+    local -i exit_code=0
 
     if [[ -f "${_build_context}/${_scrap_demand_stop_building}" ]] ; then
         echo "Skipping push on demand."
@@ -78,13 +86,24 @@ main() {
 
                     # first element is the master repo (a keeper)
                     docker push "${DOCKER_REPO}:${t}"
+                    exit_code=$?
 
+                    if [[ ${exit_code} -ne 0 ]] ; then
+                        docker logout
+                        die "Unable to push image '${DOCKER_REPO}:${t}'" ${exit_code}
+                    fi
                 else
                     target="${DOCKER_REPO}:${t}"
 
                     docker tag "${DOCKER_REPO}:${keeper_repo_tag}" "${target}"
                     docker push "${target}"
+                    exit_code=$?
                     docker rmi "${target}"
+
+                    if [[ ${exit_code} -ne 0 ]] ; then
+                        docker logout
+                        die "Unable to push image '${target}'" ${exit_code}
+                    fi
                 fi
             done
 

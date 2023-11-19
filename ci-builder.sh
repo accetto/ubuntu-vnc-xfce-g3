@@ -13,7 +13,7 @@ die() {
     local -i code=${2:-1}
     local place="${3:-$0}"
 
-    echo -e "\nEXITING '${place}' with code ${code}: ${message}\n" >&2
+    echo -e "\nEXITING at line "${BASH_LINENO[0]}" in '${place}' with code ${code}: ${message}\n" >&2
     exit ${code}
 }
 
