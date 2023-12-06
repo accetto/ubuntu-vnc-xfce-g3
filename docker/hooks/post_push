@@ -34,7 +34,7 @@ main() {
         if [[ -n "${GIST_TOKEN}" && -n "${GIST_ID}" && -n "${DEPLOY_GIST_ID}" ]] ; then
         
             if [[ ( -n "${repo_deploy}" && "${repo_deploy}" != "${_prohibited_repo_name}" ) \
-            || ( "${FORCE_PUBLISHING_BUILDER_REPO}" == "1" && -n "${repo_building}" && "${repo_building}" != "${_prohibited_repo_name}" ) ]] ; \
+            || ( "${FORCE_PUBLISHING_BUILDER_REPO:-0}" == "1" && -n "${repo_building}" && "${repo_building}" != "${_prohibited_repo_name}" ) ]] ; \
             then
 
                 ### get values for badges from the image metadata (labels)

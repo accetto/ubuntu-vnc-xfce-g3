@@ -235,6 +235,9 @@ ENV \
 
 WORKDIR "${HOME}"
 
+### add '.bashrc' and similar resources
+COPY ./src/home "${HOME}"/
+
 
 ##################
 ### stage_chromium
@@ -348,7 +351,6 @@ ENV \
 
 COPY ./src/xfce-startup "${STARTUPDIR}"/
 COPY ./src/tests "${HOME}"/tests/
-COPY ./src/home "${HOME}"/
 
 COPY ./xfce/src/home/config "${HOME}"/.config/
 COPY ./xfce/src/home/Desktop "${HOME}"/Desktop/

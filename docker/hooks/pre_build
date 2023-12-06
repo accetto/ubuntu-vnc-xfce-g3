@@ -13,7 +13,7 @@ main() {
     local version_sticker
     local -i exit_code=0
 
-    local should_build=${FORCE_BUILDING}
+    local should_build=${FORCE_BUILDING:-0}
     local build_prohibited=${PROHIBIT_BUILDING}
     local cache_script="cache"
 

@@ -73,7 +73,7 @@ main() {
     fi
 
     ### push images into the builder repository
-    if [[ "${FORCE_PUBLISHING_BUILDER_REPO}" == "1" ]] ; then
+    if [[ "${FORCE_PUBLISHING_BUILDER_REPO:-0}" == "1" ]] ; then
 
         if [[ -n "${repo}" && "${repo}" != "${_prohibited_repo_name}" ]] ; then
 
