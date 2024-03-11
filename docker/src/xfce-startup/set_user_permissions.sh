@@ -18,15 +18,18 @@ main() {
             echo "Fixing permissions for: ${i}"
         fi
 
-        ### set directory permissions (recursively)
-        find "$i" -type d -exec chmod ${verbose} 755 {} +
+        ### set directory permissions
+        ### recursively, but skipping dot-directories in $HOME
+        find "$i" -type d -not -path "${HOME}/.*" -exec chmod ${verbose} 755 {} +
 
-        ### set file permissions (recursively)
-        find "$i" -type f -exec chmod ${verbose} 644 {} +
+        ### set file permissions
+        ### recursively, but skipping dot-files and dot-directories in $HOME
+        find "$i" -type f -not -path "${HOME}/.*" -exec chmod ${verbose} 644 {} +
 
-        ### specific file permissions (recursively)
-        find "$i"/ -type f -name '*.sh' -exec chmod ${verbose} 744 {} +
-        find "$i"/ -type f -name '*.desktop' -exec chmod ${verbose} 744 {} +
+        ### specific file permissions
+        ### recursively, but skipping dot-directories in $HOME
+        find "$i"/ -type f -not -path "${HOME}/.*" -name '*.sh' -exec chmod ${verbose} 744 {} +
+        find "$i"/ -type f -not -path "${HOME}/.*" -name '*.desktop' -exec chmod ${verbose} 744 {} +
     done
 
     ### startup script is special

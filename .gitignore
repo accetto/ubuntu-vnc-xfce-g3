@@ -11,10 +11,9 @@
 # '**' matches nested directories (e.g. 'a/**/z')
 # recommended files on 'https://github.com/github/gitignore'
 
+..developer*
 .vscode
 .cache*
-.debugger*
-.developer*
 .favorites.json
 .g3-cache*
 .secret*

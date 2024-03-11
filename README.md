@@ -2,7 +2,7 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
-Version: G3v4
+Version: G3v5
 
 ***
 
@@ -106,14 +106,32 @@ The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc
 
 ### Project versions
 
-This file describes the **fourth version** (G3v4) of the project.
+This file describes the **fifth version** (G3v5) of the project.
 
 However, also this version keeps evolving.
 Please check the [CHANGELOG][this-changelog] for more information about the changes.
 
 The **first version** (G3v1, or simply G3), the **second version** (G3v2, only 20.04 images) and the **third version** (G3v3, 22.04 and 20.04 images) are still available in this **GitHub** repository as the branches `archived-generation-g3v1`, `archived-generation-g3v2` and `archived-generation-g3v3`.
+The **fourth version** (G3v4) was not archived, because the changes are minor.
 
-The version `G3v3` brings the following major changes comparing to the previous version `G3v2`:
+The version `G3v5` brings only one significant change comparing to the previous version `G3v4`:
+
+- The updated script `set_user_permissions.sh`, which is part of Dockerfiles, skips the hidden files and directories now.
+It generally should not have any unwanted side effects, but it may make a difference in some scenarios, hence the version increase.
+
+The version `G3v4` has brought the updated startup scripts and the following major changes comparing to the previous version `G3v3`:
+
+- The updated startup scripts that support overriding the user ID (`id`) and group ID (`gid`) without needing the former build argument `ARG_FEATURES_USER_GROUP_OVERRIDE`, which has been removed.
+- The user ID and the group ID can be overridden during the build time (`docker build`) and the run time (`docker run`).
+- The `user name`, the `group name` and the `initial sudo password` can be overridden during the build time.
+- The permissions of the files `/etc/passwd` and `/etc/groups` are set to the standard `644` after creating the user.
+- The content of the home folder and the startup folder belongs to the created user.
+- The created user gets permissions to use `sudo`. The initial `sudo` password is configurable during the build time using the build argument `ARG_SUDO_INITIAL_PW`. The password can be changed inside the container.
+- The default `id:gid` has been changed from `1001:0` to `1000:1000`.
+
+Please refer to the release **23.02** in the CHANGELOG for more information.
+
+The version `G3v3` has brought the following major changes comparing to the previous version `G3v2`:
 
 - The updated startup scripts that support overriding the user ID (`id`) and group ID (`gid`) without needing the former build argument `ARG_FEATURES_USER_GROUP_OVERRIDE`, which has been removed.
 - The user ID and the group ID can be overridden during the build time (`docker build`) and the run time (`docker run`).
