@@ -12,7 +12,7 @@
 
 This Docker Hub repository contains Docker images for headless working.
 
-The images are based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
+The images are based on [Ubuntu 24.04, 22.04 and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
 The popular web browser [Firefox][firefox] is also included.
 
 This [User guide][this-user-guide] describes the images and how to use them.
@@ -25,10 +25,15 @@ The following image tags are regularly built and published on Docker Hub:
 
 <!-- markdownlint-disable MD052 -->
 
-- `latest` (also as `22.04`) based on `Ubuntu 22.04 LTS`
+- `latest` (also as `24.04`) based on `Ubuntu 24.04 LTS`
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
+
+- `22.04` based on `Ubuntu 22.04 LTS`
+
+    ![badge_22-04_created][badge_22-04_created]
+    [![badge_22-04_version-sticker][badge_22-04_version-sticker]][link_22-04_version-sticker-verbose]
 
 - `20.04` based on `Ubuntu 20.04 LTS`
 
@@ -55,7 +60,7 @@ The main features and components of the images in the default configuration are:
 - support of **version sticker** (see [User guide][this-user-guide-version-sticker])
 - [Firefox][firefox] web browser
   - images based on `Ubuntu 20.04 LTS` - current version from the `Ubuntu 20.04 LTS` distribution
-  - images based on `Ubuntu 22.04 LTS` - current non-snap version from the Mozilla Team PPA
+  - images based on `Ubuntu 24.04 and 22.04 LTS` - current non-snap version from the Mozilla Team PPA
 - additional **Firefox plus** feature (see [User guide][this-user-guide-firefox-plus])
 
 The following **TCP** ports are exposed by default:
@@ -73,8 +78,8 @@ This is the **third generation** (G3) of my headless images.
 The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
 The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
-The [Firefox][firefox] installed in the images based on `Ubuntu 22.04 LTS` is the current non-snap version from the Mozilla Team PPA.
-It's because the `Ubuntu 22.04 LTS` distribution contains only the `snap` version and the `snap` is currently not supported in Docker containers.
+The [Firefox][firefox] installed in the images based on `Ubuntu 24.04 and 22.04 LTS` is the current non-snap version from the Mozilla Team PPA.
+It's because the `Ubuntu 24.04 and 22.04 LTS` distribution contains only the `snap` version and the `snap` is currently not supported in Docker containers.
 
 ### Getting help
 
@@ -108,7 +113,7 @@ If you have a question or an idea and you don't want to open an issue, you can a
 
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.24-04
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/animation-ubuntu-vnc-xfce-firefox-g3.gif
 

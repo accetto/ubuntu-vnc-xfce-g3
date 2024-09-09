@@ -12,7 +12,7 @@
 
 This Docker Hub repository contains Docker images for headless working.
 
-The images are based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
+The images are based on [Ubuntu 24.04, 22.04 and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
 
 This [User guide][this-user-guide] describes the images and how to use them.
 
@@ -24,10 +24,15 @@ The following image tags are regularly built and published on Docker Hub:
 
 <!-- markdownlint-disable MD052 -->
 
-- `latest` (also as `22.04`) based on `Ubuntu 22.04 LTS`
+- `latest` (also as `24.04`) based on `Ubuntu 24.04 LTS`
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
+
+- `22.04` based on `Ubuntu 22.04 LTS`
+
+    ![badge_22-04_created][badge_22-04_created]
+    [![badge_22-04_version-sticker][badge_22-04_version-sticker]][link_22-04_version-sticker-verbose]
 
 - `20.04` based on `Ubuntu 20.04 LTS`
 
@@ -98,7 +103,7 @@ If you have a question or an idea and you don't want to open an issue, you can a
 
 [this-discussions]: https://github.com/accetto/ubuntu-vnc-xfce-g3/discussions
 
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.24-04
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/animation-ubuntu-vnc-xfce-g3.gif
 

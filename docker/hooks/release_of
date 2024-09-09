@@ -2,16 +2,22 @@
 
 main() {
     local result=""
+    local response=""
+    local truncateMax=1000
 
     case "$1" in
 
         chromium-1804 )
             # result=$(wget -qO- \
-            result=$(curl -sLN \
-                http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/ \
-                | grep -Po -m1 '(?<=href=")[^_]*_([0-9.]+-0ubuntu\d+\.18\.04\.[^_"]*)_[^"]*' \
-                | cut -d _ -f 2 \
-            )
+            # result=$(curl -sLN \
+            #     http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/ \
+            #     | grep -Po -m1 '(?<=href=")[^_]*_([0-9.]+-0ubuntu\d+\.18\.04\.[^_"]*)_[^"]*' \
+            #     | cut -d _ -f 2 \
+            # )
+            response=$(curl -sLN http://archive.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/)
+            if [[ -n "${response}" ]] ; then
+                result=$(echo "${response}" | grep -Po -m1 '(?<=href=")[^_]*_([0-9.]+-0ubuntu\d+\.18\.04\.[^_"]*)_[^"]*' | cut -d _ -f 2)
+            fi
             ;;
 
         * )
@@ -25,7 +31,10 @@ main() {
 
         echo "${result}"
     else
-        echo "Exiting '${0}' with code '1' because unable to get version of '$1'"
+        echo "ERROR: Exiting '${0}' with code '1' because unable to get version of '$1'"
+        echo "ERROR: Unexpected HTTPS response (truncated to $truncateMax):"
+        ### don't use quotes here
+        echo ${response:0:truncateMax}
         return 1
     fi
 }

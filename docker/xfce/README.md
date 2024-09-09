@@ -70,7 +70,7 @@ The actual content of a particular image build is controlled by the *feature var
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3/
 
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.24-04
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 

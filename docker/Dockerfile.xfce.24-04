@@ -1,5 +1,5 @@
 ARG BASEIMAGE=ubuntu
-ARG BASETAG=22.04
+ARG BASETAG=24.04
 
 ARG ARG_MERGE_STAGE_VNC_BASE=stage_vnc
 ARG ARG_MERGE_STAGE_BROWSER_BASE=merge_stage_vnc
@@ -51,7 +51,7 @@ RUN \
         sudo \
         tini \
         wget
-
+        
 
 #################
 ### stage_xserver

@@ -36,8 +36,8 @@ This is the **third generation** (G3) of my headless images.
 The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-vnc-novnc][accetto-github-xubuntu-vnc-novnc].
 The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
-The [Firefox][firefox] installed in the images based on `Ubuntu 22.04 LTS` is the current non-snap version from the Mozilla Team PPA.
-It's because the `Ubuntu 22.04 LTS` distribution contains only the `snap` version and the `snap` is currently not supported in Docker containers.
+The [Firefox][firefox] installed in the images based on `Ubuntu 24.04 and 22.04 LTS` is the current non-snap version from the Mozilla Team PPA.
+It's because the `Ubuntu 24.04 and 22.04 LTS` distribution contains only the `snap` version and the `snap` is currently not supported in Docker containers.
 
 ### Getting help
 
@@ -73,7 +73,7 @@ The actual content of a particular image build is controlled by the *feature var
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3/
 
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.24-04
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 

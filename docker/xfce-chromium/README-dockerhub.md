@@ -12,7 +12,7 @@
 
 This Docker Hub repository contains Docker images for headless working.
 
-The images are based on [Ubuntu 22.04 LTS and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
+The images are based on [Ubuntu 24.04, 22.04 and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
 The popular web browser [Chromium][chromium] is also included.
 
 This [User guide][this-user-guide] describes the images and how to use them.
@@ -25,10 +25,15 @@ The following image tags are regularly built and published on Docker Hub:
 
 <!-- markdownlint-disable MD052 -->
 
-- `latest` (also as `22.04`) based on `Ubuntu 22.04 LTS`
+- `latest` (also as `24.04`) based on `Ubuntu 24.04 LTS`
 
     ![badge_latest_created][badge_latest_created]
     [![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
+
+- `22.04` based on `Ubuntu 22.04 LTS`
+
+    ![badge_22-04_created][badge_22-04_created]
+    [![badge_22-04_version-sticker][badge_22-04_version-sticker]][link_22-04_version-sticker-verbose]
 
 - `20.04` based on `Ubuntu 20.04 LTS`
 
@@ -71,7 +76,7 @@ The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-v
 The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
 The images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
-This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
+This is because the versions for `Ubuntu 24.04, 22.04 and 20.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
 
 The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode.
 You should be aware of the implications.
@@ -107,7 +112,7 @@ If you have a question or an idea and you don't want to open an issue, you can a
 
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
 
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.24-04
 
 [this-screenshot-container]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/animation-ubuntu-vnc-xfce-chromium-g3.gif
 

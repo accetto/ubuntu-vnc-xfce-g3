@@ -6,6 +6,39 @@
 
 ***
 
+### Release 24.09
+
+This is the first `G3v6` release, introducing the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
+The previous version `G3v5` will still be available in this repository as the branch `archived-generation-g3v5`.
+
+- default base of the `latest` images is now `Ubuntu 24.04 LTS (Noble Numbat)`
+  - there is no `snap` included
+  - `Firefox` is the latest non-snap version from the Mozilla Team PPA
+  - `Chromium` is the latest non-snap version from the `Ubuntu 18.04 LTS` distribution
+  - `latest` images will be doubled by the tags with the prefix `24.04`
+- images based on `Ubuntu 22.04 LTS` will still be published
+  - their tags will begin with the prefix `22.04`
+- images based on `Ubuntu 20.04 LTS` will still be published
+  - their tags will begin with the prefix `20.04`
+
+Other changes:
+
+- Default user `headless:headless (1000:1000)` has been changed to `headless:headless (1001:1001)`.
+  - This change has been required for the images based on `Ubuntu 24.04 (Noble Numbat)`, because that already contains the user `ubuntu:ubuntu (1000:1000)`.
+  - The same change has been done also in the images based on `Ubuntu 22.04 (Jammy Jellyfish)` and `Ubuntu 20.04 (Focal Fossa)` to keep them uniform.
+- The directive `syntax=docker/dockerfile:experimental` has been removed from all Dockerfiles.
+- The `noVNC` starting page has been updated in all images.
+  - If no `noVNC Client` is selected, then the `Full Client` will start automatically in 10 seconds.
+- The hook script `release_of` has been updated with the intention to report more helpful building errors.
+
+Updated versions:
+
+- **Ubuntu** to version **24.04**
+- **jq** to version **1.7**
+- **Mousepad** to version **0.6.1**
+- **nano** to version **7.2**
+- **Python** to version **3.12.3**
+
 ### Release 24.03
 
 This is the first `G3v5` release.

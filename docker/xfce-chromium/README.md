@@ -37,7 +37,7 @@ The **second generation** (G2) contains the GitHub repository [accetto/xubuntu-v
 The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc-xfce][accetto-github-ubuntu-vnc-xfce].
 
 The images contain the current Chromium Browser from the `Ubuntu 18.04 LTS` distribution.
-This is because the versions for `Ubuntu 20.04 LTS and 22.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
+This is because the versions for `Ubuntu 24.04, 22.04 and 20.04 LTS` depend on `snap`, which is currently not supported in Docker containers.
 
 The [Chromium Browser][chromium] in these images runs in the `--no-sandbox` mode.
 You should be aware of the implications.
@@ -77,7 +77,7 @@ The actual content of a particular image build is controlled by the *feature var
 
 [this-docker]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3/
 
-[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.22-04
+[this-dockerfile]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/Dockerfile.xfce.24-04
 
 [this-diagram-dockerfile-stages]: https://raw.githubusercontent.com/accetto/ubuntu-vnc-xfce-g3/master/docker/doc/images/Dockerfile.xfce.png
 

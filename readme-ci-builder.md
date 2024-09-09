@@ -54,9 +54,9 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
 <command>      := (all|all-no-push)
 <mode>         := (group|family)
 <blend>        := pivotal
-                  |(complete[-latest|-jammy|-focal|-chromium|-firefox])
-                  |(latest|jammy|focal[-chromium|-firefox])
-<parent-blend> := (complete)|(latest|jammy|focal[-chromium|-firefox])
+                  |(complete[-latest|-noble|-jammy|-focal|-chromium|-firefox])
+                  |(latest|noble|jammy|focal[-chromium|-firefox])
+<parent-blend> := (complete)|(latest|noble|jammy|focal[-chromium|-firefox])
 <child-suffix> := depends on context, e.g. '-ver1|-ver2' (currently none supported)
 
 Group mode : All images are processed independently.

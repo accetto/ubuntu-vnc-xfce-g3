@@ -1,7 +1,7 @@
 #!/bin/bash
 ### do not use '-e'
 ### @accetto, September 2022
-### updated: January 2023
+### Updated: January 2023, September 2024
 
 ### depends on the script 'builder.sh'
 ### set the environment variables first, e.g. 'source .secrets'
@@ -101,9 +101,9 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
 <command>      := (all|all-no-push)
 <mode>         := (group|family)
 <blend>        := pivotal
-                  |(complete[-latest|-jammy|-focal|-chromium|-firefox])
-                  |(latest|jammy|focal[-chromium|-firefox])
-<parent-blend> := (complete)|(latest|jammy|focal[-chromium|-firefox])
+                  |(complete[-latest|-noble|-jammy|-focal|-chromium|-firefox])
+                  |(latest|noble|jammy|focal[-chromium|-firefox])
+<parent-blend> := (complete)|(latest|noble|jammy|focal[-chromium|-firefox])
 <child-suffix> := depends on context, e.g. '-ver1|-ver2' (currently none supported)
 
 Group mode : All images are processed independently.
@@ -289,19 +289,25 @@ main() {
                         pivotal )
 
                             clear_log
-                            build_group "${command}" "latest" "focal" "latest-firefox" "focal-firefox" "latest-chromium" "focal-chromium"
+                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "focal-firefox" "latest-chromium" "focal-chromium"
                             ;;
                         
                         complete )
 
                             clear_log
-                            build_group "${command}" "latest" "focal" "latest-firefox" "focal-firefox" "latest-chromium" "focal-chromium"
+                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "focal-firefox" "latest-chromium" "focal-chromium"
                             ;;
 
                         complete-latest )
 
                             clear_log
                             build_group "${command}" "latest" "latest-firefox" "latest-chromium"
+                            ;;
+
+                        complete-noble )
+
+                            clear_log
+                            build_group "${command}" "noble" "noble-firefox" "noble-chromium"
                             ;;
 
                         complete-jammy )
@@ -319,16 +325,18 @@ main() {
                         complete-chromium )
 
                             clear_log
-                            build_group "${command}" "latest-chromium" "focal-chromium"
+                            build_group "${command}" "latest-chromium" "jammy-chromium" "focal-chromium"
                             ;;
 
                         complete-firefox )
 
                             clear_log
-                            build_group "${command}" "latest-firefox" "focal-firefox"
+                            build_group "${command}" "latest-firefox" "jammy-firefox" "focal-firefox"
                             ;;
 
-                        latest | latest-chromium | latest-firefox | jammy | jammy-chromium | jammy-firefox \
+                        latest | latest-chromium | latest-firefox \
+                        | noble | noble-chromium | noble-firefox \
+                        | jammy | jammy-chromium | jammy-firefox \
                         | focal | focal-chromium | focal-firefox )
 
                             clear_log
@@ -350,14 +358,18 @@ main() {
                             clear_log
 
                             build_family "${command}" "latest"
+                            build_family "${command}" "jammy"
                             build_family "${command}" "focal"
                             build_family "${command}" "latest-firefox"
+                            build_family "${command}" "jammy-firefox"
                             build_family "${command}" "focal-firefox"
                             build_family "${command}" "latest-chromium"
+                            build_family "${command}" "jammy-chromium"
                             build_family "${command}" "focal-chromium"
                             ;;
 
                         latest | latest-chromium | latest-firefox \
+                        | noble | noble-chromium | noble-firefox \
                         | jammy | jammy-chromium | jammy-firefox \
                         | focal | focal-chromium | focal-firefox )
 
