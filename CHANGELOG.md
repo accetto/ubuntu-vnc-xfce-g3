@@ -24,7 +24,7 @@ The previous version `G3v5` will still be available in this repository as the br
 Other changes:
 
 - Default user `headless:headless (1000:1000)` has been changed to `headless:headless (1001:1001)`.
-  - This change has been required for the images based on `Ubuntu 24.04 (Noble Numbat)`, because that already contains the user `ubuntu:ubuntu (1000:1000)`.
+  - This change has been required for the images based on `Ubuntu 24.04 (Noble Numbat)`, because those already contain the user `ubuntu:ubuntu (1000:1000)`.
   - The same change has been done also in the images based on `Ubuntu 22.04 (Jammy Jellyfish)` and `Ubuntu 20.04 (Focal Fossa)` to keep them uniform.
 - The directive `syntax=docker/dockerfile:experimental` has been removed from all Dockerfiles.
 - The `noVNC` starting page has been updated in all images.

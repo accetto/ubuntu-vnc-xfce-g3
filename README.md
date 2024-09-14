@@ -117,7 +117,7 @@ The version `G3v6` adds the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
 
 Also the default user `headless:headless (1000:1000)` has been changed to `headless:headless (1001:1001)` in all images, even if it has been technically required only for the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
 
-The version `G3v5` brings only one significant change comparing to the previous version `G3v4`:
+The version `G3v5` has brought only one significant change comparing to the previous version `G3v4`:
 
 - The updated script `set_user_permissions.sh`, which is part of Dockerfiles, skips the hidden files and directories now.
 It generally should not have any unwanted side effects, but it may make a difference in some scenarios, hence the version increase.
