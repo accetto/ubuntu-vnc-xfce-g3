@@ -289,13 +289,13 @@ main() {
                         pivotal )
 
                             clear_log
-                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "focal-firefox" "latest-chromium" "focal-chromium"
+                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-chromium" "jammy-chromium" "focal-chromium"
                             ;;
                         
                         complete )
 
                             clear_log
-                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "focal-firefox" "latest-chromium" "focal-chromium"
+                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-chromium" "jammy-chromium" "focal-chromium"
                             ;;
 
                         complete-latest )
