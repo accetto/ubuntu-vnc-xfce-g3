@@ -6,6 +6,15 @@
 
 ***
 
+### Release 25.01
+
+This is a maintenance release.
+
+Updated components:
+
+- `noVNC` to version **1.5.0**
+- `websockify` to version **0.12.0**
+
 ### Release 24.09
 
 This is the first `G3v6` release, introducing the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
