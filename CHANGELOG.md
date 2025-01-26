@@ -15,6 +15,20 @@ Updated components:
 - `noVNC` to version **1.5.0**
 - `websockify` to version **0.12.0**
 
+#### Remarks about `xfce4-about`
+
+The version of the currently running `Xfce4` can be checked by the utility `xfce4-about`.
+It can be executed from the terminal window or by the start menu item `Applications/About Xfce`.
+
+However, the utility requires the module `libGL.so.1`, which is excluded from some images, to keep them smaller.
+
+The module can be added in running containers as follows:
+
+```shell
+sudo apt-get update
+sudo install libgl1
+```
+
 ### Release 24.09
 
 This is the first `G3v6` release, introducing the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
