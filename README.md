@@ -2,7 +2,7 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
-Version: G3v6
+Version: G3v7
 
 ***
 

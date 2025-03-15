@@ -6,7 +6,7 @@
 
 ***
 
-### Release 25.03
+### Release 25.03 (G3v7)
 
 This is the first `G3v7` release, bringing an improved building pipeline.
 
@@ -59,7 +59,7 @@ sudo apt-get update
 sudo install libgl1
 ```
 
-### Release 24.09
+### Release 24.09 (G3v6)
 
 This is the first `G3v6` release, introducing the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
 The previous version `G3v5` will still be available in this repository as the branch `archived-generation-g3v5`.
@@ -92,7 +92,7 @@ Updated versions:
 - **nano** to version **7.2**
 - **Python** to version **3.12.3**
 
-### Release 24.03
+### Release 24.03 (G3v5)
 
 This is the first `G3v5` release.
 
@@ -194,7 +194,7 @@ Features `NOVNC` and `FIREFOX_PLUS`, that are enabled by default, can be disable
   - image with Firefox will not include the *Firefox Plus features*
   - image tag will get the `-default` suffix (e.g. `latest-firefox-default` or also `latest-firefox-default-vnc` etc.)
 
-### Release 23.02
+### Release 23.02 (G3v4)
 
 This is the first `G3v4` release, introducing the updated startup scripts.  The previous version `G3v3` will still be available in this repository as the branch `archived-generation-g3v3`.
 
@@ -230,7 +230,7 @@ Updated versions:
 - **TigerVNC** to version `1.13.0`
 - **noVNC** to version `1.4.0`
 
-### Release 23.01
+### Release 23.01 (G3v3)
 
 This is the first `G3v3` release, introducing the images based on `Ubuntu 22.04 LTS`. The previous version `G3v2` will still be available in this repository as the branch `archived-generation-g3v2`.
 
@@ -283,7 +283,7 @@ This is a maintenance release.
 
 This is a quick fix release, because `Chromium Browser` has changed its package naming pattern.
 
-### Release 22.11 (Milestone)
+### Release 22.11 (G3v2)
 
 This is a milestone release. It's the first release of the new building pipeline version `G3v2`. The previous version `G3v1` will still be available in this repository as the branch `archived-generation-g3v1`.
 
@@ -319,7 +319,7 @@ Many other files have been updated, some of them significantly.
 
 Hoverer, the changes affect only the building pipeline, not the Docker images themselves. The `Dockerfile`, apart from using the new local `g3-cache`, stays conceptually unchanged.
 
-### Release 22.10 (Milestone)
+### Release 22.10 (G3v1)
 
 This is the last release of the current building pipeline generation `G3v1`, which will still be available in the repository as the branch `archived-generation-g3v1`.
 
