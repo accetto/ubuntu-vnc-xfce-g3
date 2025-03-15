@@ -33,7 +33,7 @@ For example:
 
 ### then somewhere near the end of the log
 Removing helper image
-Error response from daemon: No such image: accetto/ubuntu-g3_latest-helper:latest
+Error response from daemon: No such image: accetto/headless-ubuntu-g3_latest-helper:latest
 ```
 
 ### Release 25.01
