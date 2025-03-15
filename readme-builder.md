@@ -165,23 +165,24 @@ The `cache` hook script, however, doesn't use any Docker CLI commands.
 The building pipeline consists of the following steps, that can be executed also individually:
 
 ```shell
-### this step builds the helper image and compare its verbose version sticker
-### to the one from the builder repository gist
-### it also refreshes the 'g3-cache' by executing the 'cache' hook script
+### This step builds the helper image and compares its verbose version sticker to the one
+### from the builder repository gist.
+### It also refreshes the 'g3-cache' by executing the 'cache' hook script.
+### The helper image is not deleted because it'll be used in the next step.
 ./builder.sh latest pre_build
 
-### this step builds a new image depending on the comparison result from the previous step
-### if you want to force the building in any case, then delete the file 'scrap-demand-stop-building'
-### or set the environment variable 'FORCE_BUILDING=1'
+### This step builds a new image depending on the comparison result from the previous step.
+### If you want to force the building in any case, then delete the file 'scrap-demand-stop-building'
+### or set the environment variable 'FORCE_BUILDING=1'.
+### The helper image, built in the previous step, is used as an external cache and then deleted.
 ./builder.sh latest build
 
-### this step publishes the image to the deployment repository on the Docker Hub
-### there are actually more configurations possible, check the Wiki for the description
+### This step publishes the image to the deployment repository on the Docker Hub.
+### There are actually more configurations possible. Check the Wiki for the description.
 ./builder.sh latest push
 
-### this step updates the gists that store off-line data like badge endpoints
-### or version stickers
-### note that it will not publish the README file to the Docker Hub
+### This step updates the gists that store off-line data like badge endpoints or version stickers.
+### Note that it will not publish the README file to the Docker Hub.
 ./builder.sh latest post_push
 ```
 

@@ -6,6 +6,36 @@
 
 ***
 
+### Release 25.03
+
+This is the first `G3v7` release, bringing an improved building pipeline.
+
+The helper script `ci-builder.sh` can build final images significantly faster, because the temporary helper images are used as external caches.
+
+Internally, the helper image is built by the `pre_build` hook script and then used by the `build` hook script.
+
+The helper image is now deleted by the `build` hook script and not the `pre_build` hook script as before.
+
+The `Dockerfiles` got a new metadata label `any.accetto.built-by="docker"`.
+
+#### Remarks
+
+If you would build a final image without building also the helper image (e.g. by executing `builder.sh latest build`), then there could be an error message about trying to remove the non-existing helper image.
+You can safely ignore the message.
+
+For example:
+
+```shell
+### The next line would build the helper image, but it was not executed.
+#./build.sh latest pre_build
+
+./build.sh latest build
+
+### then somewhere near the end of the log
+Removing helper image
+Error response from daemon: No such image: accetto/ubuntu-g3_latest-helper:latest
+```
+
 ### Release 25.01
 
 This is a maintenance release.

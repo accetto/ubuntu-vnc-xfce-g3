@@ -26,6 +26,7 @@ Version: G3v6
     - [Building images](#building-images)
     - [Image generations](#image-generations)
     - [Project versions](#project-versions)
+      - [Previous versions](#previous-versions)
     - [Project goals](#project-goals)
     - [Changes and new features](#changes-and-new-features)
       - [Naming scheme](#naming-scheme)
@@ -41,6 +42,7 @@ Version: G3v6
       - [Separated builder and deployment repositories](#separated-builder-and-deployment-repositories)
       - [Separate README files for Docker Hub](#separate-readme-files-for-docker-hub)
       - [New startup script](#new-startup-script)
+    - [How to fork](#how-to-fork)
     - [Getting help](#getting-help)
     - [Credits](#credits)
 
@@ -106,14 +108,24 @@ The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc
 
 ### Project versions
 
-This file describes the **sixth version** (G3v6) of the project.
+This file describes the **seventh version** (G3v7) of the project.
+
+This version brings an improved building pipeline.
+
+The helper script `ci-builder.sh` can build final images significantly faster, because the temporary helper images are used as external caches.
+
+Internally, the helper image is built by the `pre_build` hook script and then used by the `build` hook script.
+
+The helper image is now removed by the `build` hook script and not the `pre_build` hook script.
 
 However, also this version keeps evolving.
 Please check the [CHANGELOG][this-changelog] for more information about the changes.
 
+#### Previous versions
+
 The previous versions are still available in this **GitHub** repository as the branches named as `archived-generation-g3v{d}`.
 
-The version `G3v6` adds the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
+The version `G3v6` added the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
 
 Also the default user `headless:headless (1000:1000)` has been changed to `headless:headless (1001:1001)` in all images, even if it has been technically required only for the images based on `Ubuntu 24.04 LTS (Noble Numbat)`.
 
@@ -332,6 +344,10 @@ Also the utility switches `--help-usage`, `--help` and `--version` are available
 
 ***
 
+### How to fork
+
+If you want to fork this project, then please check the page [How to fork this repository][this-wiki-how-to-fork] in [Wiki][this-wiki].
+
 ### Getting help
 
 If you have found a problem or you just have a question, please check the [User guide][this-user-guide], [Issues][this-issues] and [Wiki][this-wiki] first.
@@ -363,6 +379,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-issues]: https://github.com/accetto/ubuntu-vnc-xfce-g3/issues
 
 [this-wiki]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki
+
+[this-wiki-how-to-fork]: https://github.com/accetto/ubuntu-vnc-xfce-g3/wiki/How-to-fork
 
 [this-folder-docker]: https://github.com/accetto/ubuntu-vnc-xfce-g3/tree/master/docker
 

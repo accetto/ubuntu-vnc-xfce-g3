@@ -224,7 +224,7 @@ EXPOSE "${NOVNC_PORT}"
 ### merge_stage_vnc
 ###################
 
-FROM ${ARG_MERGE_STAGE_VNC_BASE} as merge_stage_vnc
+FROM ${ARG_MERGE_STAGE_VNC_BASE} AS merge_stage_vnc
 ARG ARG_HEADLESS_USER_ID
 ARG ARG_HEADLESS_USER_NAME
 ARG ARG_HEADLESS_USER_GROUP_ID
@@ -356,7 +356,7 @@ RUN \
 ### merge_stage_browser
 #######################
 
-FROM ${ARG_MERGE_STAGE_BROWSER_BASE} as merge_stage_browser
+FROM ${ARG_MERGE_STAGE_BROWSER_BASE} AS merge_stage_browser
 
 
 ###############
@@ -395,6 +395,7 @@ RUN \
     &&  echo "${HEADLESS_USER_NAME}:$(cat ${STARTUPDIR}/.initial_sudo_password)" | chpasswd \
     &&  ln -s "${HOME}"/readme.md "${HOME}"/Desktop/README \
     &&  envsubst <"${HOME}"/Desktop/versionsticker.desktop >/tmp/esub.tmp && mv -f /tmp/esub.tmp "${HOME}"/Desktop/versionsticker.desktop \
+    &&  chmod +x "${STARTUPDIR}"/set_user_permissions.sh \
     && "${STARTUPDIR}"/set_user_permissions.sh "${STARTUPDIR}" "${HOME}"
 
 USER "${HEADLESS_USER_ID}"
@@ -431,4 +432,5 @@ LABEL \
     org.label-schema.vcs-ref="${ARG_VCS_REF}"
 
 LABEL \
-    any.accetto.version-sticker="${ARG_VERSION_STICKER}"
+    any.accetto.version-sticker="${ARG_VERSION_STICKER}" \
+    any.accetto.built-by="docker"

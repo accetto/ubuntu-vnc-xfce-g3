@@ -131,6 +131,8 @@ It can be also executed  stand-alone.
 
 Utilizing the local `g3-cache` brings a significant boost in the building performance and much shorter building times.
 
+The **seventh version** (G3v7) of the pipeline builds the images even faster, because the helper image built by the `pre_build` hook script is used by the `build` hook script as an external cache.
+
 There is also the helper script `util-readme.sh`, stored in the folder `utils/`.
 This script can be used for preparing the `README` file for the **Docker Hub**.
 
@@ -165,6 +167,8 @@ The script `ci-builder.sh` is using the utility script `builder.sh` internally.
 
 You can find more information and examples in the separate `readme` file, describing the utility `ci-builder.sh`.
 
+Using the script `ci-builder.sh` is the fastest way to build the images because it automatically benefits from the `G3v7` pipeline improvements.
+
 **Remark**: The set can contain also a single image.
 
 ### Building and publishing individual images
@@ -187,6 +191,12 @@ We could execute the following command:
 The script `builder.sh` is using the individual hook scripts internally.
 
 You can find more information and examples in the separate `readme` file, describing the utility `builder.sh`.
+
+Note that the script `builder.sh` benefits from the `G3v7` pipeline improvements only if the helper image is also built.
+
+That is the case only by using the commands `all|all-no-push` or by building the helper images by the command `pre_buil` before using the `build` command.
+
+Note thet the `build` command deletes the helper image after using it as an external cache.
 
 ### Step-by-step building and publishing
 
@@ -223,7 +233,7 @@ If you want to force the image building, you can delete this file manually.
 
 The other option is to set the environment variable `FORCE_BUILDING=1` **before** executing the `pre_build` script.
 
-**Remark**: The temporary helper image is automatically removed by the script.
+Note that since the pipeline version `G3v7` the temporary helper image **is not** automatically removed by this script.
 
 #### Step 2: `build`
 
@@ -243,6 +253,8 @@ The other option is to set the environment variable `FORCE_BUILDING=1` **before*
 This step builds a new persistent image, named by default according the variable `BUILDER_REPO` (e.g. `headless-ubuntu-g3`).
 
 **Remark**: Ensure that the file `scrap-demand-stop-building` is not present or the environment variable is set `FORCE_BUILDING=1`.
+
+Note that since the pipeline version `G3v7` this script removes the temporary helper image after using it as an external cache.
 
 #### Step 3: `push`
 
