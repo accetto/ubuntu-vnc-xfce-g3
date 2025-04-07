@@ -83,7 +83,9 @@ main() {
             clear_log
             "${_build_context}"/hooks/"${cmd}" dev "${blend}" $@
             exit_code=$?
-            if [[ ${exit_code} -ne 0 ]] ; then die "Hook script '${cmd}' failed with code ${exit_code}." ${exit_code} ; fi
+            if [[ ${exit_code} -ne 0 ]] ; then
+                die "Hook script '${cmd}' failed with code ${exit_code}." ${exit_code}
+            fi
             ;;
 
         all | all-no-push )
@@ -91,7 +93,9 @@ main() {
             clear_log
             "${_build_context}"/hooks/pre_build dev "${blend}" $@
             exit_code=$?
-            if [[ ${exit_code} -ne 0 ]] ; then die "Hook script 'pre_build' failed with code ${exit_code}." ${exit_code} ; fi
+            if [[ ${exit_code} -ne 0 ]] ; then
+                die "Hook script 'pre_build' failed with code ${exit_code}." ${exit_code}
+            fi
 
             if [[ ! -f "${_build_context}"/scrap-demand-stop-building ]] ; then
 
@@ -112,7 +116,9 @@ main() {
 
                     "${_build_context}"/hooks/"${c}" dev "${blend}" $@
                     exit_code=$?
-                    if [[ ${exit_code} -ne 0 ]] ; then die "Hook script '${c}' failed with code ${exit_code}." ${exit_code} ; fi
+                    if [[ ${exit_code} -ne 0 ]] ; then
+                        die "Hook script '${c}' failed with code ${exit_code}." ${exit_code}
+                    fi
                 done
 
                 echo

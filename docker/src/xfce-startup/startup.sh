@@ -175,7 +175,7 @@ main() {
 
         else
 
-            ### tail the null device infinitelly
+            ### tail the null device infinitely
             if [[ -n $"{_verbose}" ]] ; then
                 
                 echo "Tailing '/dev/null'"
@@ -186,7 +186,7 @@ main() {
         fi
     fi
 
-    ### default backround execution mode
+    ### default background execution mode
     ### be sure to end all previous branches by calling 'cleanup'
     ### option '--wait' is purely because of the parser
 

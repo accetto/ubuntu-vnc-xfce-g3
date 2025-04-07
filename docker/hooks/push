@@ -1,7 +1,5 @@
 #!/bin/bash
 
-### @accetto, August 2021
-
 echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
 
 declare _mydir=$(dirname $0)

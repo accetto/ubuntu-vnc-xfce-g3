@@ -1,12 +1,37 @@
 #!/bin/bash
 
-### @accetto, September 2022
-
 echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
 
 declare _mydir=$(dirname $0)
 
 source "${_mydir}"/env.rc
+source "${_mydir}"/util.rc
+
+ensure_wget() {
+    local -i error_code=0
+    local -i enforced_error_code=1
+
+    ### checking can be disabled by passing 'enforced_error_code=0'
+    if [[ "${IGNORE_MISSING_WGET:-0}" == "0" ]] ; then
+        enforced_error_code=1
+    else
+        enforced_error_code=0
+    fi
+    ensure_utility wget ${enforced_error_code}
+
+    error_code=$?
+    if [[ ${error_code} -ne 0 ]] ; then
+        echo
+        echo "WARNING! Utility 'wget' not found."
+        echo "It's recommended to install the utility or to switch to an environment where it's available (e.g. WSL)."
+        echo "Otherwise set the environment variable IGNORE_MISSING_WGET=1 to ignore this checking."
+        echo "The selected packages still will be downloaded into a temporary image layer, but not into the project's"
+        echo "'.g3-cache' folder nor the shared one, defined by the variable SHARED_G3_CACHE_PATH."
+        echo
+
+        die "Utility 'wget' not found." ${error_code}
+    fi
+}
 
 use_wget() {
     local section="${1?Expected section name}"
@@ -169,25 +194,27 @@ cache_chromium() {
 
 main() {
 
+    ensure_wget
+
     if [[ "${FEATURES_VNC}" == "1" ]] ; then
 
         cache_tigervnc
-        if [[ $? -ne 0 ]] ; then return 1; fi
+        if [[ $? -ne 0 ]] ; then return 1 ; fi
     fi
 
     if [[ "${FEATURES_NOVNC}" == "1" ]] ; then
 
         cache_novnc
-        if [[ $? -ne 0 ]] ; then return 1; fi
+        if [[ $? -ne 0 ]] ; then return 1 ; fi
 
         cache_websockify
-        if [[ $? -ne 0 ]] ; then return 1; fi
+        if [[ $? -ne 0 ]] ; then return 1 ; fi
     fi
 
     if [[ "${FEATURES_CHROMIUM}" == "1" ]] ; then
 
         cache_chromium
-        if [[ $? -ne 0 ]] ; then return 1; fi
+        if [[ $? -ne 0 ]] ; then return 1 ; fi
     fi
 
     echo

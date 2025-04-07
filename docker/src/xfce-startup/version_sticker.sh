@@ -1,5 +1,4 @@
 #!/bin/bash
-### @accetto, September 2019
 
 ### resolve also symlinks
 _current_dir="$(dirname "$(readlink -f "$0")")"

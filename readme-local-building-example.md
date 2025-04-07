@@ -114,6 +114,13 @@ On Windows you have generally two choices.
 You can build your images inside the `WSL` environment or you can download the `wget.exe` application for Windows.
 Make sure to update also the `PATH` environment variable appropriately.
 
+Since the version `25.04` the availability of the utility is checked.
+
+The checking can be skipped by setting the environment variable `IGNORE_MISSING_WGET=1`.
+
+The selected packages still will be downloaded into a temporary image layer, but not into the project's
+`.g3-cache` folder nor the shared one, defined by the variable `SHARED_G3_CACHE_PATH`.
+
 ## Building pipeline
 
 The actual building pipeline consists of the following hook scripts stored in the folder `docker/hooks`:
@@ -194,9 +201,9 @@ You can find more information and examples in the separate `readme` file, descri
 
 Note that the script `builder.sh` benefits from the `G3v7` pipeline improvements only if the helper image is also built.
 
-That is the case only by using the commands `all|all-no-push` or by building the helper images by the command `pre_buil` before using the `build` command.
+That is the case only by using the commands `all|all-no-push` or by building the helper images by the command `pre_build` before using the `build` command.
 
-Note thet the `build` command deletes the helper image after using it as an external cache.
+Note that the `build` command deletes the helper image after using it as an external cache.
 
 ### Step-by-step building and publishing
 

@@ -16,34 +16,6 @@ cleanup_scrap_files() {
     rm -f "${_build_context}/${_scrap_prefix}"*
 }
 
-dump_environment() {
-    ### List the selected environment variables.
-    ### Just debugging support.
-
-    echo "Environment dump:"
-    echo "_build_context=${_build_context}"
-    echo "_branch=${_branch}"
-    echo "_blend=${_blend}"
-
-    echo "_owner=${_owner}"
-    echo "DOCKER_REPO=${DOCKER_REPO}"
-    echo "DOCKER_TAG=${DOCKER_TAG}"
-    echo "_deploy_repo=${_deploy_repo}"
-    echo "_deploy_tags=${_deploy_tags[@]}"
-
-    echo "FEATURES_BUILD_SLIM=${FEATURES_BUILD_SLIM}"
-    echo "FEATURES_JQ=${FEATURES_JQ}"
-    echo "FEATURES_NOVNC=${FEATURES_NOVNC}"
-    echo "FEATURES_SCREENSHOOTING=${FEATURES_SCREENSHOOTING}"
-    echo "FEATURES_THUMBNAILING=${FEATURES_THUMBNAILING}"
-
-    echo "DOCKERFILE_PATH=${DOCKERFILE_PATH}"
-    echo "BASEIMAGE=${BASEIMAGE}"
-    echo "BASETAG=${BASETAG}"
-    echo "VERSION_STICKER_PREFIX=${VERSION_STICKER_PREFIX}"
-    echo "VERSION_STICKER_SUFFIX=${VERSION_STICKER_SUFFIX}"
-}
-
 encode_json_quotes() {
     ### Encode double-quotes for use in JSON
     echo "${1//\"/\\\"}"
@@ -52,6 +24,20 @@ encode_json_quotes() {
 encode_json_newlines() {
     ### Encodes new-lines for use in JSON
     echo $( echo -e "${1}" | sed -z 's/\n/\\n/g' )
+}
+
+ensure_utility() {
+    ### Checks availability of the given utility.
+    ### It can be effectively disabled by providing 'enforced_error_code=0'.
+
+    local util_name="${1?Need utility name}"
+    local enforced_error_code=${2?Need enforced error code}
+
+    if command -v "${util_name}" > /dev/null ; then
+        return 0
+    else
+        return ${enforced_error_code}
+    fi
 }
 
 get_label() {
@@ -125,7 +111,7 @@ list_labels() {
 }
 
 update_gist() {
-    ### Updating the secret GitHub gist containing datat (e.g. badge endpoints).
+    ### Updating the secret GitHub gist containing data (e.g. badge endpoints).
     ### 'GIST_TOKEN' secret (PAT) with the 'gist' scope is required
 
     local gist=${1?Need gist ID}

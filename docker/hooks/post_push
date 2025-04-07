@@ -25,9 +25,6 @@ main() {
     local repo_deploy="${_deploy_repo##*/}"
     local keeper_repo_tag="${_deploy_builder_tags[0]}"
 
-    ### debugging support
-    # dump_environment
-
     if [[ ! -f "${_build_context}/${_scrap_demand_stop_building}" ]] ; then
 
         ### essential environment variables must be already set

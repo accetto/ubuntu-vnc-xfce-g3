@@ -26,9 +26,6 @@ main() {
         die "Script '${cache_script}' failed with code ${exit_code}." ${exit_code}
     fi
 
-    ### debugging support
-    # dump_environment
-
     echo -e "\nRemoving helper files\n"
     cleanup_scrap_files
 
