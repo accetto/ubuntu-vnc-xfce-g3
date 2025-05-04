@@ -17,61 +17,61 @@ main() {
     ### helper image is also used as a cache and therefore it must not use a tag
     local helper_image="${DOCKER_REPO}"_"${DOCKER_TAG}${helper_suffix}"
 
-    if [[ -f "${_build_context}/${_scrap_demand_stop_building}" ]] ; then
-    
+    if [[ -f "${_build_context}/${_scrap_demand_stop_building}" ]]; then
+
         echo "Skipping build on demand."
-        return 0
-    fi
-
-    ### refresh local cache for the case the 'pre_build' was not run
-    "${_mydir}/${cache_script}" "${_branch}" "${_blend}"
-    exit_code=$?
-    if [[ ${exit_code} -ne 0 ]] ; then
-        die "Script '${cache_script}' failed with code ${exit_code}." ${exit_code} 
-    fi
-
-    ### get current version sticker
-    if [[ -f "${_build_context}/${_scrap_version_sticker_current}" ]] ; then
-
-        version_sticker="$( cat ${_build_context}/${_scrap_version_sticker_current} )"
     else
-        version_sticker="null"
-    fi
 
-    ### check for the '--target' parameter
-    if [[ $# -gt 0 ]] ; then
-
-        ### no quotes around 'params'
-        for i in ${params} ; do
-            if [[ "${i}" == "--target" ]] ; then
-
-                target_stage="${i}"
-
-            elif [[ -n "${target_stage}" ]] ; then
-
-                ### only if '--target' is followed by a value
-                if [[ ! "${i}" =~ ^- ]] ; then
-                    target_stage="${i}"
-                fi
-                break
-            fi
-        done
-
-        ### remove the orphaned '--target' (missing value)
-        if [[ "${target_stage}" == "--target" ]] ; then
-            params="${params/--target/}"
-            target_stage=""
+        ### refresh local cache for the case the 'pre_build' was not run
+        "${_mydir}/${cache_script}" "${_branch}" "${_blend}"
+        exit_code=$?
+        if [[ ${exit_code} -ne 0 ]]; then
+            die "Script '${cache_script}' failed with code ${exit_code}." ${exit_code}
         fi
-    fi
 
-    now="$(date --utc +%FT%TZ)"
-    echo "Current timestamp: ${now}" ; echo
+        ### get current version sticker
+        if [[ -f "${_build_context}/${_scrap_version_sticker_current}" ]]; then
 
-    ### no quotes around ${params}!
-    set -x
-    docker build ${params} \
-        --cache-from=${helper_image} \
-        -f "${DOCKERFILE_PATH}" \
+            version_sticker="$(cat ${_build_context}/${_scrap_version_sticker_current})"
+        else
+            version_sticker="null"
+        fi
+
+        ### check for the '--target' parameter
+        if [[ $# -gt 0 ]]; then
+
+            ### no quotes around 'params'
+            for i in ${params}; do
+                if [[ "${i}" == "--target" ]]; then
+
+                    target_stage="${i}"
+
+                elif [[ -n "${target_stage}" ]]; then
+
+                    ### only if '--target' is followed by a value
+                    if [[ ! "${i}" =~ ^- ]]; then
+                        target_stage="${i}"
+                    fi
+                    break
+                fi
+            done
+
+            ### remove the orphaned '--target' (missing value)
+            if [[ "${target_stage}" == "--target" ]]; then
+                params="${params/--target/}"
+                target_stage=""
+            fi
+        fi
+
+        now="$(date --utc +%FT%TZ)"
+        echo "Current timestamp: ${now}"
+        echo
+
+        ### no quotes around ${params}!
+        set -x
+        docker build ${params} \
+            --cache-from=${helper_image} \
+            -f "${DOCKERFILE_PATH}" \
             --build-arg BASEIMAGE="${BASEIMAGE}" \
             --build-arg BASETAG="${BASETAG}" \
             --build-arg ARG_CREATED="${now}" \
@@ -98,18 +98,23 @@ main() {
             ${FEATURES_FIREFOX:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox"} \
             ${FEATURES_FIREFOX_PLUS:+--build-arg ARG_MERGE_STAGE_BROWSER_BASE="stage_firefox_plus"} \
             \
-        -t "${DOCKER_REPO}:${DOCKER_TAG}${target_stage:+_${target_stage}}" "${_build_context}"
+            -t "${DOCKER_REPO}:${DOCKER_TAG}${target_stage:+_${target_stage}}" "${_build_context}"
 
-    exit_code=$?
-    set +x
-    
-    if [[ ${exit_code} -ne 0 ]] ; then
-        die "Failed to build image '${DOCKER_REPO}:${DOCKER_TAG}'" ${exit_code}
+        exit_code=$?
+        set +x
     fi
 
     ### delete the helper image in any case
-    echo; echo "Removing helper image"
-    ${CONTAINER_MANAGER:-docker} rmi "${helper_image}"
+    ensure_image "${helper_image}"
+    if [[ $? -eq 0 ]]; then
+        echo
+        echo "Removing helper image"
+        docker rmi "${helper_image}"
+    fi
+
+    if [[ ${exit_code} -ne 0 ]]; then
+        die "Failed to build image '${DOCKER_REPO}:${DOCKER_TAG}'" ${exit_code}
+    fi
 }
 
 main $@

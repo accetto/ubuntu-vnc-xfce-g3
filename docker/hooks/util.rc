@@ -12,6 +12,30 @@ declare _gist_key_created="created.json"
 declare _gist_key_version_sticker="version-sticker.json"
 declare _gist_key_version_sticker_verbose="version-sticker-verbose.txt"
 
+log() {
+### Function to log messages with timestamps and log levels
+
+    local level="$1"
+    local message="$2"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] [$level] $message"
+}
+
+validate_gist_token() {
+### Function to check if GIST_TOKEN is set and has valid scope
+    if [[ -z "${GIST_TOKEN:-}" ]]; then
+        log "ERROR" "GIST_TOKEN is not set. Skipping gist update."
+        exit 1
+    fi
+
+    # Test token scope
+    local test_result
+    test_result=$(curl -s -H "Authorization: token ${GIST_TOKEN}" https://api.github.com/rate_limit || echo "invalid")
+    if [[ "${test_result}" == "invalid" ]]; then
+        log "ERROR" "Invalid GIST_TOKEN or insufficient permissions."
+        exit 1
+    fi
+}
+
 cleanup_scrap_files() {
     rm -f "${_build_context}/${_scrap_prefix}"*
 }
@@ -23,7 +47,19 @@ encode_json_quotes() {
 
 encode_json_newlines() {
     ### Encodes new-lines for use in JSON
-    echo $( echo -e "${1}" | sed -z 's/\n/\\n/g' )
+    echo $(echo -e "${1}" | sed -z 's/\n/\\n/g')
+}
+
+ensure_image() {
+    ### Checks if the given image exists.
+
+    local image=${1?Need image}
+
+    if [[ -n "$(docker image ls -q ${image})" ]]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 ensure_utility() {
@@ -33,7 +69,7 @@ ensure_utility() {
     local util_name="${1?Need utility name}"
     local enforced_error_code=${2?Need enforced error code}
 
-    if command -v "${util_name}" > /dev/null ; then
+    if command -v "${util_name}" >/dev/null; then
         return 0
     else
         return ${enforced_error_code}
@@ -46,7 +82,7 @@ get_label() {
     local repotag="$1"
     local label="$2"
 
-    echo $( docker inspect "${repotag}" --format='{{ index .Config.Labels "'${label}'" }}' )
+    echo $(docker inspect "${repotag}" --format='{{ index .Config.Labels "'${label}'" }}')
 }
 
 make_gist_filename() {
@@ -71,7 +107,7 @@ get_gist_file() {
     local gist_filename
     local result
 
-    gist_filename=$( make_gist_filename "${repo}" "${tag}" "${filename}" )
+    gist_filename=$(make_gist_filename "${repo}" "${tag}" "${filename}")
 
     ### assumption: 'output_file' is the full file name correctly composed by the caller
     ### note that the dummy parameter '?$(date +%s)' is added to the URL to avoid caching
@@ -84,11 +120,12 @@ get_gist_file() {
         "https://gist.githubusercontent.com/${_owner}/${gist}/raw/${gist_filename}/?$(date +%s)")
     # set +x
 
-    if [[ "${result}" == "200" ]] ; then
+    if [[ "${result}" == "200" ]]; then
         echo "Gist file '${gist_filename}' saved as '${output_file}'."
         return 0
-    elif [[ "${result}" == "404" ]] ; then
-        echo ; echo "Gist file '${gist_filename}' not found."
+    elif [[ "${result}" == "404" ]]; then
+        echo
+        echo "Gist file '${gist_filename}' not found."
         return 0
     else
         echo "Getting gist file '${gist_filename}' failed: ${result}"
@@ -113,7 +150,6 @@ list_labels() {
 update_gist() {
     ### Updating the secret GitHub gist containing data (e.g. badge endpoints).
     ### 'GIST_TOKEN' secret (PAT) with the 'gist' scope is required
-
     local gist=${1?Need gist ID}
     local gist_key="${2?Need gist key}"
     local repo="${3?Need repo}"
@@ -125,66 +161,74 @@ update_gist() {
     local gist_filename
     local result
 
-    if [[ -z "${GIST_TOKEN}" ]] ; then
+    if [[ -z "${GIST_TOKEN}" ]]; then
 
         echo "Skipping gist update. Required variables not set."
         return 0
     fi
 
     case "${gist_key}" in
-        "${_gist_key_created}" )
+    "${_gist_key_created}")
 
-            envelope='{"subject":"created","status":"'${content}'","color":"blue"}'
-            ;;
+        envelope='{"schemaVersion": 1,"label":"created","message":"'${content}'","color":"blue"}'
+        ;;
 
-        "${_gist_key_version_sticker}" )
+    "${_gist_key_version_sticker}")
 
-            envelope='{"subject":"version sticker","status":"'${content}'","color":"blue"}'
-            ;;
+        envelope='{"schemaVersion": 1,"label":"version sticker","message":"'${content}'","color":"blue"}'
+        ;;
 
-        "${_gist_key_version_sticker_verbose}" )
+    "${_gist_key_version_sticker_verbose}")
 
-            envelope="${content}"
-            ;;
-        * )
-            echo "Skipping gist update. Unsupported gist key '${gist_key}'."
-            return 0
-            ;;
+        envelope="${content}"
+        ;;
+    *)
+        echo "Skipping gist update. Unsupported gist key '${gist_key}'."
+        return 0
+        ;;
     esac
 
-    gist_filename=$( make_gist_filename "${repo}" "${tag}" "${gist_key}" )
+    gist_filename=$(make_gist_filename "${repo}" "${tag}" "${gist_key}")
 
     ### encode double-quotes
     # envelope="${envelope//\"/\\\"}"
-    envelope=$( encode_json_quotes "${envelope}" )
+    envelope=$(encode_json_quotes "${envelope}")
 
     ### encode new-lines
     # envelope=$( echo "${envelope}" | sed -z 's/\n/\\n/g' )
     ### be careful with quotes!
-    envelope=$( encode_json_newlines "${envelope}" )
-    
+    envelope=$(encode_json_newlines "${envelope}")
+
     data='{ "files": { "'${gist_filename}'": { "filename": "'${gist_filename}'", "content": "'${envelope}'" } } }'
 
     echo "Updating gist '${gist_filename}'"
 
-    ### required 'GIST_TOKEN' (PAT) scope is 'gist'
-    result=$(curl -s \
-        -X PATCH \
-        -o /dev/null \
-        --write-out "%{http_code}" \
-        -H "Authorization: token ${GIST_TOKEN}" \
-        -H "Accept: application/vnd.github.v3+json" \
-        https://api.github.com/gists/${gist} \
-        -d "${data}")
-
-    if [[ "${result}" == "200" ]] ; then
+    local max_retries=3
+    local retry_delay=5 # seconds
     
-        echo "Gist '${gist_filename}' updated successfully"
-        echo
-        return 0
-    else
-        echo "Gist '${gist_filename}' update failed: ${result}"
-        echo 
-        return 1
-    fi
+    ### required 'GIST_TOKEN' (PAT) scope is 'gist'
+
+    for attempt in $(seq 1 ${max_retries}); do
+        echo "Attempt ${attempt} of ${max_retries}..."
+
+        result=$(curl -s \
+            -X PATCH \
+            -o /dev/null \
+            --write-out "%{http_code}" \
+            -H "Authorization: token ${GIST_TOKEN}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            https://api.github.com/gists/${gist} \
+            -d "${data}")
+
+        if [[ "${result}" == "200" ]]; then
+            echo "Gist '${gist_filename}' updated successfully on attempt ${attempt}"
+            return 0
+        fi
+    
+        echo "Attempt '${attempt}' failed with HTTP code: ${result}. Retrying in ${retry_delay} seconds..."
+        sleep ${retry_delay}
+    done
+
+    echo "ERROR: Gist update failed after ${max_retries} attempts."
+    return 1
 }

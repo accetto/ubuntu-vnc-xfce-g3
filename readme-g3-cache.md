@@ -62,6 +62,9 @@ Therefore it's sometimes referenced as a hook script.
 The script is used by the hook scripts `pre_build` and `build`.
 However, it can be executed also stand-alone.
 
+Since the version `G3v8` (Release `25.05`) the updated script checks if the shared `g3-cache` directory, defined by the environment variable `SHARED_G3_CACHE_PATH`, is reachable and writable.
+The shared `g3-cache` update will be skipped otherwise.
+
 **Remark**: The current implementation of the cache refreshing code is not thread safe and it is not intended for parallel building of multiple images.
 
 ***

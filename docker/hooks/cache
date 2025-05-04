@@ -93,9 +93,25 @@ refresh_file() {
             echo -e "${_mark} refreshing section '${section}' by downloading file '${file}'\n"
             use_wget "${section}" "${file}" "${source_url}" "${target}"
 
-            ### copy the downloaded file to the shared cache
-            if [[ -n "${_shared_cache_path}" && -s "${target}" ]] ; then
+            ### ensure the shared G3-CACHE directory
+            if [[ -n "${SHARED_G3_CACHE_PATH}" ]]; then
 
+                echo "WARNING! Environment variable 'SHARED_G3_CACHE_PATH' is not set."
+
+            elif [[ ! -d "${_shared_cache_path}" ]]; then
+
+                echo "WARNING! Shared G3-CACHE directory not found: ${_shared_cache_path}"
+
+            elif [[ ! -w "${_shared_cache_path}" ]]; then
+
+                echo "WARNING! Shared G3-CACHE directory is not writable: ${_shared_cache_path}"
+
+            elif [[ ! -s "${target}" ]]; then
+
+                echo "WARNING! Downloaded file in local G3-CACHE intended for the shared G3-CACHE is empty: ${target}"
+                
+            else
+                ### copy the downloaded file to the shared cache
                 echo -e "${_mark} refreshing shared section '${section}' by copying downloaded file '${file}'\n"
 
                 mkdir -p "${_shared_cache_path}/${section}"
@@ -225,7 +241,7 @@ declare _mark="\n==> G3-CACHE"
 declare _cache="${_build_context}/.g3-cache"
 declare _shared_cache_path="${SHARED_G3_CACHE_PATH}"
 
-if [[ $# -gt 0 && "${1}" =~ -q|--quiet ]] ; then 
+if [[ $# -gt 0 && "${1}" =~ -q|--quiet ]] ; then
 
     _quiet="q"
     shift

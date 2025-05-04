@@ -20,13 +20,13 @@ clear_log() {
     ### just for debugging
     # cp -f "${_ci_builder_log}" "${_ci_builder_log}_copy"
 
-    > "${_ci_builder_log}"
+    >"${_ci_builder_log}"
     echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
 }
 
 execute_smart() {
 
-    if [[ -z "${_option_logall}" ]] ; then
+    if [[ -z "${_option_logall}" ]]; then
 
         _flag_skip_footer="1"
 
@@ -47,7 +47,7 @@ execute_smart() {
 show_error() {
 
     ### don't output to 'stderr' (>&2) here!
-    echo -e "\nERROR: ${@:-(unknown)}\n"
+    echo -e "\nERROR in ${0}: ${@:-(unknown)}\n"
 }
 
 show_log_digest() {
@@ -58,7 +58,7 @@ show_log_digest() {
 }
 
 show_log_stickers() {
-    
+
     echo -e "\n--> Version stickers:\n"
     grep "${_regex_log_stickers}" "${_ci_builder_log}" | sort -u
     echo
@@ -82,7 +82,7 @@ show_unlogged_help() {
 
     # help is never logged
     exec 1>&-
-    { 
+    {
         cat <<EOT
 
 This script can:
@@ -97,11 +97,13 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
 
 <options>      := (--log-all|--no-cache) 
 <command>      := (all|all-no-push)
+                  |(pull|update-gists|list|helper-help)
 <mode>         := (group|family)
 <blend>        := pivotal
-                  |(complete[-latest|-noble|-jammy|-focal|-chromium|-firefox])
-                  |(latest|noble|jammy|focal[-chromium|-firefox])
-<parent-blend> := (complete)|(latest|noble|jammy|focal[-chromium|-firefox])
+                  |(complete[-latest|-noble|-24.04|-jammy|-22.04|-focal|-20.04|-chromium|-firefox])
+                  |(latest|noble|24.04|jammy|22.04|focal|20.04[-chromium|-firefox])
+                  |(any)
+<parent-blend> := (complete)|(latest|24.04|noble|jammy|22.04|focal|20.04[-chromium|-firefox])
 <child-suffix> := depends on context, e.g. '-ver1|-ver2' (currently none supported)
 
 Group mode : All images are processed independently.
@@ -153,35 +155,53 @@ build_single_image() {
     local option_nocache="${3}"
     local -i exit_code=0
 
-    echo -e "${_log_mark} Building image '${_builder_project}:${blend}'"
+    if [[ "${command}" == "pull" ]]; then
 
-    ### call builder script
-    ./"${_builder_script}" "${blend}" "${command}" "${option_nocache}"
-    exit_code=$?
-    if [[ ${exit_code} -ne 0 ]] ; then die "Script '${_builder_script}' failed with code ${exit_code}." ${exit_code} ; fi
+        "${_build_context}/hooks/${_helper_script}" dev "${blend}" pull
 
-    if [[ $(tail "${_builder_log}" | grep -c "==> No build needed for '${blend}'") -eq 1 ]] ; then
-        echo -e "${_log_mark} No build needed for '${_builder_project}:${blend}'."
+    elif [[ "${command}" == "update-gists" ]]; then
+
+        "${_build_context}/hooks/post_push" dev "${blend}"
+
+    elif [[ "${command}" == "list" ]]; then
+
+        "${_build_context}/hooks/${_helper_script}" dev "${blend}" list
+
+    elif [[ "${command}" == "helper-help" ]]; then
+
+        "${_build_context}/hooks/${_helper_script}" dev "${blend}" help
+
     else
-        case "${command}" in
-            all-no-push )
-                if [[ $(tail "${_builder_log}" | grep -c "==> Built '${blend}'") -eq 1 ]] ; then
+        echo -e "${_log_mark} Building image '${_builder_project}:${blend}'"
+
+        ### call builder script
+        ./"${_builder_script}" "${blend}" "${command}" "${option_nocache}"
+        exit_code=$?
+        if [[ ${exit_code} -ne 0 ]]; then die "Script '${_builder_script}' failed with code ${exit_code}." ${exit_code}; fi
+
+        if [[ $(tail "${_builder_log}" | grep -c "==> No build needed for '${blend}'") -eq 1 ]]; then
+            echo -e "${_log_mark} No build needed for '${_builder_project}:${blend}'."
+        else
+            case "${command}" in
+            all-no-push)
+                if [[ $(tail "${_builder_log}" | grep -c "==> Built '${blend}'") -eq 1 ]]; then
                     echo -e "${_log_mark} Built new '${_builder_project}:${blend}'."
                 else
                     echo -e "${_log_mark} Failed to build new '${_builder_project}:${blend}'."
                 fi
                 ;;
-            all )
-                if [[ $(tail "${_builder_log}" | grep -c "==> Published '${blend}'") -eq 1 ]] ; then
+            all)
+                if [[ $(tail "${_builder_log}" | grep -c "==> Published '${blend}'") -eq 1 ]]; then
                     echo -e "${_log_mark} Published new '${_builder_project}:${blend}'."
                 else
                     echo -e "${_log_mark} Failed to publish new '${_builder_project}:${blend}'."
                 fi
                 ;;
-            * )
+            *)
                 die "Unknown command: '${command}'"
                 ;;
-        esac
+            esac
+        fi
     fi
 }
 
@@ -189,14 +209,14 @@ build_family() {
     local command="${1?Expected command}"
     local parent="${2?Expected parent blend}"
 
-    if [[ $# -ge 2 ]] ; then shift 2 ; fi
+    if [[ $# -ge 2 ]]; then shift 2; fi
 
     ### note that the option '--no-cache' is passed in by the parent image
     build_single_image "${command}" "${parent}" "${_option_nocache}"
 
     ### if the parent probe succeeded then probe the children
-    if [[ $(tail "${_builder_log}" | grep -cE "==> (Published|Built) '${parent}'") -eq 1 ]] ; then
-        for child in $@ ; do
+    if [[ $(tail "${_builder_log}" | grep -cE "==> (Published|Built) '${parent}'") -eq 1 ]]; then
+        for child in $@; do
 
             # note that we do not pass in the option '--no-cache' by children
             build_single_image "${command}" "${parent}${child}"
@@ -207,9 +227,9 @@ build_family() {
 build_group() {
     local command="${1?Expected command}"
 
-    if [[ $# -gt 0 ]] ; then shift ; fi
+    if [[ $# -gt 0 ]]; then shift; fi
 
-    for blend in $@ ; do
+    for blend in $@; do
 
         # note that the option '--no-cache' is passed in by each image
         build_single_image "${command}" ${blend} "${_option_nocache}"
@@ -218,23 +238,24 @@ build_group() {
 
 main() {
 
-    if [[ $# -eq 0 ]] ; then
+    if [[ $# -eq 0 ]]; then
 
         show_unlogged_help
         return 0
     fi
 
-    while [[ $# -gt 0 && "${1}" =~ "--" ]] ; do
+    ### parse command options
+    while [[ $# -gt 0 && "${1}" =~ "--" ]]; do
 
         case "${1}" in
 
-            --no-cache ) _option_nocache="${1}" ;;
-            --log-all  ) _option_logall="${1}"  ;;
+        --no-cache) _option_nocache="${1}" ;;
+        --log-all) _option_logall="${1}" ;;
 
-            *)
-                execute_smart show_error "Unknown option '${1}'"
-                return 1
-                ;;
+        *)
+            execute_smart show_error "Unknown option '${1}'"
+            return 1
+            ;;
         esac
 
         shift
@@ -244,157 +265,173 @@ main() {
     local mode="${2}"
     local subject="${3}"
 
-    if [[ $# -ge 3 ]] ; then shift 3 ; fi
+    if [[ $# -ge 3 ]]; then shift 3; fi
 
     case "${command}" in
 
-        help | --help | -h )
-        
-            show_unlogged_help
-            return 0
+    help | --help | -h)
+
+        show_unlogged_help
+        return 0
+        ;;
+
+    log)
+        case "${mode}" in
+
+        get)
+
+            case "${subject}" in
+
+            digest) execute_smart show_log_digest ;;
+            stickers) execute_smart show_log_stickers ;;
+            timing) execute_smart show_log_timing ;;
+            errors) execute_smart show_log_errors ;;
+            *)
+                execute_smart show_error "Unknown 'log get' command argument '${subject}'"
+                ;;
+            esac
             ;;
 
-        log )
-            case "${mode}" in
+        *)
+            execute_smart show_error "Unknown 'log' command '${mode}'"
+            ;;
 
-                get )
+        esac
+        ;;
 
-                    case "${subject}" in
+    all-no-push | all | pull | update-gists | list | helper-help)
+        case "${mode}" in
 
-                        digest   )   execute_smart show_log_digest   ;;
-                        stickers )   execute_smart show_log_stickers ;;
-                        timing   )   execute_smart show_log_timing   ;;
-                        errors   )   execute_smart show_log_errors   ;;
-                        * )
-                            execute_smart show_error "Unknown 'log get' command argument '${subject}'"
-                            ;;
-                    esac
-                    ;;
+        group)
+            case "${subject}" in
 
-                * )
-                    execute_smart show_error "Unknown 'log' command '${mode}'"
-                    ;;
+            pivotal)
+
+                clear_log
+                build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-chromium" "jammy-chromium" "focal-chromium"
+                ;;
+
+            complete)
+
+                clear_log
+                build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-chromium" "jammy-chromium" "focal-chromium"
+                ;;
+
+            complete-latest | complete-24.04)
+
+                clear_log
+                build_group "${command}" "latest" "latest-firefox" "latest-chromium"
+                ;;
+
+            complete-noble)
+
+                clear_log
+                build_group "${command}" "noble" "noble-firefox" "noble-chromium"
+                ;;
+
+            complete-jammy | complete-22.04)
+
+                clear_log
+                build_group "${command}" "jammy" "jammy-firefox" "jammy-chromium"
+                ;;
+
+            complete-focal | complete-20.04)
+
+                clear_log
+                build_group "${command}" "focal" "focal-firefox" "focal-chromium"
+                ;;
+
+            complete-chromium)
+
+                clear_log
+                build_group "${command}" "latest-chromium" "jammy-chromium" "focal-chromium"
+                ;;
+
+            complete-firefox)
+
+                clear_log
+                build_group "${command}" "latest-firefox" "jammy-firefox" "focal-firefox"
+                ;;
+
+            latest | latest-chromium | latest-firefox | \
+                noble | noble-chromium | noble-firefox | \
+                24.04 | 24.04-chromium | 24.04-firefox | \
+                jammy | jammy-chromium | jammy-firefox | \
+                22.04 | 22.04-chromium | 22.04-firefox | \
+                focal | focal-chromium | focal-firefox | \
+                20.04 | 20.04-chromium | 20.04-firefox )
+
+                clear_log
+                build_group "${command}" "${subject}" $@
+                ;;
+
+            any)
+                echo "Warning from 'ci-builder.sh': Nothing to do for 'any' blend!"
+                echo "Provided parameters:"
+                echo "command=${command}"
+                echo "subject=${subject}"
+
+                build_group "${command}" "${subject}" $@
+                ;;
+
+            *)
+                # execute_smart show_error "Unknown blend '${subject}'"
+                die "Unknown blend '${_blend}'" -1 'ci-builder.sh'
+                ;;
 
             esac
             ;;
 
-        all-no-push | all )
-            case "${mode}" in
+        family)
+            case "${subject}" in
 
-                group )
-                    case "${subject}" in
-                        
-                        pivotal )
+            complete)
 
-                            clear_log
-                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-chromium" "jammy-chromium" "focal-chromium"
-                            ;;
-                        
-                        complete )
+                clear_log
 
-                            clear_log
-                            build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-chromium" "jammy-chromium" "focal-chromium"
-                            ;;
+                build_family "${command}" "latest"
+                build_family "${command}" "jammy"
+                build_family "${command}" "focal"
+                build_family "${command}" "latest-firefox"
+                build_family "${command}" "jammy-firefox"
+                build_family "${command}" "focal-firefox"
+                build_family "${command}" "latest-chromium"
+                build_family "${command}" "jammy-chromium"
+                build_family "${command}" "focal-chromium"
+                ;;
 
-                        complete-latest )
+            latest | latest-chromium | latest-firefox | \
+            noble | noble-chromium | noble-firefox | \
+            jammy | jammy-chromium | jammy-firefox | \
+            focal | focal-chromium | focal-firefox | \
+            24.04 | 24.04-chromium | 24.04-firefox | \
+            22.04 | 22.04-chromium | 22.04-firefox | \
+            20.04 | 20.04-chromium | 20.04-firefox )
 
-                            clear_log
-                            build_group "${command}" "latest" "latest-firefox" "latest-chromium"
-                            ;;
+                clear_log
+                build_family "${command}" "${subject}" $@
+                ;;
 
-                        complete-noble )
-
-                            clear_log
-                            build_group "${command}" "noble" "noble-firefox" "noble-chromium"
-                            ;;
-
-                        complete-jammy )
-
-                            clear_log
-                            build_group "${command}" "jammy" "jammy-firefox" "jammy-chromium"
-                            ;;
-
-                        complete-focal )
-
-                            clear_log
-                            build_group "${command}" "focal" "focal-firefox" "focal-chromium"
-                            ;;
-
-                        complete-chromium )
-
-                            clear_log
-                            build_group "${command}" "latest-chromium" "jammy-chromium" "focal-chromium"
-                            ;;
-
-                        complete-firefox )
-
-                            clear_log
-                            build_group "${command}" "latest-firefox" "jammy-firefox" "focal-firefox"
-                            ;;
-
-                        latest | latest-chromium | latest-firefox \
-                        | noble | noble-chromium | noble-firefox \
-                        | jammy | jammy-chromium | jammy-firefox \
-                        | focal | focal-chromium | focal-firefox )
-
-                            clear_log
-                            build_group "${command}" "${subject}" $@
-                            ;;
-
-                        * )
-                            execute_smart show_error "Unknown blend '${subject}'"
-                            ;;
-
-                    esac
-                    ;;
-
-                family )
-                    case "${subject}" in
-
-                        complete )
-
-                            clear_log
-
-                            build_family "${command}" "latest"
-                            build_family "${command}" "jammy"
-                            build_family "${command}" "focal"
-                            build_family "${command}" "latest-firefox"
-                            build_family "${command}" "jammy-firefox"
-                            build_family "${command}" "focal-firefox"
-                            build_family "${command}" "latest-chromium"
-                            build_family "${command}" "jammy-chromium"
-                            build_family "${command}" "focal-chromium"
-                            ;;
-
-                        latest | latest-chromium | latest-firefox \
-                        | noble | noble-chromium | noble-firefox \
-                        | jammy | jammy-chromium | jammy-firefox \
-                        | focal | focal-chromium | focal-firefox )
-
-                            clear_log
-                            build_family "${command}" "${subject}" $@
-                            ;;
-
-                        * )
-                            execute_smart show_error "Unknown parent blend '${subject}'"
-                            ;;
-
-                    esac
-                    ;;
-
-                * )
-                    execute_smart show_error "Unknown mode '${mode}'"
-                    ;;
+            *)
+                execute_smart show_error "Unknown parent blend '${subject}'"
+                ;;
 
             esac
             ;;
 
         *)
-            execute_smart show_error "Unknown command '${command}'"
+            execute_smart show_error "Unknown mode '${mode}'"
             ;;
+
+        esac
+        ;;
+
+    *)
+        execute_smart show_error "Unknown command '${command}'"
+        ;;
     esac
 
-    if [[ -z "${_flag_skip_footer}" ]] ; then
+    if [[ -z "${_flag_skip_footer}" ]]; then
 
         echo -e "\n==> FINISHED  @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
     fi
@@ -402,6 +439,8 @@ main() {
 
 declare _builder_project="${BUILDER_REPO:-headless-ubuntu-g3}"
 declare _builder_log="scrap_builder.log"
+declare _build_context="./docker"
+declare _helper_script="helper"
 
 declare _builder_script="builder.sh"
 declare _ci_builder_log="scrap_ci-builder.log"

@@ -13,7 +13,6 @@
 
 .vscode
 .cache*
-.favorites.json
 .g3-cache*
 .secret*
 .util*
