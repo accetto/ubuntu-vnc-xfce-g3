@@ -3,27 +3,24 @@
 
 <!-- latest -->
 
-[badge_latest_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@created.json
+[badge_latest_created]: https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@created.json
 
-[badge_latest_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker.json
+[badge_latest_version-sticker]: https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker.json
 
 [link_latest_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@latest@version-sticker-verbose.txt
 
 <!-- 22.04 -->
 
-[badge_22-04_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@22.04@created.json
+[badge_22-04_created]: https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@22.04@created.json
 
-[badge_22-04_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@22.04@version-sticker.json
+[badge_22-04_version-sticker]: https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@22.04@version-sticker.json
 
 [link_22-04_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@22.04@version-sticker-verbose.txt
 
 <!-- 20.04 -->
 
-[badge_20-04_created]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@20.04@created.json
+[badge_20-04_created]: https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@20.04@created.json
 
-[badge_20-04_version-sticker]: https://badgen.net/https/gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@20.04@version-sticker.json
+[badge_20-04_version-sticker]: https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@20.04@version-sticker.json
 
 [link_20-04_version-sticker-verbose]: https://gist.githubusercontent.com/${OWNER}/${GIST}/raw/${REPO}@20.04@version-sticker-verbose.txt
-
-
-

@@ -11,12 +11,19 @@
       - [Group mode examples](#group-mode-examples)
     - [Family mode](#family-mode)
       - [Family mode examples](#family-mode-examples)
+    - [Blend names and synonyms](#blend-names-and-synonyms)
     - [Log processing](#log-processing)
       - [Digest command](#digest-command)
       - [Stickers command](#stickers-command)
       - [Timing command](#timing-command)
       - [Errors command](#errors-command)
   - [Additional building parameters](#additional-building-parameters)
+  - [Helper commands for specific scenarios](#helper-commands-for-specific-scenarios)
+    - [Command `list`](#command-list)
+    - [Command `pull`](#command-pull)
+    - [Command `update-gists`](#command-update-gists)
+    - [Command `helper-help`](#command-helper-help)
+    - [Example](#example)
 
 ## Introduction
 
@@ -52,11 +59,13 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
 
 <options>      := (--log-all|--no-cache) 
 <command>      := (all|all-no-push)
+                  |(pull|update-gists|list|helper-help)
 <mode>         := (group|family)
 <blend>        := pivotal
-                  |(complete[-latest|-noble|-jammy|-focal|-chromium|-firefox])
-                  |(latest|noble|jammy|focal[-chromium|-firefox])
-<parent-blend> := (complete)|(latest|noble|jammy|focal[-chromium|-firefox])
+                  |(complete[-latest|-noble|-jammy|-focal|24.04|22.04|20.04|-chromium|-firefox])
+                  |(latest|noble|jammy|focal|24.04|22.04|20.04[-chromium|-firefox])
+                  |(any)
+<parent-blend> := (complete)|(latest|noble|jammy|focal|24.04|22.04|20.04[-chromium|-firefox])
 <child-suffix> := depends on context, e.g. '-ver1|-ver2' (currently none supported)
 
 Group mode : All images are processed independently.
@@ -254,6 +263,50 @@ For example:
 ./ci-builder.sh all-no-push family latest -fugo
 ```
 
+### Blend names and synonyms
+
+Blends relate to the `Ubuntu` versions. The blends in the command line can be replaced by their synonyms.
+
+Since the version `G3v8` (Release `25.05`), the `Ubuntu` versions can be used as the blend synonyms.
+
+The following table illustrates the relations.
+
+| Ubuntu Version | Blend  | Synonym 1 | Synonym 2 |
+| -------------- | ------ | --------- | --------- |
+| 24.04          | latest | 24.04     | noble     |
+| 22.04          | jammy  | 22.04     |           |
+| 20.04          | focal  | 20.04     |           |
+
+For example, the following command line groups are functional equivalents:
+
+```shell
+### Group 1
+./ci-builder.sh list group latest
+./ci-builder.sh list group noble
+./ci-builder.sh list group 24.04
+
+### Group 2
+./ci-builder.sh list group complete-latest
+./ci-builder.sh list group complete-noble
+./ci-builder.sh list group complete-24.04
+
+### Group 3
+./ci-builder.sh list group jammy
+./ci-builder.sh list group 22.04
+
+### Group 4
+./ci-builder.sh list group complete-jammy
+./ci-builder.sh list group complete-22.04
+
+### Group 5
+./ci-builder.sh list group focal
+./ci-builder.sh list group 20.04
+
+### Group 6
+./ci-builder.sh list group complete-focal
+./ci-builder.sh list group complete-20.04
+```
+
 ### Log processing
 
 The **log processing** mode is intended for evaluating the outcome of the latest image building session.
@@ -348,6 +401,160 @@ The output is mostly empty:
 There is no notion of additional building parameters by the script `ci-builder.sh` (compare to [builder.sh][readme-builder]).
 
 There is no way to build the images only from particular Dockerfile stages using the script `ci-builder.sh`.
+
+## Helper commands for specific scenarios
+
+There has been a case when it was necessary to update the badges of all repositories because of switching from the **badgen.net** provider to the **shields.io** one.
+
+Therefore the **Release 25.05 (G3v8)** has introduced a new hook script called `helper` and also the following new commands:
+
+- list
+- pull
+- update-gists
+- helper-help
+
+The commands are forwarded by the utility script `builder.sh` to the appropriate target scripts, as it's described in the file `readme-builder.md`.
+
+There is also a new wildcard value `any`, which can be generally used for the command arguments `branch` and `blend` in all cases when the argument values are not really needed, but they are enforced purely by the command syntax.
+
+### Command `list`
+
+The **list** command displays a list of the actual names of the target build and deployment images, that would be built during the given building scenario.
+The names of possible helper images will not be included.
+
+For example:
+
+```shell
+ubuntu-vnc-xfce-g3> ./ci-builder.sh list group complete-latest
+
+### would output
+Build target => accetto/headless-ubuntu-g3:latest
+Deploy target => accetto/ubuntu-vnc-xfce-g3:latest
+Build target => accetto/headless-ubuntu-g3:latest-firefox
+Deploy target => accetto/ubuntu-vnc-xfce-firefox-g3:latest
+Build target => accetto/headless-ubuntu-g3:latest-chromium
+Deploy target => accetto/ubuntu-vnc-xfce-chromium-g3:latest
+```
+
+### Command `pull`
+
+The **pull** command pulls from ***Docker Hub* all the images that would be built and published during the given building scenario.
+
+For example:
+
+```shell
+ubuntu-vnc-xfce-g3> ./ci-builder.sh pull group complete-latest
+
+### would pull the following images
+accetto/ubuntu-vnc-xfce-chromium-g3   latest
+accetto/ubuntu-vnc-xfce-firefox-g3    latest
+accetto/ubuntu-vnc-xfce-g3            latest
+```
+
+### Command `update-gists`
+
+The **update-gists** command updates the deployment gists of the images that would be built and deployed in the given build scenario.
+
+It's expected that all such images are already available locally, e.g that they've been previously built or pulled from the **Docker Hub**.
+
+The values of the `created` and `version sticker` badges are extracted from the local images and the `verbose version sticker` badge values are generated using them.
+
+For example:
+
+```shell
+### would update all deployment gists belonging to the above images
+ubuntu-vnc-xfce-g3> ./ci-builder.sh update-gists group complete-latest
+
+### extract from the output
+Missing builder image 'accetto/headless-ubuntu-g3:latest'.
+Getting badge values from deployment image 'accetto/headless-ubuntu-g3:latest'.
+Wait... generating current verbose sticker file './docker/scrap-version_sticker-verbose_current.tmp'
+
+Badge 'created': 2025-05-03T17:06:01Z
+Badge 'version_sticker': ubuntu24.04.2
+Badge 'version_sticker_verbose':
+...
+Updating builder gists for 'accetto/headless-ubuntu-g3:latest'
+Updating gist 'headless-ubuntu-g3@latest@created.json'
+Attempt 1 of 3...
+Gist 'headless-ubuntu-g3@latest@created.json' updated successfully on attempt 1
+Updating gist 'headless-ubuntu-g3@latest@version-sticker.json'
+Attempt 1 of 3...
+Gist 'headless-ubuntu-g3@latest@version-sticker.json' updated successfully on attempt 1
+Updating gist 'headless-ubuntu-g3@latest@version-sticker-verbose.txt'
+Attempt 1 of 3...
+Gist 'headless-ubuntu-g3@latest@version-sticker-verbose.txt' updated successfully on attempt 1
+...
+Updating deployment gists for 'accetto/ubuntu-vnc-xfce-g3:latest'
+Updating gist 'ubuntu-vnc-xfce-g3@latest@created.json'
+Attempt 1 of 3...
+Gist 'ubuntu-vnc-xfce-g3@latest@created.json' updated successfully on attempt 1
+Updating gist 'ubuntu-vnc-xfce-g3@latest@version-sticker.json'
+Attempt 1 of 3...
+Gist 'ubuntu-vnc-xfce-g3@latest@version-sticker.json' updated successfully on attempt 1
+Updating gist 'ubuntu-vnc-xfce-g3@latest@version-sticker-verbose.txt'
+Attempt 1 of 3...
+Gist 'ubuntu-vnc-xfce-g3@latest@version-sticker-verbose.txt' updated successfully on attempt 1
+...
+```
+
+### Command `helper-help`
+
+The **helper-help** command displays the embedded help of the new hook script called `helper`, which supports the other new commands.
+
+From the example below it can be also seen, that this is one of the commands, which can be used with the newly introduced wildcard value `any` for the `branch` and `blend` arguments.
+  Generally the wildcard value `any` should work in all cases when the argument values are not really needed but they are enforced purely by the command syntax.
+
+For example:
+
+```shell
+ubuntu-vnc-xfce-g3> ./ci-builder.sh helper-help group any any
+Warning from 'ci-builder.sh': Nothing to do for 'any' blend!
+Provided parameters:
+command=helper-help
+subject=any
+Warning from 'env.rc': Allowing 'any' blend!
+
+The script "./docker/hooks/helper" contains helper functions for the script 'ci-builder.sh'.
+
+Usage: ./docker/hooks/helper <branch> <blend> <command>
+
+<branch>    := (any|dev|(or see 'env.rc'))
+<blend>     (any|(or see 'env.rc'))
+<command>   := (help|--help|-h)
+            (list-target|list-build-target|list-deploy-target)
+            (pull|pull-deploy-target|pull-build-target)
+Warning from 'env.rc': Allowing 'any' blend!
+
+The script "./docker/hooks/helper" contains helper functions for the script 'ci-builder.sh'.
+
+Usage: ./docker/hooks/helper <branch> <blend> <command>
+
+<branch>    := (any|dev|(or see 'env.rc'))
+<blend>     (any|(or see 'env.rc'))
+<command>   := (help|--help|-h)
+            (list-target|list-build-target|list-deploy-target)
+            (pull|pull-deploy-target|pull-build-target)
+```
+
+### Example
+
+This is how you would update the deployment gists of the building group `pivotal` using the "historical" data from the previously published images.
+
+```shell
+### Step 1: Pull the previously published images
+ubuntu-vnc-xfce-g3> ./ci-builder.sh pull group pivotal
+
+### Step 2: Update the gists
+ubuntu-vnc-xfce-g3> ./ci-builder.sh update-gists group pivotal
+```
+
+If you don't want to use the "historical" data, but to build and publish fresh images, then you would do the following:
+
+```shell
+### Step 1: build fresh new images and publish them and update their deployment gists
+ubuntu-vnc-xfce-g3> ./ci-builder.sh all group pivotal
+```
 
 ***
 

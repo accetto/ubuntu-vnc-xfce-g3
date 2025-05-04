@@ -6,6 +6,57 @@
 
 ***
 
+### Release 25.05 (G3v8)
+
+This is the first `G3v8` release.
+It fixes the badge service problem and brings some improvements in the building pipeline and utilities.
+There are also updates and fixes of several [Wiki][this-wiki] pages.
+
+The service **Badgen.net**, which was unreachable for some time already, has been replaced by the service [Shields.io][service-shields-io].
+
+Consequently, all README files of all `accetto` [Generation 3][dashboard-dockerhub] repositories on the **Docker Hub**  had to be updated.
+
+This is what you need to do in such case:
+
+- Update all project files named `readme-append.template`
+  - Replace the string `https://badgen.net/https/gist.` by the string `https://img.shields.io/endpoint?url=https://gist.`
+  
+- Use the utility script `util-readme.sh` from the project folder `/util` to generate the files `scrap-readme.md` for each repository.
+The file `readme-util-readme-examples.md` describes the utility.
+
+- Copy the content of the `scrap-readme.md` to the description page of the related repository on the **Docker Hub**.
+
+  Note that you have to process the repositories one-by-one, because the same output file `scrap-readme.md` is overwritten each time the utility script is executed.
+
+#### Changes in the building pipeline and utilities
+
+- The updated hook script `post_push`, which updates the `deployment gists` on the **GitHub**, now extracts the badge values ad-hoc from the locally available images. Those can be just built locally or also pulled from the **Docker Hub**. There is no need to re-build them and to go through the `pre_build` phase just for updating the deployment gists. This change allows refreshing the gists using the "historical" data extracted from the previously published images.
+
+- The actual gist update is implemented in the supporting hook script `util.rc`. The addition of up to 3 automatic retries has made the updating more reliable.
+
+*Just a reminder:* Deployment gists are publicly accessible files on the **GitHub**, that contain values used for generating the badges for the README files, that are published on the **Docker Hub**.
+
+The new functionality is available through the updated utility scripts `ci-builder.sh`, which has got the following new commands:
+
+- `list`
+- `pull`
+- `update-gists`
+- `helper-help`
+
+The added hook script `helper` supports the new commands.
+
+The updated utility `ci-builder.sh`can now accept also the Ubuntu version numbers as the blend values. For example, `24.04` instead of `latest` or `noble`, `22.04` instead of `jammy.` and `20.04` instead of `focal`.
+
+Please check the file `readme-ci-builder.md` for more description.
+
+The updated hook script `cache` checks if the shared `g3-cache` directory, which is defined by the environment variable `SHARED_G3_CACHE_PATH`, is reachable and writable.
+The shared `g3-cache` update will be skipped otherwise.
+
+#### Fixes
+
+The hook script `pre_build` removes the helper images if there will be no `build` script call.
+It's then, when the helper temporary file `scrap-demand-stop-building` is present.
+
 ### Release 25.04
 
 Availability checking of the `wget` utility has been added.
@@ -566,3 +617,7 @@ This is just a maintenance release.
 [accetto-ubuntu-vnc-xfce-firefox-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-firefox-g3
 
 [accetto-tigervnc-release-mirror]: https://github.com/accetto/tigervnc/releases
+
+[service-shields-io]: https://shields.io/
+
+[dashboard-dockerhub]: https://github.com/accetto/dashboard/blob/master/dockerhub-dashboard.md

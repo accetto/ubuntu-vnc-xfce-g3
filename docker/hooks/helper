@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
+
+declare _mydir=$(dirname $0)
+source "${_mydir}"/env.rc
+
+get_builder_image_name() {
+    echo "${DOCKER_REPO}:${_deploy_builder_tags[0]}"
+}
+
+get_deployment_image_name() {
+    echo "${_deploy_repo}:${_deploy_tags[0]}"
+}
+
+main() {
+    local cmd="${1?Need command}"
+
+    if [[ "${cmd}" == "help" ]]; then
+
+cat <<EOT
+
+The script "${0}" contains helper functions for the script 'ci-builder.sh'.
+
+Usage: ${0} <branch> <blend> <command>
+
+<branch>    := (any|dev|(or see 'env.rc'))
+<blend>     (any|(or see 'env.rc'))
+<command>   := (help|--help|-h)
+            (list-target|list-build-target|list-deploy-target)
+            (pull|pull-deploy-target|pull-build-target)
+EOT
+
+        return 0
+    fi
+
+    case "${cmd}" in
+    list | list-targets)
+        echo "Build target => $(get_builder_image_name)"
+        echo "Deploy target => $(get_deployment_image_name)"
+        # echo "Build image: $(get_builder_image_name)"
+        # echo "Deploy image: $(get_deployment_image_name)"
+        ;;
+
+    list-build-target)
+        echo "Build target => $(get_builder_image_name)"
+        ;;
+
+    list-deploy-target)
+        echo "Deploy target => $(get_deployment_image_name)"
+        ;;
+
+    pull | pull-deploy-target)
+        echo
+        echo "Pulling deploy targets... $(get_deployment_image_name)"
+        docker pull "$(get_deployment_image_name)"
+        ;;
+
+    pull-build-target)
+        echo
+        echo "Pulling build targets... $(get_builder_image_name)"
+        echo docker pull "$(get_builder_image_name)"
+        ;;
+
+    *)
+        die "Unknown command '${cmd}'."
+        ;;
+    esac
+}
+
+main $@
+
+# echo -e "\n==> FINISHED  @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"

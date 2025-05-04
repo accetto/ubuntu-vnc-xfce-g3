@@ -10,6 +10,7 @@
   - [Executing individual pipeline steps](#executing-individual-pipeline-steps)
     - [What about the 'cache' helper script](#what-about-the-cache-helper-script)
   - [Additional building parameters](#additional-building-parameters)
+  - [Helper commands for specific scenarios](#helper-commands-for-specific-scenarios)
 
 ## Introduction
 
@@ -32,7 +33,7 @@ This script can:
 
 Usage: ./builder.sh <blend> <command> [<docker-cli-options>]
 
-blend   := (latest|noble|jammy|focal)[-chromium|-firefox]
+blend   := (latest|noble|24.04|jammy|22.04|focal|20.04)[-chromium|-firefox]
 command := (all|all-no-push)|(pre_build|build|push|post_push|cache)
 
 The <docker-cli-options> (e.g. '--no-cache') are passed to the Docker CLI commands used internally.
@@ -235,6 +236,24 @@ For example:
 The additional parameters `--target stage_xfce --no-cache` will be passed to the script `docker/hooks/build`.
 
 See the file [readme-local-building-example][this-readme-local-building-example] for more information about handling of the additional building parameters.
+
+## Helper commands for specific scenarios
+
+There has been a case when it was necessary to update the badges of all repositories because of switching from the **badgen.net** provider to the **shields.io** one.
+
+Therefore the **Release 25.05 (G3v8)** has introduced a new hook script called `helper` and also the following new `ci-builder.sh` commands:
+
+- list
+- pull
+- helper-help
+- update-gists
+
+Most of the commands are forwarded  to the new `helper` hook script, only the `update-gists` command is forwarded to the updated `post_push` hook script.
+It's all implemented in the procedure `build_single_image()`.
+
+The actual gist update is implemented in the hook script `util.rc`, which has been also updated. Up to 3 gist update retries have also been added.
+
+The new commands are intended for the building utility script `ci-builder.sh` and therefore they are described in the file `readme-ci-builder.md`.
 
 ***
 

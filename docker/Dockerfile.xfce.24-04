@@ -12,7 +12,6 @@ ARG ARG_HEADLESS_USER_GROUP_NAME=headless
 ARG ARG_SUDO_INITIAL_PW=headless
 ARG ARG_HOME=/home/headless
 
-
 ###############
 ### stage_cache
 ###############
