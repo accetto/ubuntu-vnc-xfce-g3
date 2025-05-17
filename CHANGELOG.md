@@ -6,6 +6,17 @@
 
 ***
 
+### Release 25.05.1
+
+This is a maintenance release.
+
+Updated versions:
+
+- `TigerVNC` to version **1.15.0**
+  - only in images based on `Ubuntu 24.04` (Noble Numbat)
+  - avoid using an empty VNC password (environment variable `VNC_PW`) with this version
+
+
 ### Release 25.05 (G3v8)
 
 This is the first `G3v8` release.

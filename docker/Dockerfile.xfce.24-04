@@ -72,7 +72,10 @@ RUN \
         xauth \
         xinit \
         x11-xserver-utils \
-        xdg-utils
+        xdg-utils \
+        libxshmfence1 \
+        libxcvt0 \
+        libgbm1
 
 
 ##############
