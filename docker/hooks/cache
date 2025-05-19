@@ -94,7 +94,7 @@ refresh_file() {
             use_wget "${section}" "${file}" "${source_url}" "${target}"
 
             ### ensure the shared G3-CACHE directory
-            if [[ -n "${SHARED_G3_CACHE_PATH}" ]]; then
+            if [[ -z "${SHARED_G3_CACHE_PATH}" ]]; then
 
                 echo "WARNING! Environment variable 'SHARED_G3_CACHE_PATH' is not set."
 
