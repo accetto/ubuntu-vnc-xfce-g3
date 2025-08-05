@@ -54,9 +54,7 @@ The main features and components of the images in the default configuration are:
 - current version of [tini][tini] as the entry-point initial process (PID 1)
 - support for overriding environment variables, VNC parameters, user and group (see [User guide][this-user-guide-using-containers])
 - support of **version sticker** (see [User guide][this-user-guide-version-sticker])
-- [Firefox][firefox] web browser
-  - images based on `Ubuntu 20.04 LTS` - current version from the `Ubuntu 20.04 LTS` distribution
-  - images based on `Ubuntu 24.04 and 22.04 LTS` - current non-snap version from the Mozilla Team PPA
+- [Firefox][firefox] web browser, current non-snap version from the official Mozilla repository
 - additional **Firefox plus** feature (see [User guide][this-user-guide-firefox-plus])
 
 The following **TCP** ports are exposed by default:

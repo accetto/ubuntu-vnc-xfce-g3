@@ -6,6 +6,21 @@
 
 ***
 
+### Release 25.08
+
+The way the `Firefox Browser` is installed has been changed, following the [official Mozilla recommendations](https://support.mozilla.org/en-US/kb/install-firefox-linux?as=u&utm_source=inproduct).
+The current non-snap version is installed from the official Mozilla repository.
+The previous Mozilla Team PPA repository is not used any more.
+
+The warning `Some of Firefox's security features may offer less protection on your current operation system` should not come any more.
+
+Note that the `Firefox Browser` in the image based on `Ubuntu 20.04` is also installed the same way.
+Previously the `Firefox` version from the `Ubuntu 20.04` distribution has been used, which usually was not the current one.
+
+Updated versions:
+
+- `Firefox` to version **141.0.2** (in all images)
+
 ### Release 25.05.1
 
 This is a maintenance release.
@@ -15,7 +30,6 @@ Updated versions:
 - `TigerVNC` to version **1.15.0**
   - only in images based on `Ubuntu 24.04` (Noble Numbat)
   - avoid using an empty VNC password (environment variable `VNC_PW`) with this version
-
 
 ### Release 25.05 (G3v8)
 

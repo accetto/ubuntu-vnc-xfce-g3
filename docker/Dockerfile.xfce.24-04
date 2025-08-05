@@ -308,28 +308,28 @@ ENV \
     FEATURES_BUILD_SLIM_FIREFOX="${ARG_APT_NO_RECOMMENDS:+1}" \
     FEATURES_FIREFOX=1
 
+RUN DEBIAN_FRONTEND=noninteractive install -d -m 0755 /etc/apt/keyrings \
+    &&  wget -q https://packages.mozilla.org/apt/repo-signing-key.gpg -O- | tee /etc/apt/keyrings/packages.mozilla.org.asc > /dev/null \
+    && gpg -n -q --import --import-options import-show /etc/apt/keyrings/packages.mozilla.org.asc | awk \
+'/pub/{ getline; gsub(/^ +| +$/,""); \
+if ($0 == "35BAA0B33E9EB396F59CA838C0BA5CE6DC6315A3") {print "\nThe key fingerprint matches ("$0").\n"; exit 0;} \
+else {print "\nERROR: Verification failed: the fingerprint ("$0") does not match the expected one.\n"; exit 1;} }'
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    echo "deb [signed-by=/etc/apt/keyrings/packages.mozilla.org.asc] https://packages.mozilla.org/apt mozilla main" \
+    | tee -a /etc/apt/sources.list.d/mozilla.list > /dev/null
+
+RUN DEBIAN_FRONTEND=noninteractive echo \
+"Package: *\n\
+Pin: origin packages.mozilla.org\n\
+Pin-Priority: 1000" \
+| tee /etc/apt/preferences.d/mozilla
+
 RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
-    KEY_SERVER_URL="keyserver.ubuntu.com" \
-    FIREFOX_PPA_FINGERPRINT="0x0AB215679C571D1C8325275B9BDB3D89CE49EC21" \
-    FIREFOX_PPA_GPG_KEY="mozillateam-ubuntu-ppa.gpg" \
-    && gpg --status-fd 1 --keyserver "${KEY_SERVER_URL}" --recv-keys "${FIREFOX_PPA_FINGERPRINT}" \
-    && gpg --export "${FIREFOX_PPA_FINGERPRINT}" > "${FIREFOX_PPA_GPG_KEY}" \
-    && sudo install -o root -g root -m 644 "${FIREFOX_PPA_GPG_KEY}" /etc/apt/trusted.gpg.d/ \
-    && gpg --batch --yes --delete-keys "${FIREFOX_PPA_FINGERPRINT}" \
-    && rm "${FIREFOX_PPA_GPG_KEY}" \
-    && echo \
-"deb https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main\
-\n# deb-src https://ppa.launchpadcontent.net/mozillateam/ppa/ubuntu jammy main\n" \
-    >> /etc/apt/sources.list \
-    && echo \
-"Package: firefox*\n\
-Pin: release o=LP-PPA-mozillateam\n\
-Pin-Priority: 501" \
-    > /etc/apt/preferences.d/mozilla-firefox \
-    && apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+    DEBIAN_FRONTEND=noninteractive apt-get update \
+    && apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         firefox
 
 COPY ./xfce-firefox/src/home/Desktop "${HOME}"/Desktop/
