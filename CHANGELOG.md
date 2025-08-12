@@ -6,6 +6,15 @@
 
 ***
 
+### Release 25.08.1
+
+This release brings new images with the open-source [Brave Browser][brave], which is based on the open-source [Chromium Browser][chromium] and includes a built-in private AI assistant.
+
+The [Brave Browser][brave] is installed from the Brave's official **Release Channel** repositories.
+However, in Docker containers it needs to be launched with the `--no-sandbox` option.
+It's similar to the [Chromium Browser][chromium].
+You should be aware of the implications. The images are intended for testing and development.
+
 ### Release 25.08
 
 The way the `Firefox Browser` is installed has been changed, following the [official Mozilla recommendations](https://support.mozilla.org/en-US/kb/install-firefox-linux?as=u&utm_source=inproduct).
@@ -646,3 +655,6 @@ This is just a maintenance release.
 [service-shields-io]: https://shields.io/
 
 [dashboard-dockerhub]: https://github.com/accetto/dashboard/blob/master/dockerhub-dashboard.md
+
+[brave]: https://brave.com/
+[chromium]: https://www.chromium.org/Home
