@@ -244,6 +244,42 @@ WORKDIR "${HOME}"
 COPY ./src/home "${HOME}"/
 
 
+###############
+### stage_brave
+###############
+
+FROM merge_stage_vnc AS stage_brave
+ARG ARG_APT_NO_RECOMMENDS
+
+ENV \
+    FEATURES_BUILD_SLIM_BRAVE="${ARG_APT_NO_RECOMMENDS:+1}" \
+    FEATURES_BRAVE=1
+
+RUN \
+    --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
+    --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+        curl
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+        https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    curl -fsSLo /etc/apt/sources.list.d/brave-browser-release.sources \
+        https://brave-browser-apt-release.s3.brave.com/brave-browser.sources
+
+RUN \
+    --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
+    --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
+    DEBIAN_FRONTEND=noninteractive apt-get update \
+    && apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+        brave-browser
+
+COPY ./xfce-brave/src/home/Desktop "${HOME}"/Desktop/
+COPY ./xfce-brave/src/home/readme*.md "${HOME}"/
+
+
 ##################
 ### stage_chromium
 ##################

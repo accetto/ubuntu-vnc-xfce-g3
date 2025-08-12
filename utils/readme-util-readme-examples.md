@@ -23,6 +23,8 @@ Embedded help describes the parameters:
 
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-g3 --context=../docker/xfce --gist <deployment-gist-ID> -- preview
 
+./util-readme.sh --repo accetto/ubuntu-vnc-xfce-brave-g3 --context=../docker/xfce-brave --gist <deployment-gist-ID> -- preview
+
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-chromium-g3 --context=../docker/xfce-chromium --gist <deployment-gist-ID> -- preview
 
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-firefox-g3 --context=../docker/xfce-firefox --gist <deployment-gist-ID> -- preview
@@ -30,6 +32,8 @@ Embedded help describes the parameters:
 ### or if the environment variable 'DEPLOY_GIST_ID' has been set
 
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-g3 --context=../docker/xfce -- preview
+
+./util-readme.sh --repo accetto/ubuntu-vnc-xfce-brave-g3 --context=../docker/xfce-brave -- preview
 
 ./util-readme.sh --repo accetto/ubuntu-vnc-xfce-chromium-g3 --context=../docker/xfce-chromium -- preview
 

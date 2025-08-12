@@ -51,7 +51,7 @@ Version: G3v8
 This GitHub repository contains resources and tools for building Docker images for headless working.
 
 The images are based on [Ubuntu 24.04, 22.04 and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
-The popular web browsers [Chromium][chromium] and [Firefox][firefox] are also included.
+The popular web browsers [Brave][brave], [Chromium][chromium] and [Firefox][firefox] are also included.
 
 This [User guide][this-user-guide] describes the images and how to use them.
 
@@ -60,6 +60,7 @@ The content of this GitHub project is intended for developers and image builders
 Ordinary users can simply use the images available in the following repositories on Docker Hub:
 
 - [accetto/ubuntu-vnc-xfce-g3][accetto-docker-ubuntu-vnc-xfce-g3]
+- [accetto/ubuntu-vnc-xfce-brave-g3][accetto-docker-ubuntu-vnc-xfce-brave-g3]
 - [accetto/ubuntu-vnc-xfce-chromium-g3][accetto-docker-ubuntu-vnc-xfce-chromium-g3]
 - [accetto/ubuntu-vnc-xfce-firefox-g3][accetto-docker-ubuntu-vnc-xfce-firefox-g3]
 
@@ -85,6 +86,7 @@ The resources for building the individual images and their variations (tags) are
 The individual README files contain quick examples of building the images:
 
 - [accetto/ubuntu-vnc-xfce-g3][this-readme-ubuntu-vnc-xfce-g3]
+- [accetto/ubuntu-vnc-xfce-brave-g3][this-readme-ubuntu-vnc-xfce-brave-g3]
 - [accetto/ubuntu-vnc-xfce-chromium-g3][this-readme-ubuntu-vnc-xfce-chromium-g3]
 - [accetto/ubuntu-vnc-xfce-firefox-g3][this-readme-ubuntu-vnc-xfce-firefox-g3]
 
@@ -409,6 +411,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 
 [this-readme-ubuntu-vnc-xfce-g3]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce/README.md
 
+[this-readme-ubuntu-vnc-xfce-brave-g3]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-brave/README.md
+
 [this-readme-ubuntu-vnc-xfce-chromium-g3]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/docker/xfce-chromium/README.md
 
 [this-readme-ubuntu-vnc-xfce-firefox-g3]: https://github.com/accetto/ubuntu-vnc-xfce-g3/tree/master/docker/xfce-firefox
@@ -424,6 +428,8 @@ Credit goes to all the countless people and companies, who contribute to open so
 [this-readme-util-readme-examples]: https://github.com/accetto/ubuntu-vnc-xfce-g3/blob/master/utils/readme-util-readme-examples.md
 
 [accetto-docker-ubuntu-vnc-xfce-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-g3
+
+[accetto-docker-ubuntu-vnc-xfce-brave-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-brave-g3
 
 [accetto-docker-ubuntu-vnc-xfce-chromium-g3]: https://hub.docker.com/r/accetto/ubuntu-vnc-xfce-chromium-g3
 
@@ -448,6 +454,7 @@ Credit goes to all the countless people and companies, who contribute to open so
 [docker-doc-build-with-buildkit]: https://docs.docker.com/develop/develop-images/build_enhancements/
 
 [argbash-doc]: https://argbash.readthedocs.io/en/stable/index.html
+[brave]: https://brave.com/
 [chromium]: https://www.chromium.org/Home
 [dockerhub]: https://hub.docker.com/
 [firefox]: https://www.mozilla.org
