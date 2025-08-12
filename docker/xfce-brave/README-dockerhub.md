@@ -140,8 +140,8 @@ If you have a question or an idea and you don't want to open an issue, you can a
 
 [badge-github-release]: https://img.shields.io/github/v/release/accetto/ubuntu-vnc-xfce-g3
 
-[badge-docker-pulls]: https://img.shields.io/docker/pulls/accetto/ubuntu-vnc-xfce-chromium-g3
+[badge-docker-pulls]: https://img.shields.io/docker/pulls/accetto/ubuntu-vnc-xfce-brave-g3
 
-[badge-docker-stars]: https://img.shields.io/docker/stars/accetto/ubuntu-vnc-xfce-chromium-g3
+[badge-docker-stars]: https://img.shields.io/docker/stars/accetto/ubuntu-vnc-xfce-brave-g3
 
 <!-- Appendix will be added by util-readme.sh -->
