@@ -6,6 +6,35 @@
 
 ***
 
+### Release 26.05
+
+This is a maintenance release. Most of the updates are related to the `TigerVNC v1.16.2`, which is being introduced in this release.
+
+Updated versions:
+
+- `TigerVNC` to version **1.16.2**
+  - only in images based on `Ubuntu 24.04` (Noble)
+  - avoid using an empty VNC password (environment variable `VNC_PW`) with this version
+
+Updated files:
+
+- `Dockerfile.xfce.24-04`, `Dockerfile.xfce.22-04` and `Dockerfile.xfce.20-04`
+  - The standard Linux help viewer `man` has been added (at `stage_tools`).
+
+- `vnc_startup.rc`
+  - The `TigerVNC 1.16.2` has deprecated the folder `$HOME/.vnc` and the new path for the configuration files (`config`, `passwd`) is now `$HOME/.config/tigervnc`
+    - This does not apply to the images based on the `Ubuntu 22.04` and `Ubuntu 20.04` that do not work with the `TigerVNC 1.16.2` and therefore still include the `TigerVNC 1.13.1`.
+  - a new variable `VNC_CONFIG_HOME` is used for configuring the correct path for the VNC configuration files
+  - All required environment variables are validated individually one-by-one. There are listed in the array `required_vars`.
+
+  - An empty VNC password is not working any more and therefore a non-empty one is enforced. Do not set the environment variable `VNC_PW` to an empty string!
+    - Note that you can provide the password also
+      - as part of the connection string if you're using a WebBrowser and `noVNC`
+        - example: `http://localhost:36901/vnc_lite.html?password=headless`
+      - via the command line parameter `-PasswordFile` if you're using the `TigerVNCViewer`
+        - example: `vncviewer64.exe" -PasswordFile my.pass :35901`
+        - you'll need to generate the `my.pass` file using the `vncpasswd` utility
+
 ### Release 25.08.1
 
 This release brings new images with the open-source [Brave Browser][brave], which is based on the open-source [Chromium Browser][chromium] and includes a built-in private AI assistant.

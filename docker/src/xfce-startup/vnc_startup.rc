@@ -3,6 +3,15 @@ start_vnc () {
     local passwd_path
     local xinit_pid
 
+    local required_vars=( \
+    "VNC_CONFIG_HOME" \
+    "DISPLAY" \
+    "VNC_PORT" \
+    "VNC_COL_DEPTH" \
+    "VNC_RESOLUTION" \
+    "VNC_PW" \
+    )
+
     ### option '--skip-vnc'
     if [[ "${_arg_skip_vnc}" == "on" ]] ; then
 
@@ -23,25 +32,23 @@ start_vnc () {
         return 0
     fi
 
-    ### VNC requirements
-    ### VNC password not enforced any more, so it can be set to an empty string by 'docker run -e VNC_PW=""'.
-    ### If you still want to enforce it, bring the following line back:
-    ### || [[ -z "${VNC_PW}" ]] \
-    if [[ -z "${DISPLAY}" \
-    || -z "${VNC_PORT}" \
-    || -z "${VNC_COL_DEPTH}" \
-    || -z "${VNC_RESOLUTION}" ]] ; then
+    ### an empty VNC password is not working any more and therefore it's enforced
+    ### do not set the environment variable VNC_PW to an empty string!
+    ### also the variable VNC_CONFIG_HOME must be correctly set (new value: '$HOME/.config/tigervnc')
+    ### the previous value '$HOME/.vnc' has been deprecated since the 'TigerVNC 1.16.2'
+    for var in "${required_vars[@]}"; do
+        # Check if the variable is unset OR if it is set but empty
+        if [[ -z "${!var:-}" ]] ; then
+            cleanup "ERROR: Required environment variable '${var}' is not set or is empty."
+        fi
+    done
 
-        # cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT, VNC_PW, VNC_COL_DEPTH, VNC_RESOLUTION"
-        cleanup "ERROR: Not all required environment variables are set: DISPLAY, VNC_PORT, VNC_COL_DEPTH, VNC_RESOLUTION"
+    if [[ ! -d "${VNC_CONFIG_HOME}" ]] ; then
+    
+        mkdir "${VNC_CONFIG_HOME}"
     fi
 
-    passwd_path="${HOME}"/.vnc/passwd
-    
-    if [[ ! -d "${HOME}"/.vnc ]] ; then
-    
-        mkdir "${HOME}"/.vnc
-    fi
+    passwd_path="${VNC_CONFIG_HOME}"/passwd
 
     if [[ "${VNC_VIEW_ONLY,,}" == "true" ]] ; then
     
@@ -58,11 +65,11 @@ start_vnc () {
     chmod 600 "${passwd_path}"
 
     ### create VNC configuration file
-    echo "
-    rfbport=${VNC_PORT}
-    depth=${VNC_COL_DEPTH}
-    geometry=${VNC_RESOLUTION}
-    " > "${HOME}"/.vnc/config
+    echo \
+"rfbport=${VNC_PORT}
+depth=${VNC_COL_DEPTH}
+geometry=${VNC_RESOLUTION}" \
+> "${VNC_CONFIG_HOME}"/config
 
     ### get container IP address
     vnc_ip=$(hostname -i)
