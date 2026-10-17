@@ -50,10 +50,23 @@ show_error() {
     echo -e "\nERROR in ${0}: ${@:-(unknown)}\n"
 }
 
+show_log_deploy() {
+
+    echo -e "\n--> Log deploy:\n"
+    grep -iPn "${_regex_log_deploy}" "${_ci_builder_log}"
+    echo
+}
+
 show_log_digest() {
 
     echo -e "\n--> Log digest:\n"
     grep -Po "${_regex_log_digest}" "${_ci_builder_log}" | sort -u
+    echo
+}
+show_log_errors() {
+
+    echo -e "\n--> Building errors and warnings:\n"
+    grep -iPn "${_regex_log_errors}" "${_ci_builder_log}"
     echo
 }
 
@@ -68,13 +81,6 @@ show_log_timing() {
 
     echo -e "\n--> Building timing:\n"
     grep -P "${_regex_log_timing}" "${_ci_builder_log}"
-    echo
-}
-
-show_log_errors() {
-
-    echo -e "\n--> Building errors and warnings:\n"
-    grep -iPn "${_regex_log_errors}" "${_ci_builder_log}"
     echo
 }
 
@@ -93,7 +99,7 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
 
     ${0} [<options>] <command> group <blend> [<blend>]...
     ${0} [<options>] <command> family <parent-blend> [<child-suffix>]...
-    ${0} [--log-all] log get (digest|stickers|timing|errors)
+    ${0} [--log-all] log get (digest|stickers|timing|errors|deploy)
 
 <options>      := (--log-all|--no-cache) 
 <command>      := (all|all-no-push)
@@ -147,6 +153,8 @@ EOT
     #     ${0} log get timing
     # Display building errors:
     #     ${0} log get errors
+    # Display image uploads:
+    #     ${0} log get deploy
 }
 
 build_single_image() {
@@ -282,10 +290,11 @@ main() {
 
             case "${subject}" in
 
+            deploy) execute_smart show_log_deploy ;;
             digest) execute_smart show_log_digest ;;
+            errors) execute_smart show_log_errors ;;
             stickers) execute_smart show_log_stickers ;;
             timing) execute_smart show_log_timing ;;
-            errors) execute_smart show_log_errors ;;
             *)
                 execute_smart show_error "Unknown 'log get' command argument '${subject}'"
                 ;;
@@ -447,10 +456,11 @@ declare _ci_builder_log="scrap_ci-builder.log"
 
 declare _log_mark="\n[CI-BUILDER]"
 
+declare _regex_log_deploy="Deploying image "
 declare _regex_log_digest="(?<=\[CI-BUILDER\] ).+"
+declare _regex_log_errors="\berror\b|\bwarning\b|\bexiting at line\b"
 declare _regex_log_stickers="Current version sticker of "
 declare _regex_log_timing="==> (EXECUTING @.*builder\.sh.*|FINISHED  @.*builder\.sh.*)"
-declare _regex_log_errors="\berror\b|\bwarning\b|\bexiting at line\b"
 
 declare _flag_skip_footer=""
 declare _option_nocache=""
