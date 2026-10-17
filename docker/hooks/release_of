@@ -3,14 +3,20 @@
 main() {
     local result=""
     local response=""
-    local curl_output="scrap-release_of-failed.tmp"
+    local subject=${1:?'Subject must be provided as the first parameter!'}
 
-    case "$1" in
+    ### Warning! The log name must be synchronized with the 'builder.sh' script!
+    local curl_output="scrap_release_of.log"
+
+    # ensure the log file exists
+    touch "${curl_output}"
+
+    case "${subject}" in
 
         ### currently unused
 
         * )
-            echo "Exiting '${0}' with code '1' because of unknown key '${1}'"
+            echo "Exiting '${0}' with code '1' because of unknown subject '${1}'"
             return 1
             ;;
 
@@ -20,10 +26,11 @@ main() {
 
         echo "${result}"
     else
-        echo "ERROR: Exiting '${0}' with code '1' because unable to get version of '$1'"
-        echo "ERROR: Unexpected HTTPS response (see '${curl_output}')"
-        ### save to file
-        echo "${response}" > "../${curl_output}"
+        ### log the unexpected 'curl' response into the log file
+        echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n\n${response}\n" >> "${curl_output}"
+
+        echo "ERROR: Exiting '${0}' with code '1' because unable to get version of '${subject}'"
+        echo "ERROR: Unexpected HTTPS response (see the file '${curl_output}')"
         return 1
     fi
 }
