@@ -2,7 +2,7 @@
 
 ## Project `accetto/ubuntu-vnc-xfce-g3`
 
-Version: G3v8
+Version: G3v9
 
 ***
 
@@ -50,7 +50,7 @@ Version: G3v8
 
 This GitHub repository contains resources and tools for building Docker images for headless working.
 
-The images are based on [Ubuntu 24.04, 22.04 and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
+The images are based on [Ubuntu 24.04 and 22.04][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
 The popular web browsers [Brave][brave], [Chromium][chromium] and [Firefox][firefox] are also included.
 
 This [User guide][this-user-guide] describes the images and how to use them.
@@ -110,35 +110,55 @@ The **first generation** (G1) contains the GitHub repository [accetto/ubuntu-vnc
 
 ### Project versions
 
-This file describes the **eighths version** (G3v8) of the project.
+This file describes the **ninth version** (G3v9) of the project, which brings the following changes.
 
-This version brings some changes in the building pipeline and building utilities and it also fixes the problem with the badge service.
+It goes around the problem with the current `containerd` and the improved building pipeline, which has been introduced in the release `25.05 (G3v8)`. See also the [feedback-issue-603].
+
+Since the *Docker Desktop* option `Use containerd for pulling and storing images` has been introduced some time ago, the command `docker build --cache-from=<local-helper-image-used-as-cache>` ignores the local helper image if the option is enabled.
+It always tries to pull the cache image from the registry instead of using the local image.
+
+The new version uses the local file system for caching the helper images.
+This option seems to perform better and it is easier to maintain than the other possible option with a local registry.
+
+The path to the local helper cache is configurable via the environment variable `HELPER_IMAGE_CACHE_PATH`.
+The variable is expected to be set in the file `hooks/secrets.rc`.
+The default value is `./.buildx-cache`.
+
+The local cache is automatically cleaned during the building.
+
+The usage of the `stage_cache` layers has been also improved in all Dockerfiles, avoiding possible stale cache data.
+
+Also the optional building parameter `--pull` has been introduced for both builder scripts `builder.sh` and `ci-builder.sh`.
+It prevents builds from relying only on a possibly stale local base image.
+
+The version removes the support for the images based on `Ubuntu 20.04 LTS (Focal)` because it already reached its end-of-life.
+
+Please note that the project keeps evolving, so always check the [CHANGELOG][this-changelog] for the latest changes.
+
+#### Previous versions
+
+The previous versions are still available in this **GitHub** repository as the branches named as `archived-generation-g3v{d}`.
+
+The version `G3v8` has brought some changes in the building pipeline and building utilities and it also fixed the problem with the badge service.
 
 The service **Badgen.net**, which has been unusable for some time already, was replaced by the service [Shields.io][service-shields-io].
 
-Consequently it was necessary to update all README files of all `accetto` repositories on **Docker Hub**. Therefore there are several new functions that support this kind of scenarios.
+Consequently it was necessary to update all README files of all `accetto` repositories on **Docker Hub**. Therefore there were several new functions that supported that kind of scenarios.
 
-For example, now it's possible to update the `deployment gists` on the **GitHub** without re-build the images first. The updated hook script `post_push` can extract the badge values ad-hoc from the final deployment images available locally and it doesn't depend on the helper files created during the `pre_build` phase. It would use the images pulled from the **Docker Hub** as well.
+For example, it was possible to update the `deployment gists` on the **GitHub** without re-build the images first. The updated hook script `post_push` could extract the badge values ad-hoc from the final deployment images available locally and it didn't depend on the helper files created during the `pre_build` phase. It could use the images pulled from the **Docker Hub** as well.
 
-This change makes it possible to refresh the gists using the "historical" data extracted from previously published images.
+The change made it possible to refresh the gists using the "historical" data extracted from the previously published images.
 
-Gist updates are also more reliable because there will be up to 3 retries if an update fails.
+Gist updates were made more reliable because there were up to 3 retries if an update failed.
 
-The new functionality is available through the updated utility `ci-builder.sh`, which has got the following new commands:
+The new functionality was available through the updated utility `ci-builder.sh`, which got the following new commands:
 
 - `list`
 - `pull`
 - `update-gists`
 - `helper-help`
 
-Please check the files `readme-ci-builder.md` and `readme-builder.md` for the description.
-
-However, the project keeps evolving.
-Please always check the [CHANGELOG][this-changelog] for the latest changes.
-
-#### Previous versions
-
-The previous versions are still available in this **GitHub** repository as the branches named as `archived-generation-g3v{d}`.
+The files `readme-ci-builder.md` and `readme-builder.md` described the changes.
 
 The version `G3v7` could build final images significantly faster, because the temporary helper images were used as external caches.
 
@@ -480,3 +500,4 @@ Credit goes to all the countless people and companies, who contribute to open so
 [badge-github-closed-issues]: https://img.shields.io/github/issues-closed/accetto/ubuntu-vnc-xfce-g3
 
 [service-shields-io]: https://shields.io/
+[feedback-issue-603]: https://github.com/docker/desktop-feedback/issues/603

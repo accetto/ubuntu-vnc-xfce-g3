@@ -100,10 +100,10 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
                   |(pull|update-gists|list|helper-help)
 <mode>         := (group|family)
 <blend>        := pivotal
-                  |(complete[-latest|-noble|-24.04|-jammy|-22.04|-focal|-20.04|-brave|-chromium|-firefox])
-                  |(latest|noble|24.04|jammy|22.04|focal|20.04[-brave|-chromium|-firefox])
+                  |(complete[-latest|-noble|-24.04|-jammy|-22.04|-brave|-chromium|-firefox])
+                  |(latest|noble|24.04|jammy|22.04[-brave|-chromium|-firefox])
                   |(any)
-<parent-blend> := (complete)|(latest|24.04|noble|jammy|22.04|focal|20.04[-brave|-chromium|-firefox])
+<parent-blend> := (complete)|(latest|24.04|noble|jammy|22.04[-brave|-chromium|-firefox])
 <child-suffix> := depends on context, e.g. '-ver1|-ver2' (currently none supported)
 
 Group mode : All images are processed independently.
@@ -335,12 +335,6 @@ main() {
                 build_group "${command}" "jammy" "jammy-firefox" "jammy-brave" "jammy-chromium"
                 ;;
 
-            complete-focal | complete-20.04)
-
-                clear_log
-                build_group "${command}" "focal" "focal-firefox" "focal-brave" "focal-chromium"
-                ;;
-
             complete-brave)
 
                 clear_log
@@ -363,9 +357,7 @@ main() {
                 noble | noble-brave | noble-chromium | noble-firefox | \
                 24.04 | 24.04-brave | 24.04-chromium | 24.04-firefox | \
                 jammy | jammy-brave | jammy-chromium | jammy-firefox | \
-                22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox | \
-                focal | focal-brave | focal-chromium | focal-firefox | \
-                20.04 | 20.04-brave | 20.04-chromium | 20.04-firefox )
+                22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox )
 
                 clear_log
                 build_group "${command}" "${subject}" $@
@@ -414,8 +406,7 @@ main() {
             jammy | jammy-brave | jammy-chromium | jammy-firefox | \
             focal | focal-brave | focal-chromium | focal-firefox | \
             24.04 | 24.04-brave | 24.04-chromium | 24.04-firefox | \
-            22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox | \
-            20.04 | 20.04-brave | 20.04-chromium | 20.04-firefox )
+            22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox )
 
                 clear_log
                 build_family "${command}" "${subject}" $@
