@@ -31,7 +31,8 @@ begins_with_short_option()
 
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_source="${HOME}/firefox.plus"
-_arg_target="${HOME}/.mozilla/firefox"
+_arg_target="${HOME}/.config/mozilla/firefox"
+_arg_target_legacy="${HOME}/.mozilla/firefox"
 
 
 print_help()
@@ -39,7 +40,7 @@ print_help()
 	printf '%s\n' "Copy 'user.js' into existing Firefox profiles"
 	printf 'Usage: %s [-s|--source <arg>] [-t|--target <arg>] [-v|--version] [-h|--help]\n' "$0"
 	printf '\t%s\n' "-s, --source: Source folder (where 'user.js' is). (default: '${HOME}/firefox.plus')"
-	printf '\t%s\n' "-t, --target: Target folder (where Firefox profiles are). (default: '${HOME}/.mozilla/firefox')"
+	printf '\t%s\n' "-t, --target: Target folder (where Firefox profiles are). (default: '${_arg_target}', legacy: '${_arg_target_legacy}')"
 	printf '\t%s\n' "-v, --version: Prints version"
 	printf '\t%s\n' "-h, --help: Prints help"
 }
@@ -115,11 +116,6 @@ _mark=""
 _oldIFS=""
 declare -a _list
 
-# LOCAL_DEBUG=true
-
-[[ $LOCAL_DEBUG ]] && _arg_source="."
-[[ $LOCAL_DEBUG ]] && _arg_target="../.mozilla/firefox"
-
 fn_die()
 {
 	local _ret=$2
@@ -132,8 +128,21 @@ fn_die()
 
 ### source and target folders must be provided
 # : ${_arg_source?} ${_arg_target?}
-[[ ! ${_arg_source} ]] && fn_die "Source path must be provided!"
-[[ ! ${_arg_target} ]] && fn_die "Target path must be provided!"
+[[ ! ${_arg_source} ]] && fn_die "Source path must be provided and it must exist!"
+
+if [[ -d "${_arg_target_legacy}" ]] ; then
+
+	_arg_target="../.mozilla/firefox"
+
+elif [[ -d "${_arg_target}" ]] ; then
+
+	_arg_target="../.config/mozilla/firefox"
+
+else
+	_arg_target=""
+fi
+
+[[ ! ${_arg_target} ]] && fn_die "Target path must be provided and it must exist!"
 
 _full_userjs="${_arg_source}/${_file_userjs}"
 _full_profilesini="${_arg_target}/${_file_profilesini}"
