@@ -62,6 +62,7 @@ main() {
     ### no quotes around ${params}!
     set -x
     docker build ${params} \
+        --cache-to=type=local,dest=${HELPER_IMAGE_CACHE_PATH}/${helper_image} \
         -f "${DOCKERFILE_PATH}" \
         --build-arg BASEIMAGE="${BASEIMAGE}" \
         --build-arg BASETAG="${BASETAG}" \
@@ -94,6 +95,11 @@ main() {
 
     if [[ ${exit_code} -ne 0 ]]; then
         set +x
+
+        echo
+        echo "Removing helper image from the cache"
+        echo "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        rm -rf "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
 
         die "Failed to build helper image '${helper_image}'" ${exit_code}
     fi
@@ -164,8 +170,14 @@ main() {
     ### moved to the 'build' script where the helper image is used as a cache
     ### however, there could be also no 'build' call
     if [[ -f "${_build_context}/${_scrap_demand_stop_building}" ]]; then
+
         echo; echo "Removing helper image because no 'build' is needed"
         docker rmi "${helper_image}"
+
+        echo
+        echo "Removing helper image from the cache"
+        echo "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        rm -rf "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
     fi
 }
 

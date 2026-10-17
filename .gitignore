@@ -12,8 +12,7 @@
 # recommended files on 'https://github.com/github/gitignore'
 
 .vscode
-.cache*
-.g3-cache*
+.*cache*
 .secret*
 .util*
 .vscode
