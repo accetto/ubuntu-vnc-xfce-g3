@@ -45,7 +45,7 @@ Usage: $0 <blend> <command> [<docker-cli-options>]
 blend   := (latest|noble|24.04|jammy|22.04)[-brave|-chromium|-firefox]
 command := (all|all-no-push)|(pre_build|build|push|post_push|cache)
 
-The <docker-cli-options> (e.g. '--no-cache') are passed to the Docker CLI commands used internally.
+The <docker-cli-options> (e.g. '--no-cache', '--target' or '--pull') are passed to the Docker CLI commands used internally.
 
 The script creates a complete execution log.
 EOT

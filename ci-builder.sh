@@ -102,7 +102,7 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
     ${0} [<options>] <command> family <parent-blend> [<child-suffix>]...
     ${0} [--log-all] log get (digest|stickers|timing|errors|deploy)
 
-<options>      := (--log-all|--no-cache) 
+<options>      := (--log-all|--no-cache|--pull) 
 <command>      := (all|all-no-push)
                   |(pull|update-gists|list|helper-help)
 <mode>         := (group|family)
@@ -163,6 +163,7 @@ build_single_image() {
     local blend="${2?Expected blend}"
     local option_nocache="${3}"
     local -i exit_code=0
+    local option_build_pull="${4}"
 
     if [[ "${command}" == "pull" ]]; then
 
@@ -184,7 +185,7 @@ build_single_image() {
         echo -e "${_log_mark} Building image '${_builder_project}:${blend}'"
 
         ### call builder script
-        ./"${_builder_script}" "${blend}" "${command}" "${option_nocache}"
+        ./"${_builder_script}" "${blend}" "${command}" "${option_nocache}" "${option_build_pull}"
         exit_code=$?
         if [[ ${exit_code} -ne 0 ]]; then die "Script '${_builder_script}' failed with code ${exit_code}." ${exit_code}; fi
 
@@ -221,7 +222,7 @@ build_family() {
     if [[ $# -ge 2 ]]; then shift 2; fi
 
     ### note that the option '--no-cache' is passed in by the parent image
-    build_single_image "${command}" "${parent}" "${_option_nocache}"
+    build_single_image "${command}" "${parent}" "${_option_nocache}" "${option_build_pull}"
 
     ### if the parent probe succeeded then probe the children
     if [[ $(tail "${_builder_log}" | grep -cE "==> (Published|Built) '${parent}'") -eq 1 ]]; then
@@ -241,7 +242,7 @@ build_group() {
     for blend in $@; do
 
         # note that the option '--no-cache' is passed in by each image
-        build_single_image "${command}" ${blend} "${_option_nocache}"
+        build_single_image "${command}" ${blend} "${_option_nocache}" "${option_build_pull}"
     done
 }
 
@@ -260,6 +261,7 @@ main() {
 
         --no-cache) _option_nocache="${1}" ;;
         --log-all) _option_logall="${1}" ;;
+        --pull) _option_build_pull="${1}" ;;
 
         *)
             execute_smart show_error "Unknown option '${1}'"
@@ -466,6 +468,7 @@ declare _regex_log_timing="==> (EXECUTING @.*builder\.sh.*|FINISHED  @.*builder\
 declare _flag_skip_footer=""
 declare _option_nocache=""
 declare _option_logall=""
+declare _option_build_pull=""
 
 ### duplicate 'stdout' so we can close it when needed
 exec 3>&1
