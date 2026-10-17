@@ -22,7 +22,6 @@ FROM ${BASEIMAGE}:${BASETAG} AS stage_cache
 ### refresh the 'apt' cache
 RUN rm -f /etc/apt/apt.conf.d/docker-clean ; \
     echo 'Binary::apt::APT::Keep-Downloaded-Packages "true" ;' > /etc/apt/apt.conf.d/keep-cache
-RUN apt-get update
 
 ### embed the local '.g3-cache' from the build context
 ### note that the bound cache '/tmp/cache2' is ephemeral and all written data will be discarded automatically
@@ -42,7 +41,8 @@ FROM ${BASEIMAGE}:${BASETAG} AS stage_essentials
 RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y \
         gettext-base \
         gir1.2-rsvg-2.0 \
         gpg \
@@ -68,7 +68,8 @@ ENV \
 RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+    apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         dbus-x11 \
         xauth \
         xinit \
@@ -88,7 +89,8 @@ ENV FEATURES_BUILD_SLIM_XFCE="${ARG_APT_NO_RECOMMENDS:+1}"
 RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+    apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         xfce4 \
         xfce4-terminal \
         elementary-xfce-icon-theme
@@ -111,7 +113,8 @@ ENV \
 RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+    apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         man \
         mousepad \
         python3 \
@@ -182,7 +185,8 @@ RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/tmp/g3-cache/,target=/tmp/g3-cache/ \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+    apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         python3-numpy \
     &&  mkdir -p "${NOVNC_HOME}"/utils/websockify \
     &&  NOVNC_VERSION="${ARG_NOVNC_VERSION}" \
@@ -261,7 +265,8 @@ ENV \
 RUN \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/cache/apt,target=/var/cache/apt \
     --mount=type=cache,from=stage_cache,sharing=locked,source=/var/lib/apt,target=/var/lib/apt \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
+    apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y "${ARG_APT_NO_RECOMMENDS:+--no-install-recommends}" \
         curl
 
 RUN DEBIAN_FRONTEND=noninteractive \
