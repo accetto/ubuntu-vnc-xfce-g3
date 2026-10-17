@@ -24,11 +24,11 @@ The related [GitHub project][this-github] contains image generators that image u
 
 The following image tags are regularly built and published on Docker Hub:
 
-- `latest` (also as `24.04`) based on `Ubuntu 24.04 LTS`
+- `latest` (also as `24.04` or `noble`) based on `Ubuntu 24.04 LTS`
 
     ![badge_latest_created][badge_latest_created]` `[![badge_latest_version-sticker][badge_latest_version-sticker]][link_latest_version-sticker-verbose]
 
-- `22.04` based on `Ubuntu 22.04 LTS`
+- `22.04` (also as `jammy`) based on `Ubuntu 22.04 LTS`
 
     ![badge_22-04_created][badge_22-04_created]` `[![badge_22-04_version-sticker][badge_22-04_version-sticker]][link_22-04_version-sticker-verbose]
 
