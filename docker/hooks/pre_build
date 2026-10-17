@@ -99,7 +99,10 @@ main() {
         echo
         echo "Removing helper image from the cache"
         echo "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
-        rm -rf "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        ### remove the whole directory
+        # rm -rf "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        ### remove just the directory content
+        find "${HELPER_IMAGE_CACHE_PATH}/${helper_image}" -mindepth 1 -delete
 
         die "Failed to build helper image '${helper_image}'" ${exit_code}
     fi
@@ -177,7 +180,10 @@ main() {
         echo
         echo "Removing helper image from the cache"
         echo "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        ### remove the whole directory
         rm -rf "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        ### remove just the directory content
+        # find "${HELPER_IMAGE_CACHE_PATH}/${helper_image}" -mindepth 1 -delete
     fi
 }
 
