@@ -13,7 +13,7 @@
 
 This Docker Hub repository contains Docker images for headless working.
 
-The images are based on [Ubuntu 24.04, 22.04 and 20.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
+The images are based on [Ubuntu 24.04 and 22.04 LTS][docker-ubuntu] and include [Xfce][xfce] desktop, [TigerVNC][tigervnc] server and [noVNC][novnc] client.
 
 This [User guide][this-user-guide] describes the images and how to use them.
 
@@ -32,11 +32,6 @@ The following image tags are regularly built and published on Docker Hub:
 
     ![badge_22-04_created][badge_22-04_created]` `
     [![badge_22-04_version-sticker][badge_22-04_version-sticker]][link_22-04_version-sticker-verbose]
-
-- `20.04` based on `Ubuntu 20.04 LTS`
-
-    ![badge_20-04_created][badge_20-04_created]` `
-    [![badge_20-04_version-sticker][badge_20-04_version-sticker]][link_20-04_version-sticker-verbose]
 
 <!-- markdownlint-enable MD052 -->
 
