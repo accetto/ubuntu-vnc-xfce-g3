@@ -132,11 +132,11 @@ fn_die()
 
 if [[ -d "${_arg_target_legacy}" ]] ; then
 
-	_arg_target="../.mozilla/firefox"
+	_arg_target="${HOME}/.mozilla/firefox"
 
 elif [[ -d "${_arg_target}" ]] ; then
 
-	_arg_target="../.config/mozilla/firefox"
+	_arg_target="${HOME}/.config/mozilla/firefox"
 
 else
 	_arg_target=""
