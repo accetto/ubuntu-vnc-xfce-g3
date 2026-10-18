@@ -19,8 +19,12 @@ clear_log() {
     ### just for debugging
     # cp -f "${_ci_builder_log}" "${_ci_builder_log}_copy"
 
+    ### clear the log
     >"${_builder_log}"
     echo -e "\n==> EXECUTING @$(date -u +'%Y-%m-%d_%H-%M-%S'): ${0} $@\n"
+
+    ### clear the log
+    >"${_release_of_log}"
 }
 
 show_error() {
@@ -152,6 +156,10 @@ main() {
 declare _build_context="./docker"
 
 declare _builder_log="scrap_builder.log"
+
+### The log of the 'release_of' utility, which stores the 'curl' failures and is cleared by this script.
+### Warning, its name must be synchronized with the 'hooks/release_of' script!
+declare _release_of_log="scrap_release_of.log"
 
 ### duplicate 'stdout' so we can close it when displaying help
 exec 3>&1
