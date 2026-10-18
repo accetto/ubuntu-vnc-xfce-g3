@@ -36,7 +36,23 @@ This is the first `G3v9` release. It brings the following changes.
     - `./builder.sh latest build --pull`
     - `./ci-builder.sh --pull all-no-push group latest`
 
+- It introduces a possibility to override the result of the hook script `release_of`, which returns current dynamic data (e.g. version numbers) used by installing of some products.
+  - It can be done by setting the following environment variables (in the `secrets.rc` script or otherwise):
+    - `RELEASE_OF_OVERRIDE_chromium_1804`
+  - It can be useful for pinning a specific application version or by mitigating building errors because of reaching the request limits.
+
 - It removes support for the images based on `Ubuntu 20.04 LTS (Focal)` because the version already reached its end-of-life.
+
+Other changes and improvements:
+
+- `ci-builder.sh` has got a new command `log get deploy` for extracting the beginnings of all deployments (pushes) from the log file
+  - it recognizes also pushing of builder images (when `FORCE_PUBLISHING_BUILDER_REPO=1`)
+  - Usage example: `./ci-builder.sh log get deploy`
+- `hooks/release_of` now saves an unexpected `curl` response into the file `scrap_release_of.log`, which will be cleared by the script `builder.sh` whenever the builder log is cleared. The file is always created and it can be empty if there have been no failures.
+- Mozilla has changed the `Firefox` profile root path from `${HOME}/.mozilla/firefox` to `${HOME}/.config/mozilla/firefox`. The updated script `copy_firefox_user_preferences.sh` handles both paths and uses it absolute paths to Firefox profiles.
+- Some improvements in the `stage_cache` layers in all Dockerfiles
+- Hook scripts `pre_build` and `build` ensure `BuildKit` by using `docker buildx build --load` instead of just `docker build`
+  - Remark: `BuildKit` has been enforced also before by setting the environment variable `export DOCKER_BUILDKIT=1` in the hook script `secrets.rc`.
 
 ### Release 26.05
 
