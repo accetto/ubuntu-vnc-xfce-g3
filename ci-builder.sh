@@ -50,10 +50,24 @@ show_error() {
     echo -e "\nERROR in ${0}: ${@:-(unknown)}\n"
 }
 
+show_log_deploy() {
+
+    echo -e "\n--> Log deploy:\n"
+    grep -iPn "${_regex_log_deploy}" "${_ci_builder_log}"
+    echo
+}
+
 show_log_digest() {
 
     echo -e "\n--> Log digest:\n"
     grep -Po "${_regex_log_digest}" "${_ci_builder_log}" | sort -u
+    echo
+}
+
+show_log_errors() {
+
+    echo -e "\n--> Building errors and warnings:\n"
+    grep -iPn "${_regex_log_errors}" "${_ci_builder_log}"
     echo
 }
 
@@ -68,13 +82,6 @@ show_log_timing() {
 
     echo -e "\n--> Building timing:\n"
     grep -P "${_regex_log_timing}" "${_ci_builder_log}"
-    echo
-}
-
-show_log_errors() {
-
-    echo -e "\n--> Building errors and warnings:\n"
-    grep -iPn "${_regex_log_errors}" "${_ci_builder_log}"
     echo
 }
 
@@ -93,17 +100,17 @@ Usage: <script> <mode> <argument> [<optional-argument>]...
 
     ${0} [<options>] <command> group <blend> [<blend>]...
     ${0} [<options>] <command> family <parent-blend> [<child-suffix>]...
-    ${0} [--log-all] log get (digest|stickers|timing|errors)
+    ${0} [--log-all] log get (digest|stickers|timing|errors|deploy)
 
-<options>      := (--log-all|--no-cache) 
+<options>      := (--log-all|--no-cache|--pull) 
 <command>      := (all|all-no-push)
                   |(pull|update-gists|list|helper-help)
 <mode>         := (group|family)
 <blend>        := pivotal
-                  |(complete[-latest|-noble|-24.04|-jammy|-22.04|-focal|-20.04|-brave|-chromium|-firefox])
-                  |(latest|noble|24.04|jammy|22.04|focal|20.04[-brave|-chromium|-firefox])
+                  |(complete[-latest|-noble|-24.04|-jammy|-22.04|-brave|-chromium|-firefox])
+                  |(latest|noble|24.04|jammy|22.04[-brave|-chromium|-firefox])
                   |(any)
-<parent-blend> := (complete)|(latest|24.04|noble|jammy|22.04|focal|20.04[-brave|-chromium|-firefox])
+<parent-blend> := (complete)|(latest|24.04|noble|jammy|22.04[-brave|-chromium|-firefox])
 <child-suffix> := depends on context, e.g. '-ver1|-ver2' (currently none supported)
 
 Group mode : All images are processed independently.
@@ -147,6 +154,8 @@ EOT
     #     ${0} log get timing
     # Display building errors:
     #     ${0} log get errors
+    # Display image uploads:
+    #     ${0} log get deploy
 }
 
 build_single_image() {
@@ -154,6 +163,7 @@ build_single_image() {
     local blend="${2?Expected blend}"
     local option_nocache="${3}"
     local -i exit_code=0
+    local option_pull="${4}"
 
     if [[ "${command}" == "pull" ]]; then
 
@@ -175,7 +185,7 @@ build_single_image() {
         echo -e "${_log_mark} Building image '${_builder_project}:${blend}'"
 
         ### call builder script
-        ./"${_builder_script}" "${blend}" "${command}" "${option_nocache}"
+        ./"${_builder_script}" "${blend}" "${command}" "${option_nocache}" "${option_pull}"
         exit_code=$?
         if [[ ${exit_code} -ne 0 ]]; then die "Script '${_builder_script}' failed with code ${exit_code}." ${exit_code}; fi
 
@@ -212,7 +222,7 @@ build_family() {
     if [[ $# -ge 2 ]]; then shift 2; fi
 
     ### note that the option '--no-cache' is passed in by the parent image
-    build_single_image "${command}" "${parent}" "${_option_nocache}"
+    build_single_image "${command}" "${parent}" "${_option_nocache}" "${_option_build_pull}"
 
     ### if the parent probe succeeded then probe the children
     if [[ $(tail "${_builder_log}" | grep -cE "==> (Published|Built) '${parent}'") -eq 1 ]]; then
@@ -232,7 +242,7 @@ build_group() {
     for blend in $@; do
 
         # note that the option '--no-cache' is passed in by each image
-        build_single_image "${command}" ${blend} "${_option_nocache}"
+        build_single_image "${command}" ${blend} "${_option_nocache}" "${_option_build_pull}"
     done
 }
 
@@ -251,6 +261,7 @@ main() {
 
         --no-cache) _option_nocache="${1}" ;;
         --log-all) _option_logall="${1}" ;;
+        --pull) _option_build_pull="${1}" ;;
 
         *)
             execute_smart show_error "Unknown option '${1}'"
@@ -282,10 +293,11 @@ main() {
 
             case "${subject}" in
 
+            deploy) execute_smart show_log_deploy ;;
             digest) execute_smart show_log_digest ;;
+            errors) execute_smart show_log_errors ;;
             stickers) execute_smart show_log_stickers ;;
             timing) execute_smart show_log_timing ;;
-            errors) execute_smart show_log_errors ;;
             *)
                 execute_smart show_error "Unknown 'log get' command argument '${subject}'"
                 ;;
@@ -308,13 +320,13 @@ main() {
             pivotal)
 
                 clear_log
-                build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-brave" "jammy-brave" "focal-brave" "latest-chromium" "jammy-chromium" "focal-chromium"
+                build_group "${command}" "latest" "jammy" "latest-firefox" "jammy-firefox" "latest-brave" "jammy-brave" "latest-chromium" "jammy-chromium"
                 ;;
 
             complete)
 
                 clear_log
-                build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-brave" "jammy-brave" "focal-brave" "latest-chromium" "jammy-chromium" "focal-chromium"
+                build_group "${command}" "latest" "jammy" "latest-firefox" "jammy-firefox" "latest-brave" "jammy-brave" "latest-chromium" "jammy-chromium" 
                 ;;
 
             complete-latest | complete-24.04)
@@ -335,37 +347,29 @@ main() {
                 build_group "${command}" "jammy" "jammy-firefox" "jammy-brave" "jammy-chromium"
                 ;;
 
-            complete-focal | complete-20.04)
-
-                clear_log
-                build_group "${command}" "focal" "focal-firefox" "focal-brave" "focal-chromium"
-                ;;
-
             complete-brave)
 
                 clear_log
-                build_group "${command}" "latest-brave" "jammy-brave" "focal-brave"
+                build_group "${command}" "latest-brave" "jammy-brave"
                 ;;
             
             complete-chromium)
 
                 clear_log
-                build_group "${command}" "latest-chromium" "jammy-chromium" "focal-chromium"
+                build_group "${command}" "latest-chromium" "jammy-chromium"
                 ;;
 
             complete-firefox)
 
                 clear_log
-                build_group "${command}" "latest-firefox" "jammy-firefox" "focal-firefox"
+                build_group "${command}" "latest-firefox" "jammy-firefox"
                 ;;
 
             latest | latest-brave | latest-chromium | latest-firefox | \
                 noble | noble-brave | noble-chromium | noble-firefox | \
                 24.04 | 24.04-brave | 24.04-chromium | 24.04-firefox | \
                 jammy | jammy-brave | jammy-chromium | jammy-firefox | \
-                22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox | \
-                focal | focal-brave | focal-chromium | focal-firefox | \
-                20.04 | 20.04-brave | 20.04-chromium | 20.04-firefox )
+                22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox )
 
                 clear_log
                 build_group "${command}" "${subject}" $@
@@ -397,25 +401,19 @@ main() {
 
                 build_family "${command}" "latest"
                 build_family "${command}" "jammy"
-                build_family "${command}" "focal"
                 build_family "${command}" "latest-firefox"
                 build_family "${command}" "jammy-firefox"
-                build_family "${command}" "focal-firefox"
                 build_family "${command}" "latest-brave"
                 build_family "${command}" "jammy-brave"
-                build_family "${command}" "focal-brave"
                 build_family "${command}" "latest-chromium"
                 build_family "${command}" "jammy-chromium"
-                build_family "${command}" "focal-chromium"
                 ;;
 
             latest | latest-brave | latest-chromium | latest-firefox | \
             noble | noble-brave | noble-chromium | noble-firefox | \
             jammy | jammy-brave | jammy-chromium | jammy-firefox | \
-            focal | focal-brave | focal-chromium | focal-firefox | \
             24.04 | 24.04-brave | 24.04-chromium | 24.04-firefox | \
-            22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox | \
-            20.04 | 20.04-brave | 20.04-chromium | 20.04-firefox )
+            22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox )
 
                 clear_log
                 build_family "${command}" "${subject}" $@
@@ -456,14 +454,16 @@ declare _ci_builder_log="scrap_ci-builder.log"
 
 declare _log_mark="\n[CI-BUILDER]"
 
+declare _regex_log_deploy="\bDeploying image\b|\bPushing builder image\b"
 declare _regex_log_digest="(?<=\[CI-BUILDER\] ).+"
+declare _regex_log_errors="\berror\b|\bwarning\b|\bexiting at line\b"
 declare _regex_log_stickers="Current version sticker of "
 declare _regex_log_timing="==> (EXECUTING @.*builder\.sh.*|FINISHED  @.*builder\.sh.*)"
-declare _regex_log_errors="\berror\b|\bwarning\b|\bexiting at line\b"
 
 declare _flag_skip_footer=""
 declare _option_nocache=""
 declare _option_logall=""
+declare _option_build_pull=""
 
 ### duplicate 'stdout' so we can close it when needed
 exec 3>&1

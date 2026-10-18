@@ -69,8 +69,8 @@ main() {
 
         ### no quotes around ${params}!
         set -x
-        docker build ${params} \
-            --cache-from=${helper_image} \
+        docker buildx build --load ${params} \
+            --cache-from=type=local,src=${HELPER_IMAGE_CACHE_PATH}/${helper_image} \
             -f "${DOCKERFILE_PATH}" \
             --build-arg BASEIMAGE="${BASEIMAGE}" \
             --build-arg BASETAG="${BASETAG}" \
@@ -106,12 +106,20 @@ main() {
         set +x
     fi
 
-    ### delete the helper image in any case
+    ### delete the helper image in any case (also from the helper image cache)
     ensure_image "${helper_image}"
     if [[ $? -eq 0 ]]; then
         echo
         echo "Removing helper image"
         docker rmi "${helper_image}"
+
+        echo
+        echo "Removing helper image from the cache"
+        echo "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        ### remove the whole directory
+        rm -rf "${HELPER_IMAGE_CACHE_PATH}/${helper_image}"
+        ### remove just the directory content
+        # find "${HELPER_IMAGE_CACHE_PATH}/${helper_image}" -mindepth 1 -delete
     fi
 
     if [[ ${exit_code} -ne 0 ]]; then

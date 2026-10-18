@@ -6,6 +6,54 @@
 
 ***
 
+### Release 26.10 (G3v9)
+
+This is the first `G3v9` release. It brings the following changes.
+
+- It goes around the problem with the current `containerd` and the improved building pipeline, which has been introduced in the release `25.05 (G3v8)`. See also the [feedback-issue-603].
+
+  - Since the *Docker Desktop* option `Use containerd for pulling and storing images` has been introduced some time ago, the command `docker build --cache-from=<local-helper-image-used-as-cache>` ignores the local helper image if the option is enabled.
+  It always tries to pull the cache image from the registry instead of using the local image.
+    - This release uses the local file system for caching the helper images.
+    This option seems to perform better and it is easier to maintain than the other possible option with a local registry.
+      - The path to the local helper cache is configurable via the environment variable `HELPER_IMAGE_CACHE_PATH`.
+        - The variable is expected to be set in the file `hooks/secrets.rc`.
+        - The default local cache path value is `./.buildx-cache`.
+        - The local cache is automatically cleaned during the building.
+
+- It improves usage of the `stage_cache` layers in all Dockerfiles, avoiding possible stale cache data.
+
+- Both builder scripts `builder.sh` and `ci-builder.sh` can now take a new optional build parameter `--pull`, which is passed to the underlying [docker build][docker-build-command] command.
+
+  - Command `docker build --pull` tells Docker to check the registry for a newer version of every base image referenced by `FROM`, even if a local copy already exists.
+  - Benefits:
+    - Incorporates updated base-image patches and security fixes.
+    - Prevents builds from relying only on a possibly stale local base image.
+    - Rebuilds dependent layers when the base image changes.
+    - Does not disable the build cache or pull every dependency used by later commands.
+  - Use it in CI or security-focused rebuilds. For fully reproducible builds, pin the base image by digest instead.
+  - Note the difference in the command line syntax. For example:
+    - `./builder.sh latest build --pull`
+    - `./ci-builder.sh --pull all-no-push group latest`
+
+- It introduces a possibility to override the result of the hook script `release_of`, which returns current dynamic data (e.g. version numbers) used by installing of some products.
+  - It can be done by setting the following environment variables (in the `secrets.rc` script or otherwise):
+    - `RELEASE_OF_OVERRIDE_chromium_1804`
+  - It can be useful for pinning a specific application version or by mitigating building errors because of reaching the request limits.
+
+- It removes support for the images based on `Ubuntu 20.04 LTS (Focal)` because the version already reached its end-of-life.
+
+Other changes and improvements:
+
+- `ci-builder.sh` has got a new command `log get deploy` for extracting the beginnings of all deployments (pushes) from the log file
+  - it recognizes also pushing of builder images (when `FORCE_PUBLISHING_BUILDER_REPO=1`)
+  - Usage example: `./ci-builder.sh log get deploy`
+- `hooks/release_of` now saves an unexpected `curl` response into the file `scrap_release_of.log`, which will be cleared by the script `builder.sh` whenever the builder log is cleared. The file is always created and it can be empty if there have been no failures.
+- Mozilla has changed the `Firefox` profile root path from `${HOME}/.mozilla/firefox` to `${HOME}/.config/mozilla/firefox`. The updated script `copy_firefox_user_preferences.sh` handles both paths and uses it absolute paths to Firefox profiles.
+- Some improvements in the `stage_cache` layers in all Dockerfiles
+- Hook scripts `pre_build` and `build` ensure `BuildKit` by using `docker buildx build --load` instead of just `docker build`
+  - Remark: `BuildKit` has been enforced also before by setting the environment variable `export DOCKER_BUILDKIT=1` in the hook script `secrets.rc`.
+
 ### Release 26.05
 
 This is a maintenance release. Most of the updates are related to the `TigerVNC v1.16.2`, which is being introduced in this release.
@@ -687,3 +735,7 @@ This is just a maintenance release.
 
 [brave]: https://brave.com/
 [chromium]: https://www.chromium.org/Home
+
+[feedback-issue-603]: https://github.com/docker/desktop-feedback/issues/603
+
+[docker-build-command]: https://docs.docker.com/reference/cli/docker/buildx/build/

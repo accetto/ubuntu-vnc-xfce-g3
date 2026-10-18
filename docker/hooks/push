@@ -12,6 +12,15 @@ deployment_push() {
     local keeper_repo_tag="${_deploy_builder_tags[0]}"
     local -i exit_code=0
 
+    ### if you experience broken pushes, then these variables could help
+    ### initialize them, for example, in the 'secrets.rc' file
+    ### export DOCKER_CLIENT_TIMEOUT=300
+    ### export COMPOSE_HTTP_CLIENT_TIMEOUT=300
+    
+    ### just for tracing
+    # echo "TRACE: DOCKER_CLIENT_TIMEOUT=${DOCKER_CLIENT_TIMEOUT}"
+    # echo "TRACE: COMPOSE_HTTP_CLIENT_TIMEOUT=${COMPOSE_HTTP_CLIENT_TIMEOUT}"
+
     if [[ -n "${repo}" && "${repo}" != "${_prohibited_repo_name}" ]] ; then
 
         ### push all target tags into the deployment repository
@@ -24,6 +33,7 @@ deployment_push() {
                 target="${_deploy_repo}:${t}"
 
                 echo ; echo "Deploying image '${target}'"
+                
                 docker tag "${DOCKER_REPO}:${keeper_repo_tag}" "${target}"
                 docker push "${target}"
                 exit_code=$?
