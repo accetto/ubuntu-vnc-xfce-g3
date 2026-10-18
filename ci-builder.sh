@@ -320,13 +320,13 @@ main() {
             pivotal)
 
                 clear_log
-                build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-brave" "jammy-brave" "focal-brave" "latest-chromium" "jammy-chromium" "focal-chromium"
+                build_group "${command}" "latest" "jammy" "latest-firefox" "jammy-firefox" "latest-brave" "jammy-brave" "latest-chromium" "jammy-chromium"
                 ;;
 
             complete)
 
                 clear_log
-                build_group "${command}" "latest" "jammy" "focal" "latest-firefox" "jammy-firefox" "focal-firefox" "latest-brave" "jammy-brave" "focal-brave" "latest-chromium" "jammy-chromium" "focal-chromium"
+                build_group "${command}" "latest" "jammy" "latest-firefox" "jammy-firefox" "latest-brave" "jammy-brave" "latest-chromium" "jammy-chromium" 
                 ;;
 
             complete-latest | complete-24.04)
@@ -350,19 +350,19 @@ main() {
             complete-brave)
 
                 clear_log
-                build_group "${command}" "latest-brave" "jammy-brave" "focal-brave"
+                build_group "${command}" "latest-brave" "jammy-brave"
                 ;;
             
             complete-chromium)
 
                 clear_log
-                build_group "${command}" "latest-chromium" "jammy-chromium" "focal-chromium"
+                build_group "${command}" "latest-chromium" "jammy-chromium"
                 ;;
 
             complete-firefox)
 
                 clear_log
-                build_group "${command}" "latest-firefox" "jammy-firefox" "focal-firefox"
+                build_group "${command}" "latest-firefox" "jammy-firefox"
                 ;;
 
             latest | latest-brave | latest-chromium | latest-firefox | \
@@ -401,22 +401,17 @@ main() {
 
                 build_family "${command}" "latest"
                 build_family "${command}" "jammy"
-                build_family "${command}" "focal"
                 build_family "${command}" "latest-firefox"
                 build_family "${command}" "jammy-firefox"
-                build_family "${command}" "focal-firefox"
                 build_family "${command}" "latest-brave"
                 build_family "${command}" "jammy-brave"
-                build_family "${command}" "focal-brave"
                 build_family "${command}" "latest-chromium"
                 build_family "${command}" "jammy-chromium"
-                build_family "${command}" "focal-chromium"
                 ;;
 
             latest | latest-brave | latest-chromium | latest-firefox | \
             noble | noble-brave | noble-chromium | noble-firefox | \
             jammy | jammy-brave | jammy-chromium | jammy-firefox | \
-            focal | focal-brave | focal-chromium | focal-firefox | \
             24.04 | 24.04-brave | 24.04-chromium | 24.04-firefox | \
             22.04 | 22.04-brave | 22.04-chromium | 22.04-firefox )
 
