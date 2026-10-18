@@ -26,11 +26,13 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean ; \
 ### embed the local '.g3-cache' from the build context
 ### note that the bound cache '/tmp/cache2' is ephemeral and all written data will be discarded automatically
 ### therefore copy its content into the another permanent cache '/tmp/g3-cache'
+### do not fail on empty folder and do not skip empty files
 RUN \
     --mount=type=bind,target=/tmp/cache2 \
     mkdir -p /tmp/g3-cache \
-    && if [ -d /tmp/cache2/.g3-cache/ ] ; then cp -r /tmp/cache2/.g3-cache/* /tmp/g3-cache/ ; fi
-
+    && if [ -d /tmp/cache2/.g3-cache ]; then \
+        cp -a /tmp/cache2/.g3-cache/. /tmp/g3-cache/; \
+    fi
 
 ####################
 ### stage_essentials
