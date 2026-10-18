@@ -61,7 +61,7 @@ main() {
 
     ### no quotes around ${params}!
     set -x
-    docker build ${params} \
+    docker buildx build --load ${params} \
         --cache-to=type=local,dest=${HELPER_IMAGE_CACHE_PATH}/${helper_image} \
         -f "${DOCKERFILE_PATH}" \
         --build-arg BASEIMAGE="${BASEIMAGE}" \
