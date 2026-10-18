@@ -500,4 +500,5 @@ Credit goes to all the countless people and companies, who contribute to open so
 [badge-github-closed-issues]: https://img.shields.io/github/issues-closed/accetto/ubuntu-vnc-xfce-g3
 
 [service-shields-io]: https://shields.io/
+
 [feedback-issue-603]: https://github.com/docker/desktop-feedback/issues/603
